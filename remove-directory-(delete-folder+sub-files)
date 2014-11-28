@@ -1,3 +1,6 @@
+p.s. REMEMBER! <br/>dont pass EMPTY VALUES  to any Directory deleting functions!!!  (backup them always, otherwise one day you might get DISASTER!!)
+
+
 function remove_Dir($path) {
 	if(!empty($path) && file_exists($path) ){
 		$dir  = new RecursiveDirectoryIterator($path, RecursiveDirectoryIterator::SKIP_DOTS); //upper dirs are not included,otherwise DISASTER HAPPENS :)

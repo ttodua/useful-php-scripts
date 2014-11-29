@@ -1,6 +1,7 @@
 <?php
 /*
-	//https://github.com/tazotodua/Simple-PHP-file-browser-manager/blob/master/filemanager.php
+	//COPY of pafm(https://github.com/mustafa0x/pafm), just added ZIP functionality
+	//https://github.com/tazotodua/useful-php-scripts/blob/master/Simple-PHP-file-browser-manager.php
 	@name:                    PHP AJAX File Manager (PAFM)
 	@filename:                pafm.php
 	@version:                 1.8 RC1 (TT modification)

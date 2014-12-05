@@ -31,7 +31,8 @@ define('PASSWORD_SALT', 'P5`SU2"6]NALYR}');
 set_time_limit(3000);
 ini_set('max_execution_time', 3000);
 ini_set('memory_limit','100M');
-	
+ini_set('mysql.connect_timeout', 300);
+ini_set('default_socket_timeout', 300);
 /**
  * Local (absolute or relative) path of folder to manage.
  *
@@ -1142,7 +1143,7 @@ if (!empty($_POST['dbaction'])){
 		}
 		else if (actionname == 'importt')
 		{
-			postm({dbaction:actionname,dbHOST:ddHOST,dbUSER:ddUSER,dbPASS:ddPASS,dbNAME:ddNAME,dbCLEAR:dbCLEARALLTABLES,sqlfilenamee: "<?php echo $myzip_pathh;?>/" + slqfile },'', '', '');
+			postm({dbaction:actionname,dbHOST:ddHOST,dbUSER:ddUSER,dbPASS:ddPASS,dbNAME:ddNAME,sqlfilenamee: "<?php echo $myzip_pathh;?>/" + slqfile },'', '', '');
 		}
 	}	
 	

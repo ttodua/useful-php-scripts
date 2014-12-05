@@ -1,6 +1,5 @@
-======================USAGE=====================
-EXPORT_TABLES("localhost","user","pass","db_name");  //to IMPORT, see the import.php file
-
+======================USAGE=====================//to IMPORT, see the import.php file
+EXPORT_TABLES("localhost","user","pass","db_name" );  //or add 5th parameter{only targeted tables}: "mytable1,mytable2,mytable3"
 <?php
 function EXPORT_TABLES($host,$user,$pass,$name,  $tables=false, $backup_name=false )
 {

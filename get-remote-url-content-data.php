@@ -1,4 +1,5 @@
 ====================================== USAGE=============================
+
 	echo get_remote_data('http://example.com', true ); // FOLLOWLOCATION enabled; simple request; 
 	//OR
 	echo get_remote_data('http://example.com', true, "var2=something&var3=blabla" ); // FOLLOWLOCATION enabled; POST REQUEST;
@@ -22,18 +23,14 @@ CODE :
 		curl_setopt($c, CURLOPT_FOLLOWLOCATION, 1);
 		curl_setopt($c, CURLOPT_CONNECTTIMEOUT, 9);
 		curl_setopt($c, CURLOPT_TIMEOUT, 60);
-		curl_setopt($c, CURLOPT_HEADER, true);
 		curl_setopt($c, CURLOPT_REFERER, $url);
 		curl_setopt($c, CURLOPT_ENCODING, 'gzip,deflate');
 		curl_setopt($c, CURLOPT_AUTOREFERER, true);
-			$header[0] = "Accept: text/xml,application/xml,application/xhtml+xml," . "text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5";
-			$header[]="Cache-Control: max-age=0"; $header[]="Connection: keep-alive"; $header[]="Keep-Alive: 300"; $header[]="Accept-Charset: ISO-8859-1,utf-8;q=0.7,*;q=0.7"; $header[] = "Accept-Language: en-us,en;q=0.5"; $header[] = "Pragma: "; 
-		curl_setopt($c, CURLOPT_HTTPHEADER, $header);
-			
+			//$header[0] = "Accept: text/xml,application/xml,application/xhtml+xml," . "text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5"; $header[]="Cache-Control: max-age=0"; $header[]="Connection: keep-alive"; $header[]="Keep-Alive: 300"; $header[]="Accept-Charset: ISO-8859-1,utf-8;q=0.7,*;q=0.7"; $header[] = "Accept-Language: en-us,en;q=0.5"; $header[] = "Pragma: "; 
+		//curl_setopt($c, CURLOPT_HTTPHEADER, $header);
+		//curl_setopt($c, CURLOPT_HEADER, true);	
 		//==========EXECUTE=========
-		$data = curl_exec($c);
-		$status   = curl_getinfo($c);
-		curl_close($c);
+		$data = curl_exec($c);	$status=curl_getinfo($c); curl_close($c);
 								//	 correct Links(i.e. href="PICTURE.JPG" to href="http://site.com/images/PICTURE.JPG" )
 								preg_match('/(http:|https:)\/\/(.*\/|.*)/', $url,$n);
 								foreach( array_merge(range('a','z'), range('A','Z'), array('.','..'), range('0','9'))  as $i) 	{
@@ -41,21 +38,21 @@ CODE :
 										$data=str_replace('src="'.$i,'src="'.$n[0].$i,$data);	$data=str_replace('href="'.$i,'href="'.$n[0].$i,$data); $data=str_replace('action="'.$i,'action="'.$n[0].$i,$data);
 									}
 								}
-			
 		//if TURNED OFF "FOLLOWLOCATION"
-		if (!$use_FOLLOWLOCATION){
-			if($status['http_code']==200) { return $data; }	else{
-				if($status['http_code'] == 301 || $status['http_code'] == 302) {
-					list($header) = explode("\r\n\r\n", $data, 2);
-					preg_match("/(Location:|URI:)[^(\n)]*/", $header, $matches);
-					$url = trim(str_replace($matches[1],"",$matches[0])); $url_parsed = parse_url($url);
-					return (isset($url_parsed))? get_remote_data($url, $use_FOLLOWLOCATION, $post_paramtrs, $from_mobile) : "ERRORCODE11:<br/>can't catch redirected url. LAST RESPONSE:<br/><br/>$data";
-				}
-				else{
-					$oline=''; foreach($status as $key=>$eline){$oline.='['.$key.']'.$eline.' ';}
-					$line =$oline." <br/> ".$url."<br/>-----------------<br/>";
-					return "ERRORCODE13:<br/>$line";
-				}
+		if($status['http_code']==200) {
+			return $data;
+		}
+		elseif (!$use_FOLLOWLOCATION){
+			if($status['http_code'] == 301 || $status['http_code'] == 302) {
+				list($header) = explode("\r\n\r\n", $data, 2);
+				preg_match("/(Location:|URI:)[^(\n)]*/", $header, $matches);
+				$url = trim(str_replace($matches[1],"",$matches[0])); $url_parsed = parse_url($url);
+				return (isset($url_parsed))? get_remote_data($url, $use_FOLLOWLOCATION, $post_paramtrs, $from_mobile) : "ERRORCODE11:<br/>can't catch redirected url. LAST RESPONSE:<br/><br/>$data";
+			}
+			else{
+				$oline=''; foreach($status as $key=>$eline){$oline.='['.$key.']'.$eline.' ';}
+				$line =$oline." <br/> ".$url."<br/>-----------------<br/>";
+				return "ERRORCODE13:<br/>$line";
 			}
 		}
 	}

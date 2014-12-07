@@ -1,18 +1,22 @@
 ====================================== USAGE=============================
-echo get_remote_data("http://example.com/", true, 'myvar1=blabla');
-
-//complete function,with customizations
-function get_remote_data($url, $use_FOLLOWLOCATION=true, $post_paramtrs=false)	
+	echo get_remote_data('http://example.com', true ); // FOLLOWLOCATION enabled; simple request; 
+	//OR
+	echo get_remote_data('http://example.com', true, "var2=something&var3=blabla" ); // FOLLOWLOCATION enabled; POST REQUEST;
+	
+CODE :
+	
+	//needs "php_curl" to be enabled (+php_openssl)
+	function get_remote_data($url, $use_FOLLOWLOCATION=true, $post_paramtrs=false, $from_mobile=false )	
 	{
 		$c = curl_init();
 		curl_setopt($c, CURLOPT_URL, $url);
 		curl_setopt($c, CURLOPT_RETURNTRANSFER, 1);
 				if ($post_paramtrs){
 		curl_setopt($c, CURLOPT_POST, TRUE); 
-		curl_setopt($c, CURLOPT_POSTFIELDS, $post_paramtrs); //"var1=bla&var2=foo"
+		curl_setopt($c, CURLOPT_POSTFIELDS, "var1=bla&".$post_paramtrs);
 				}
 		curl_setopt($c, CURLOPT_SSL_VERIFYHOST,false);
-		curl_setopt($c, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows NT 6.1; rv:33.0) Gecko/20100101 Firefox/33.0"); //"Mozilla/5.0 (iPhone; U; CPU like Mac OS X; en) AppleWebKit/420+ (KHTML, like Gecko) Version/3.0 Mobile/1C25 Safari/419.3" 
+		curl_setopt($c, CURLOPT_USERAGENT, ($from_mobile) ? "Mozilla/5.0 (iPhone; U; CPU like Mac OS X; en) AppleWebKit/420+ (KHTML, like Gecko) Version/3.0 Mobile/1C25 Safari/419.3" :  "Mozilla/5.0 (Windows NT 6.1; rv:33.0) Gecko/20100101 Firefox/33.0");
 		curl_setopt($c, CURLOPT_SSL_VERIFYPEER,false);
 		curl_setopt($c, CURLOPT_MAXREDIRS, 10);
 		curl_setopt($c, CURLOPT_FOLLOWLOCATION, 1);
@@ -27,17 +31,25 @@ function get_remote_data($url, $use_FOLLOWLOCATION=true, $post_paramtrs=false)
 		curl_setopt($c, CURLOPT_HTTPHEADER, $header);
 			
 		//==========EXECUTE=========
-		$got_html = curl_exec($c);
+		$data = curl_exec($c);
 		$status   = curl_getinfo($c);
 		curl_close($c);
+								//	 correct Links(i.e. href="PICTURE.JPG" to href="http://site.com/images/PICTURE.JPG" )
+								preg_match('/(http:|https:)\/\/(.*\/|.*)/', $url,$n);
+								foreach( array_merge(range('a','z'), range('A','Z'), array('.','..'), range('0','9'))  as $i) 	{
+									if ($i != 'h' && $i != 'H'){ //except h, because it might be http://..
+										$data=str_replace('src="'.$i,'src="'.$n[0].$i,$data);	$data=str_replace('href="'.$i,'href="'.$n[0].$i,$data); $data=str_replace('action="'.$i,'action="'.$n[0].$i,$data);
+									}
+								}
+			
 		//if TURNED OFF "FOLLOWLOCATION"
 		if (!$use_FOLLOWLOCATION){
-			if($status['http_code']==200) { return $got_html; }	else{
+			if($status['http_code']==200) { return $data; }	else{
 				if($status['http_code'] == 301 || $status['http_code'] == 302) {
-					list($header) = explode("\r\n\r\n", $got_html, 2);
+					list($header) = explode("\r\n\r\n", $data, 2);
 					preg_match("/(Location:|URI:)[^(\n)]*/", $header, $matches);
 					$url = trim(str_replace($matches[1],"",$matches[0])); $url_parsed = parse_url($url);
-					return (isset($url_parsed))? get_remote_data($url, $use_FOLLOWLOCATION, $post_paramtrs, $from_mobile)	 : "ERRORCODE11:<br/>can't catch redirected url. LAST RESPONSE:<br/><br/>$got_html";
+					return (isset($url_parsed))? get_remote_data($url, $use_FOLLOWLOCATION, $post_paramtrs, $from_mobile) : "ERRORCODE11:<br/>can't catch redirected url. LAST RESPONSE:<br/><br/>$data";
 				}
 				else{
 					$oline=''; foreach($status as $key=>$eline){$oline.='['.$key.']'.$eline.' ';}
@@ -47,3 +59,6 @@ function get_remote_data($url, $use_FOLLOWLOCATION=true, $post_paramtrs=false)
 			}
 		}
 	}
+
+	
+(**NOTICE:** if you want to display images and href urls CORRECTLY, (i.e href="./imageblabla.png" to href="http://example.com/imageblabla.png" ), then this code does that too! )

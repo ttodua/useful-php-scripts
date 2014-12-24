@@ -1,10 +1,10 @@
 ======================USAGE=====================//to IMPORT, see the import.php file
-EXPORT_TABLES("localhost","user","pass","db_name" );  //or add 5th parameter{only targeted tables}: "mytable1,mytable2,mytable3"
+EXPORT_TABLES("localhost","user","pass","db_name" );  //or add 5th parameter(array of specific tables): array("mytable1","mytable2","mytable3")
 <?php
 function EXPORT_TABLES($host,$user,$pass,$name,  $tables=false, $backup_name=false )
 {
 	$mysqli = new mysqli($host,$user,$pass,$name); if ($mysqli->connect_errno){ echo "ConnecttError: " . $mysqli->connect_error;} $mysqli->select_db($name); $mysqli->query("SET NAMES 'utf8'");
-	$queryTables = $mysqli->query('SHOW TABLES'); while($row = $queryTables->fetch_row()) { $target_tables[] = $row[0]; }	if($tables !== false) { $target_tables = array_intersect( $target_tables, explode(',',$tables)); }
+	$queryTables = $mysqli->query('SHOW TABLES'); while($row = $queryTables->fetch_row()) { $target_tables[] = $row[0]; }	if($tables !== false) { $target_tables = array_intersect( $target_tables, $tables); }
 	
 	$content='';    //start cycle
 	foreach($target_tables as $table){

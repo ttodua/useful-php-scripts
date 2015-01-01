@@ -57,13 +57,13 @@ p.s.(MYSQLI has two ways of execution- Object Oriented and Procedural: http://ph
 	p.s. For Wordpress, there may be needed:   require_once( ABSPATH . 'wp-admin/includes/upgrade.php' ); dbDelta("CREATE TABLE..........");
 	
 
-//================================= DELETE  TABLES		=================================	
-			$zzzzzz = $CONNECTED->query('SET foreign_key_checks = 0');
-			if ($result = $CONNECTED->query("SHOW TABLES"))	{ while($row = $result->fetch_array())		{
-					$mysql_query->query('DROP TABLE IF EXISTS '.$row[0]);
-				}
+//================================= DELETE  TABLES		=================================
+			if ($result = $CONNECTED->query("SHOW TABLES"))	{	
+				$zzzzzz = $CONNECTED->query('SET foreign_key_checks = 0');
+				while($row = $zzzzzz->fetch_array()) {$CONNECTED->query('DROP TABLE IF EXISTS '.$row[0]);}
+				$zzzzzz = $CONNECTED->query('SET foreign_key_checks = 1');
 			}
-			$zzzzzz = $CONNECTED->query('SET foreign_key_checks = 1');
+			
    
 //=================================INSERT	=================================	
 	$command="INSERT INTO my_tablee (Mycolumn_1, Mycolumn_2) VALUES ('aaaaaa', 'tttttttt')";

@@ -114,18 +114,17 @@ p.s. for Wordpress, for secutiry, its better to use "PREPARE" function inside th
 		$CONNECTED->query("INSERT INTO my_tablename (content1, content2, userid) VALUES ('$value1', '$value2','$useriid')");
 		
 			
-						//////Method 2 (only for  wordpress, sanitized)//////
-						$CheckIfExists = $wpdb->get_var("SELECT id FROM my_tablename WHERE userid = '$useriid'");
-						if (!empty($CheckIfExists)) {
-							$wpdb->update($tablename, 
-								array('mycolumn_1'=>$value1, 'mycolumn_2'=>$value2),
-								array('userid'=> $useriid)
-							);
-						}
-						else 	{
-							$wpdb->insert($tablename, 
-								array('mycolumn_1'=>$value1, 'mycolumn_2'=>$value2,	'userid'=> $useriid,), 
-								array('%s','%s','%s') 
-							);
-						}
-		
+					//////Method 2 (only for  wordpress, sanitized)//////
+					function UPDATEE_OR_INSERTTT($tablename, $NewArrayValues, $WhereArray){	global $wpdb;
+						  //convert array to STRING
+						  $o=''; $i=1; foreach ($WhereArray as $key=>$value){ $o .= $key . ' = \''. $value .'\''; if ($i != count($WhereArray)) { $o .=' AND '; $i++;}	}
+						  $CheckIfExists = $wpdb->get_var("SELECT id FROM ".$tablename." WHERE ".$o);
+						//check if already exist
+						if (!empty($CheckIfExists)	{  $wpdb->update( $tablename,  $NewArrayValues,	$WhereArray );  }
+						else 				{  $wpdb->insert( $tablename,  array_merge($NewArrayValues, $WhereArray) );  }
+					}	
+					
+					**EXECUTE**
+					UPDATEE_OR_INSERTTT('myyy_tableee', 
+							array('mycolumn_1'=> 'myvalueeee' ),
+							array('mycolumn_5'=> 'Gonzales', 'mycolumn_6'=> 'France' ) );

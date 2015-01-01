@@ -6,7 +6,7 @@ function IMPORT_TABLES($host,$user,$pass,$dbname,$sql_file)
 {
 	if (!file_exists($sql_file)) {die('Input the SQL filename correctly! <button onclick="window.history.back();">Click Back</button>');} $allLines = file($sql_file);
 	
-	$mysqli = new mysqli($host, $user, $pass, $dbname); if (mysqli_connect_errno()){echo "Failed to connect to MySQL: " . mysqli_connect_error();} 
+	$mysqli = new mysqli($host, $user, $pass, $dbname);
 		$zzzzzz = $mysqli->query('SET foreign_key_checks = 0');
 		preg_match_all("/\nCREATE TABLE(.*?)\`(.*?)\`/si", "\n".file_get_contents($sql_file), $target_tables);
 		foreach ($target_tables[2] as $table) {$mysqli->query('DROP TABLE IF EXISTS '.$table);}

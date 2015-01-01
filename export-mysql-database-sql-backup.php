@@ -3,7 +3,7 @@ EXPORT_TABLES("localhost","user","pass","db_name" );  //or add 5th parameter(arr
 <?php
 function EXPORT_TABLES($host,$user,$pass,$name,  $tables=false, $backup_name=false )
 {
-	$mysqli = new mysqli($host,$user,$pass,$name) or die($mysqli->connect_error); $mysqli->select_db($name); $mysqli->query("SET NAMES 'utf8'");
+	$mysqli = new mysqli($host,$user,$pass,$name); $mysqli->select_db($name); $mysqli->query("SET NAMES 'utf8'");
 	$queryTables = $mysqli->query('SHOW TABLES'); while($row = $queryTables->fetch_row()) { $target_tables[] = $row[0]; }	if($tables !== false) { $target_tables = array_intersect( $target_tables, $tables); }
 	
 	$content='';    //start cycle

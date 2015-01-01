@@ -1,36 +1,22 @@
-========== MYSQLI vs PDO ============
-------------- http://code.tutsplus.com/tutorials/pdo-vs-mysqli-which-should-you-use--net-24059
-----------OR
-------------- http://php.net/manual/en/mysqlinfo.api.choosing.php
-
-p.s.(MYSQLI has two ways of execution- Object Oriented and Procedural: http://php.net/manual/en/mysqli.error.php )
-==================================
-
-
-============================================
-*MYSQLI commands  :
-	(DIRECT): http://www.pantz.org/software/mysql/mysqlcommands.html
-	(WORDPRESS): http://codex.wordpress.org/Class_Reference/wpdb#Examples 	//(in Wordpress,before starting commands, you need to use: global $wpdb;)
-============================================
-
+*MYSQLI vs PDO:     http://code.tutsplus.com/tutorials/pdo-vs-mysqli-which-should-you-use--net-24059 (OR ttp://php.net/manual/en/mysqlinfo.api.choosing.php)
+*MYSQLI commands:   http://www.pantz.org/software/mysql/mysqlcommands.html  [MYSQLI has 2 ways of execution- Object Oriented and Procedural (example: http://php.net/manual/en/mysqli.error.php )]
+	
 
 <?php
 //=================================CONENCT TO MYSQL	
- 	**********DIRECT**********
+ 	**********TYPICAL**********
 	$CONNECTED = new mysqli($host,$user,$pass,$DBname);
 
-	**********WODRPRESS**********	
-	global $wpdb;  //(this object will be already connected..)
+	**********FOR WODRPRESS**********	
+	global $wpdb;  //(in Wordpress,before starting your SQL commands, you need to global that only once
   
   
   		
-	=================== NOW, for example,  you can execute the queries :=======================
-	$command= "Create Database my_database";
-	
-				**********DIRECT**********
+	=================== Example of Query execution :=======================
+				$command = "......";
+				**********TYPICAL QUERY**********
 					$zzzzzz = $CONNECTED->query($command);
-	
-				**********WODRPRESS**********
+				**********WODRPRESS QUERY**********
 					$zzzzzz = $wpdb->query($command);
    
    
@@ -96,6 +82,19 @@ p.s. during the command execution, you can see errors like this (if there will b
 	**********WODRPRESS
 	  query(....) or die($wpdb->last_error);
 					
+p.s. for Wordpress, for secutiry, its better to use "PREPARE" function inside the query  - http://codex.wordpress.org/Class_Reference/wpdb#Examples			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
 			
 			
 			

@@ -34,7 +34,7 @@ CODE :
 				$url = trim(str_replace($matches[1],"",$matches[0])); $url_parsed = parse_url($url);
 				return (isset($url_parsed))? get_remote_data($url, $use_FOLLOWLOCATION, $post_paramtrs, $from_mobile) : "ERRORCODE11:<br/>can't catch redirected url. LAST RESPONSE:<br/><br/>$data";
 			}
-			else {$f=''; foreach($status as $key=>$e{$f.='['.$key.']'.$e.' ';} return "ERRORCODE13:<br/>$f<br/>$url";}
+			else {$f=''; foreach($status as $key=>$e){$f.='['.$key.']'.$e.' ';} return "ERRORCODE13:<br/>$f<br/>$url";}
 		}
 	}
 

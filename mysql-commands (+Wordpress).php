@@ -40,7 +40,8 @@
 	//........................CHARSET=latin1	AUTO_INCREMENT=1;
 	//!!!!!!!!!!!!!!!!Check your database and make sure the whole database + tables + fields have the same charset!!!!!!!!!!!!!!!!!
 
-	p.s. For Wordpress, there may be needed:   require_once( ABSPATH . 'wp-admin/includes/upgrade.php' ); dbDelta("CREATE TABLE..........");
+	p.s. For Wordpress, there may be needed:   http://codex.wordpress.org/Creating_Tables_with_Plugins#Creating_or_Updating_the_Table 
+	require_once( ABSPATH . 'wp-admin/includes/upgrade.php' ); dbDelta("CREATE TABLE..........");
 	
 
 //================================= DELETE  TABLES		=================================

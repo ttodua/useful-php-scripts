@@ -121,7 +121,7 @@ p.s. for Wordpress, for secutiry, its better to use "PREPARE" function inside th
 						  $o=''; $i=1; foreach ($WhereArray as $key=>$value){ $o .= $key . ' = \''. $value .'\''; if ($i != count($WhereArray)) { $o .=' AND '; $i++;}	}
 						  $CheckIfExists = $wpdb->get_var("SELECT id FROM ".$tablename." WHERE ".$o);
 						//check if already exist
-						if (!empty($CheckIfExists)	{  $wpdb->update( $tablename,  $NewArrayValues,	$WhereArray );  }
+						if (!empty($CheckIfExists))	{  $wpdb->update( $tablename,  $NewArrayValues,	$WhereArray );  }
 						else 				{  $wpdb->insert( $tablename,  array_merge($NewArrayValues, $WhereArray) );  }
 					}	
 					

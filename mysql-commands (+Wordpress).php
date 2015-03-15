@@ -31,34 +31,34 @@
 		`IDD` int(11) NOT NULL AUTO_INCREMENT,
 		`userid` int(11) NOT NULL,
 		`mycolumn1` varchar(150) NOT NULL,
-		`mycolumn2` LONGTEXT DEFAULT '' NOT NULL,
-		`mycolumn3` LONGTEXT DEFAULT '' CHARACTER SET utf8 NOT NULL,
+		`mycolumn2` LONGTEXT NOT NULL DEFAULT '',
+		`mycolumn3` LONGTEXT CHARACTER SET utf8 NOT NULL DEFAULT '',
 		`mytime` datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
-	  PRIMARY KEY (`IDD`),
-	  UNIQUE KEY `IDD` (`IDD`)
-	)  ENGINE=InnoDB  DEFAULT CHARSET=utf8		AUTO_INCREMENT=10; "; 
-	//........................CHARSET=latin1	AUTO_INCREMENT=1;
+		PRIMARY KEY (`IDD`),
+		UNIQUE KEY `IDD` (`IDD`)
+	) ENGINE=InnoDB DEFAULT CHARSET=utf8    AUTO_INCREMENT=10; "; 
+	//......................CHARSET=latin1	AUTO_INCREMENT=1;
 	//!!!!!!!!!!!!!!!!Check your database and make sure the whole database + tables + fields have the same charset!!!!!!!!!!!!!!!!!
 
-	p.s. For Wordpress, there may be needed:   http://codex.wordpress.org/Creating_Tables_with_Plugins#Creating_or_Updating_the_Table 
+	//p.s. For Wordpress, there can be used this too: (more at http://codex.wordpress.org/Creating_Tables_with_Plugins#Creating_or_Updating_the_Table) :
 	require_once( ABSPATH . 'wp-admin/includes/upgrade.php' ); dbDelta("CREATE TABLE..........");
+ 
+
 	
 
-//================================= DELETE  TABLES		=================================
+//================================= DELETE  TABLES	=================================
 			if ($result = $CONNECTED->query("SHOW TABLES"))	{	
 				$zzzzzz = $CONNECTED->query('SET foreign_key_checks = 0');
 				while($row = $zzzzzz->fetch_array()) {$CONNECTED->query('DROP TABLE IF EXISTS '.$row[0]);}
 				$zzzzzz = $CONNECTED->query('SET foreign_key_checks = 1');
 			}
-			
-   
-//=================================INSERT	=================================	
+//=================================INSERT=================================	
 	$command="INSERT INTO my_tablee (Mycolumn_1, Mycolumn_2) VALUES ('aaaaaa', 'tttttttt')";
 //=================================UPDATE=================================
 	$command="UPDATE my_tablee SET Age=36 WHERE FirstName='Peter' AND LastName='Griffin'";
 		//*****REPLACE existing values into columns****
 		$command="UPDATE my_tablee set FIELD_NAME = replace( FIELD_NAME, 'what', 'by what' )";
-//================================= DELETE	=================================		
+//=================================DELETE=================================		
 	$command="DELETE FROM my_tablee WHERE post_status = 'www'";
 //=================================SELECT=================================
 	**********DIRECT
@@ -76,7 +76,7 @@
 			$wpdb->get_var("SELECT Mycolumn_1 FROM my_tablee WHERE post_type = 'smtnhnnng" );
 //====================================================================================			
 
-p.s. during the command execution, you can see errors like this (if there will be any errors):
+p.s. during the command execution, you can enable to show error reports(in case they happens):
 	**********DIRECT
 	  query(....) or die($mysqli->error);
 	

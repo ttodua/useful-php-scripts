@@ -6,8 +6,7 @@ echo get_remote_data('http://example.com/', "var2=something&var3=blabla" );    /
 	1) Remote urls are automatically re-corrected!!  (for exampled:  src="./imageblabla.png"  --------> src="http://example.com/path/imageblabla.png" !! )
 	2) It automatically handes FOLLOWLOCATION problem!!
 	
-	
-<?php
+
 
 
 //=================== compressed version===============https://github.com/tazotodua/useful-php-scripts/==========================

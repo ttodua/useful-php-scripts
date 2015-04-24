@@ -2,9 +2,7 @@
 echo get_remote_data('http://example.com/');                                   //simple request
 echo get_remote_data('http://example.com/', "var2=something&var3=blabla" );    //POST request 										
 
-	**NOTICE:** 
-	1) Remote urls are automatically re-corrected!!  (for exampled:  src="./imageblabla.png"  --------> src="http://example.com/path/imageblabla.png" !! )
-	2) It automatically handes FOLLOWLOCATION problem!!
+	**It automatically handes FOLLOWLOCATION problem  + Remote urls are automatically re-corrected!  ( src="./imageblabla.png"  --------> src="http://example.com/path/imageblabla.png" )
 	
 
 

@@ -1,6 +1,12 @@
 <?php
-/*	//COPY of pafm(https://github.com/mustafa0x/pafm), just added ZIP functionality
+define('PASSWORD', 'xxxxxx');									 //SET your password
+$ALLOWED_IPs = array ( '277.277.277.277',  '299.299.299.299',);  //insert your correct IP
 
+
+
+
+
+/*	//based on  pafm(https://github.com/mustafa0x/pafm), added ZIP functionality and minor changes..
 	//https://github.com/tazotodua/useful-php-scripts/blob/master/Simple-PHP-file-browser-manager.php
 	@name:                    PHP AJAX File Manager (PAFM)
 	@filename:                pafm.php
@@ -18,21 +24,80 @@
 	This program is free software; you can redistribute it and/or modify it under the terms of the
 	GNU General Public License as published by the Free Software Foundation. See COPYING
 */
+function separator__WFMB($input){return  str_replace('\\',DIRECTORY_SEPARATOR, str_replace('/',DIRECTORY_SEPARATOR, $input)) ; }
+//set memory limits
+$result=ini_set('max_execution_time', 3000);
+$result=ini_set('memory_limit','100M');
+$result=ini_set('mysql.connect_timeout', 300);
+$result=ini_set('default_socket_timeout', 300);
 
+
+//================================= WORDPRESS  addition=============================
+	//if included in wordpress plugin folder
+	if (file_exists('readme.txt') && strstr(file_get_contents('readme.txt'),'Tested up to:') ){
+		$w1=dirname(dirname(__file__)).'/wp-load.php';
+		$w2=dirname(dirname(dirname(__file__))).'/wp-load.php';
+		$w3=dirname(dirname(dirname(dirname(__file__)))).'/wp-load.php';
+		$w4=dirname(dirname(dirname(dirname(dirname(__file__))))).'/wp-load.php';
+		$w5=dirname(dirname(dirname(dirname(dirname(dirname(__file__)))))).'/wp-load.php';
+		if    (file_exists($w1)) {$wordpress_found=true;$wpc=$w1;}
+		elseif(file_exists($w2)) {$wordpress_found=true;$wpc=$w2;}
+		elseif(file_exists($w3)) {$wordpress_found=true;$wpc=$w3;}
+		elseif(file_exists($w4)) {$wordpress_found=true;$wpc=$w4;}
+		elseif(file_exists($w5)) {$wordpress_found=true;$wpc=$w5;}
+		else					 { die('no_access. cant find wp-load.php'); } 	
+				//wp bug
+				if (substr($_SERVER['REQUEST_URI'],-21) == '/wp-admin/install.php') {}
+				
+		$coredir=dirname($wpc); 	if (!defined('WP_INSTALLING')){define( 'WP_INSTALLING','this_avoiddsss_redirection_when_not_installed' ); } 	
+		require_once($coredir.'/wp-load.php'); 	
+		if (is_blog_installed()) {
+			$startdir=dirname($_SERVER['DOCUMENT_ROOT'].home_url('','relative'));
+			// ========================== CHECK IF ADMIN
+			//$randomnum=get_option('myfmg_random_numb'); if (!$randomnum) {update_option('myfmg_random_numb',rand(1,111111)*rand(1,1111111)); header("location:" . $_SERVER['REQUES_URI']); exit;}
+			global $current_user;
+			$user_info= get_userdata( $current_user->ID ); //http://codex.wordpress.org/Function_Reference/get_userdata
+			$lvl=$user_info->user_level;	 
+			if ($lvl == '10' )	{$avoid_authrz = true; define('is_WP', true); }
+			else {	die('you are not logged in as Wordpress ADMIN.. At first, <a href="'.home_url().'/wp-login.php?redirect_to='.urlencode($_SERVER['PHP_SELF']).'&reauth=1">LOGIN</a> and then come back here.<br/><br/><br/>'); }
+			//else {	echo 'you are not logged in as Wordpress ADMIN.. however, I will display typical authorization.<br/><br/><br/>'; }
+		}
+		else{
+			$wp_not_installed=true; $noinst_message= 'seems wordpress not correctly installed....However I will allow a basic authorization..<br/><br/>';
+		}
+	}
+//================================= ### WORDPRESS addition=============================
 
 /*
- * configuration
- */
+configuration
+*/
+if (!isset($avoid_authrz)){
+	if (isset($wp_not_installed)) {echo $noinst_message;}
+	if(!in_array($_SERVER['REMOTE_ADDR'] ,$ALLOWED_IPs)){die("Incorect ip: <b>".$_SERVER['REMOTE_ADDR'].'</b> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;(in FTP, open <b>'.$_SERVER['PHP_SELF'].'</b> and insert your IP in the ALLOWED list).');}
+	if ('xxxxxx' == PASSWORD) { die('please, open this file and SET your password');}
+}
 
-define('PASSWORD', 'auth');
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 define('PASSWORD_SALT', 'P5`SU2"6]NALYR}');
-
-//set memory limits
-set_time_limit(3000);
-ini_set('max_execution_time', 3000);
-ini_set('memory_limit','100M');
-ini_set('mysql.connect_timeout', 300);
-ini_set('default_socket_timeout', 300);
 /**
  * Local (absolute or relative) path of folder to manage.
  *
@@ -45,7 +110,7 @@ ini_set('default_socket_timeout', 300);
  * invalid directory.
  *
  */
-define('ROOT', '.');  //or '..' or '../..' or etc...
+define('ROOT', (isset($startdir) ? $startdir : $_SERVER['DOCUMENT_ROOT']));  //or '..' or '../..' or etc...
 
 /*
  * /configuration
@@ -66,7 +131,7 @@ define('BRUTEFORCE_ATTEMPTS', 5);
  */
 define('BRUTEFORCE_TIME_LOCK', 15 * 60);
 
-define('AUTHORIZE', true);
+define('AUTHORIZE', (!isset($avoid_authrz) ? true : false) );
 
 /**
  * files larger than this are not editable
@@ -126,7 +191,7 @@ $_R['images/move.gif'] = 'data:image/gif;base64,R0lGODlhEAAQANU/AD+0OnvbSEG2OrW2
 $_R['images/movehere.gif'] = 'data:image/gif;base64,R0lGODlhEAAQANU/APn5+VHDPE7BOz+0OnvbSLm6uUK3O7W2tky/O0S5O/39/fT09u7u8vz8/PX197Gxsc/Pz/b2+Pr6+7GysbKxsvj4+kC2Ovz/k+ry60i8O0i8PO3t8LGyspTmW+/v83bhOpriZojcZ4vgUPDz8rj7ZcnJybKxsejo7Zrrh6Pmgr6+vc/P0F/QPk2/PJvqffb595jjeO718LGxssr6hEHIE772drKysszNzMHCwsbFxZnpWvLy9fDw89HR0f///////yH5BAEAAD8ALAAAAAAQABAAAAaMwJ9wSCwOe70VctkDGHu+qNSHrBShjCzDc1pefbyweEP9BnbodJkI8QUCi3jcBxkiWoI8KjBy+H03QxosISEwKS4CGBERPiVDCTQEHToiBB8tFRU+OUMWhCAzNSQaMRISPjhDA6wWBhcJLw2zPipFBT6sCru7PgVFB7lTUgdFMhMmNhwUDw/ME0bRRkEAOw==';
 $_R['images/ren.gif'] = 'data:image/gif;base64,R0lGODlhEAAQANU/APHy8/zbmqyVYyEhIV5eXsPDw5ucnKqrq/7BZ7Kysuu1SoKCgnx8fPzShS8wMejo6NfX2fz67vj4+ERERL29ve7v7//Zc4uLi+Xl5f79+lRUU2BPL7mtlfT19//IWd7h5ZKSknR0dP3+/vf4+9avtf7rx1lZWXpnQ/rcqElNVGhbQMOvhP+gtu/Mdv/PYZKUmZ6fora3uNvTwtelRNrCjeS9YPXO3VJVXOzs6//kkVBQUPn5+ff392ZmZv///////yH5BAEAAD8ALAAAAAAQABAAAAbAwN9OwuPtjkeJZNexsX4GBoFwKFASh4MhxIGQfqCew1Hw4SCLQ0LQ4FR+F8KYsntATC+aZXYa/RZyZCJ2MCsWChs3PD8hPRo6DBcLIQKHGw4mi409PSYaKSo1HidjGoudIBgfHzItLgEfDAM6pzowPj4ROa+4F7OLBBMGPhkBHg0ZIzsLvz8mwj4lCA0RHRUAzLTO0AEoPAA4Dw/Mpj+cwxkiI+DiDCYEHeYTCwUxMQlYWSETPRI//wADChxIMGAQADs=';
 $_R['images/upload.gif'] = 'data:image/gif;base64,R0lGODlhGAAYAOZ/AOrNmf398v/rmPj4+OfJk9z5Yv/heuzs7vbdrv/igqLfJv/ebbbWVaa8Ne7ToezQnKLcLPHWpXC6DP/njaniLunp69zc3P/wqf/Xa/zcd+fIlOXl5vLYqP/yu//tpfT09Nb3W87yVP/plqzkMbTmOejLlsfwTLnqP/P09P/51/79+6PYRf/75b3rQf/APv/vof/wpffju/Hx8f7+/qW3L//64pDYFP/WX5DXFf/bZYTTCJzdIevr7LrdaP/deP/2zqrFPNzeu7PtK9f5V8HvVOv22P/ISvz8/Pn5+fvac6/PUf/lhbXPTprcHvn6+druuJXQHJbaGv/ojL/lgozWEfTz87rgef/Zav/nkNLGR4bJGf/QXNjgmJHQIJvXJrLmN//wrvTaqvTbrKThKavpMP/urv/SW+bm5//rnsTyQP/kiOLi4uPj5M7es5fRO3vCEtf1n+/w7f/OU63nKv/76Pj979Dyk9j2Xv/RV//NUf+/PP/ISf/DQ3zPAP///////yH5BAEAAH8ALAAAAAAYABgAAAf/gH+Cg4SFhoeIiYRIPAeOjwc8SIMBZHCHPH6am5sVg0RDQkWGBzOmp6Z+nn92aXcFZHWFFUdItre2Z2dtcwUkLSAraxsHgmdOKB8fKChVyh9FECAjFBQnLVNIFoJsAzLf4N9xKyZjO+c7LQpP238x7/DxTCQmFDj3OCchUEGCCAF0aggcWKNHDwhfdCjUEcKNFS7+WFyYSLGiFwp9MvYxwYAFAkFiUsAYSbJkFwUa+5xgkEKMoDA/XsicSVNLk5QjlPwII4jDDwFAgwIVIeWNjZQKgHTgIChChwlQoy4xsGCBBCopozQAE0GQgw4JwiagmqNsDgk20qpt4MGB1zI+ZOJeuUG3Lo27eGlkQeP2zwMPGDCYwUO4sOHDIh4IAiBii5w8kCNLnpwHi+I/ACYY2cO5s+fPnNUAEFQiAZ/TqFOrRp2gBOkkLvTInk27th4XGVz/UUFAA4HfwIMLB65CkXFCgQAAOw==';
-$_R['css'] = 'html,body{height:100%;width:100%}body{margin:0;font-family:Calibri,Consolas,Trebuchet,sans-serif}a{text-decoration:none;color:#b22424}a:visited{color:#ff2f00}a:hover{color:#dd836f}img{border:0}a:hover.b,.b a:hover,#add a img:hover{border:1px dotted #b22424}#header{padding:.2em;background-color:#e8e8e8}#logout{float:right}.pathCrumbs a:hover{background-color:white}#dir-count{color:grey;font-size:small;margin:0 0 3px 10px}#dirList ul{list-style:none;margin:.5em 0 0 1.5em;padding:0}#dirList li{margin:.05em 0;padding:.1em 0 .1em .1em;width:98%}#dirList li:hover{background:#ebebeb;border-radius:5px}#body .pathCrumbs a:hover{background-color:#e8e8e8}#info li:hover{background:0}#file{padding-left:.3em;font-size:.7em;bottom:.10em}#fileop{position:absolute;right:3em;font-size:.7em;margin-top:.30em}.dir,.file{position:relative;bottom:.05em;right:.11em;font:bold 14px verdana,arial;color:black}.dir{background:url('.$_R['images/dir.png'].') no-repeat bottom left;padding-left:1.45em;padding-top:2px}.file{padding-left:.30em}.mode,.fs,.extension,.filemtime{position:absolute;right:15em;font-family:Calibri,sans-serif;font-size:.7em;margin-top:.30em}.fs{margin-right:5%}.extension{margin-right:13%}.filemtime{margin-right:20%}.del,.edit,.rename,.move,.copy,.chmod,.extract{position:absolute;margin-top:.11em;min-width:1em;min-height:1em}.del{background:url('.$_R['images/del.png'].') no-repeat top right;right:2.22em}.rename{background:url('.$_R['images/ren.gif'].') no-repeat top right;right:3.33em}.move{background:url('.$_R['images/move.gif'].') no-repeat top right;right:4.44em}.chmod{background:url('.$_R['images/chmod.gif'].') no-repeat top right;right:6.55em}.copy{background:url('.$_R['images/copy.png'].') no-repeat top right;right:5.56em}.extract{background:url('.$_R['images/extract.png'].') no-repeat top right;right:8.92em}.edit{background:url('.$_R['images/edit.png'].') no-repeat top right;right:7.65em} .backRestor{margin: 20px 0px 0px 20%;} .backRestor div{padding: 5px;display: inline-block; border-radius: 20px;}  .backRestor .backupp{background-color: rgb(96, 219, 10);} .backRestor .restoree{background-color: pink;} .backRestor .db_backResto{float:right; background-color: yellow;}  .my_zip{font-size:0.8em;background-color:yellow;color:black;position: absolute;right:9.55em;} .cp{background:url('.$_R['images/cp.png'].') no-repeat top right;padding:0 0 1px 1px}#add{float:right;position:relative;right:2em;top:1em}#add a:hover,#add a:focus{border:0}#movelist{text-align:left;margin-left:.5em}#moveListUL{margin-top:.75em;margin-bottom:.5em;list-style:none;overflow:auto}#movelist a img{vertical-align:-15%}#movehere{margin-left:.5em;background:url('.$_R['images/movehere.gif'].') no-repeat center left;padding-left:.90em;font-family:Calibri,sans-serif}#ea{position:absolute;top:0;left:0;z-index:125}#editMsg{margin-left:2px}.failed,.succeeded{color:red;font-weight:bold}.succeeded{color:green}.CodeMirror-scroll{width:800px;height:600px!important;border:1px solid black}#footer{position:relative;top:3em;padding-bottom:1em;clear:both;text-align:center;font-size:.85em}#footer a{font-style:italic}#popup{position:fixed;left:50%;top:50%;min-width:15em;min-height:3em;border:2px solid #525252;background:white;z-index:150;padding-bottom:10px}#head{background-color:#e8e8e8;font-family:Calibri,sans-serif}#x{float:right}#body{text-align:center;margin:.5em 0;padding:0 15px 5px;white-space:nowrap}#response{font-weight:bold;font-size:small;margin-top:10px}#shell-history{width:400px;height:300px}#upload-drag{border:2px dashed;color:grey;height:20px;margin-top:7px;padding:7px 0 10px;width:97%}#upload-drag.upload-dragover{border:2px dashed blue}#remote-copy{text-align:left}#remote-copy input[type="text"]{width:300px}#remote-copy input[type="submit"]{float:right;margin-top:8px}#popOverlay,#editOverlay,#ajaxOverlay{width:100%;height:100%;position:fixed;left:0;top:0;z-index:105;background-color:#fff!important}#editOverlay{opacity:1;filter:alpha(opacity = 100);z-index:115}#ajaxOverlay{z-index:150}#ajaxImg{position:fixed;left:50%;top:50%;margin-left:-1.5em;margin-top:-1em;z-index:160}';
+$_R['css'] = 'html,body{height:100%;width:100%}body{margin:0;font-family:Calibri,Consolas,Trebuchet,sans-serif}a{text-decoration:none;color:#b22424}a:visited{color:#ff2f00}a:hover{color:#dd836f}img{border:0}a:hover.b,.b a:hover,#add a img:hover{border:1px dotted #b22424} #header{padding:.2em;background-color:#e8e8e8} #logout{float:right}.pathCrumbs a:hover{background-color:white}#dir-count{color:grey;font-size:small;margin:0 0 3px 10px}#dirList ul{list-style:none;margin:.5em 0 0 1.5em;padding:0}#dirList li{margin:.05em 0;padding:.1em 0 .1em .1em;width:98%}#dirList li:hover{background:#ebebeb;border-radius:5px}#body .pathCrumbs a:hover{background-color:#e8e8e8}#info li:hover{background:0} #file{padding-left:.3em;font-size:.7em;bottom:.10em} #fileop{position:absolute;right:3em;font-size:.7em;margin-top:.30em} .dir,.file{position:relative;bottom:.05em;right:.11em;font:bold 14px verdana,arial;color:black} .dir{background:url('.$_R['images/dir.png'].') no-repeat bottom left;padding-left:1.45em;padding-top:2px}.file{padding-left:.30em}.mode, .fs,.extension, .filemtime{position:absolute;right:15em;font-family:Calibri,sans-serif; font-size:.7em;margin-top:.30em}.fs{margin-right:5%}.extension{margin-right:13%} .filemtime{margin-right:20%}.del,.edit,.rename,.move,.copy,.chmod, .extract{position:absolute;margin-top:.11em;min-width:1em;min-height:1em}.del{background:url('.$_R['images/del.png'].') no-repeat top right;right:2.22em}.rename{background:url('.$_R['images/ren.gif'].') no-repeat top right;right:3.33em}.move{background:url('.$_R['images/move.gif'].') no-repeat top right;right:4.44em}.chmod{background:url('.$_R['images/chmod.gif'].') no-repeat top right;right:6.55em}.copy{background:url('.$_R['images/copy.png'].') no-repeat top right;right:5.56em}.extract{background:url('.$_R['images/extract.png'].') no-repeat top right;right:8.92em}.edit{background:url('.$_R['images/edit.png'].') no-repeat top right;right:7.65em} .backRestor{margin: 20px 0px 0px 20%;} .backRestor div{padding: 5px;display: inline-block; border-radius: 20px;}  .backRestor .backupp{background-color: rgb(96, 219, 10);} .backRestor .restoree{background-color: pink;} .backRestor .db_backResto{float:right; background-color: yellow;}  .my_zip{font-size:0.8em;background-color:yellow;color:black;position: absolute;right:9.55em;} .cp{background:url('.$_R['images/cp.png'].') no-repeat top right;padding:0 0 1px 1px}#add{float:right;position:relative;right:2em;top:1em}#add a:hover,#add a:focus{border:0}#movelist{text-align:left;margin-left:.5em}#moveListUL{margin-top:.75em;margin-bottom:.5em;list-style:none;overflow:auto}#movelist a img{vertical-align:-15%}#movehere{margin-left:.5em;background:url('.$_R['images/movehere.gif'].') no-repeat center left;padding-left:.90em;font-family:Calibri,sans-serif} #ea{position:absolute;top:0;left:0;z-index:125}#editMsg{margin-left:2px}.failed,.succeeded{color:red;font-weight:bold}.succeeded{color:green}.CodeMirror-scroll{width:800px;height:600px!important;border:1px solid black}#footer{position:relative;top:3em;padding-bottom:1em;clear:both; text-align:center;font-size:.85em}#footer a{font-style:italic}#popup{position:fixed;left:50%;top:50%;min-width:15em;min-height:3em;border:2px solid #525252;background:white;z-index:150;padding-bottom:10px} #head{background-color:#e8e8e8;font-family:Calibri,sans-serif} #x{float:right}#body{text-align:center;margin:.5em 0;padding:0 15px 5px;white-space:nowrap}#response{font-weight:bold;font-size:small;margin-top:10px}#shell-history{width:400px;height:300px}#upload-drag{border:2px dashed;color:grey;height:20px;margin-top:7px;padding:7px 0 10px;width:97%}#upload-drag.upload-dragover{border:2px dashed blue}#remote-copy{text-align:left}#remote-copy input[type="text"]{width:300px}#remote-copy input[type="submit"]{float:right;margin-top:8px} #popOverlay,#editOverlay, #ajaxOverlay{width:100%;height:100%;position:fixed;left:0;top:0; z-index:105;background-color:#fff!important}#editOverlay{opacity:1;filter:alpha(opacity = 100);z-index:115}#ajaxOverlay{z-index:150}#ajaxImg{position:fixed;left:50%;top:50%;margin-left:-1.5em;margin-top:-1em;z-index:160}';
 
 
 
@@ -788,18 +853,16 @@ function getDirs($path){
 		//------------------------###edit ttt
 		
 		
-		echo '  <li title="' . $dirItemHTML . '">' .
+		echo 
+		'<li title="' . $dirItemHTML . '">' .
 		"\n\t" . '<a href="?path=' . escape($fullPath) . '" title="' . $dirItemHTML . '" class="dir">'.$dirItemHTML.'</a>'.
 		"\n\t" . '<span class="filemtime" title="'.date('c', $mtime).'">' . date('y-m-d | H:i:s', $mtime + $tz_offset) . '</span>' .
 		"\n\t" . '<span class="mode" title="mode">' . $mod . '</span>' .
 		
-		
-		
-		//-------------------------edit ttt
-		"\n\t" . '<a href="javascript:myzip_func(\''.$myzip_pathh.'\',\''.$dirItemHTML.'\');"  class="myclass my_zip b">Zip</a>' .
-		//------------------------###edit ttt
-		
-		
+	//-------------------------edit ttt
+	"\n\t" . '<a href="javascript:myzip_func(\''.$myzip_pathh.'\',\''.$dirItemHTML.'\');"  class="myclass my_zip b">Zip</a>' .
+	
+	//------------------------###edit ttt
 		
 		"\n\t" . '<a href="#" title="Chmod '.$dirItemHTML.'" onclick="fOp.chmod(\''.$pathURL.'\', \''.$dirItemURL.'\', \''.$mod.'\'); return false;" class="chmod b"></a>' .
 		"\n\t" . '<a href="#" title="Move '.$dirItemHTML.'" onclick="fOp.moveList(\''.$dirItemURL.'\', \''.$pathURL.'\', \''.$pathURL.'\'); return false;" class="move b"></a>' .
@@ -820,7 +883,11 @@ function getFiles($path){
 
 	$codeMirrorExists = (int)is_dir(CODEMIRROR_PATH);
 	$zipSupport = zipSupport();
-
+	
+	//tt edition
+	$correctpath = str_ireplace(separator__WFMB($_SERVER['DOCUMENT_ROOT']), '', separator__WFMB(ROOT) );
+	$correctpath = str_ireplace('\\','/',$correctpath);
+	
 	foreach ($dirContents['files'] as $dirItem){
 		$dirItemURL = escape($dirItem);
 		$dirItemHTML = htmlspecialchars($dirItem);
@@ -833,7 +900,13 @@ function getFiles($path){
 		$cmSupport = in_array($ext, $codeMirrorModes) ? 'cp ' : '';
 
 		echo '  <li title="' . $dirItemHTML . '">' .
-		"\n\t" . '<a href="' . escape(ROOT . $filePath . $dirItem) . '" title="' . $dirItemHTML . '" class="file">'.$dirItemHTML.'</a>' .
+		"\n\t" . '<a href="' . escape($correctpath.$filePath . $dirItem) . '" title="' . $dirItemHTML . '" class="file" id="'.$dirItemHTML.'" target="_blank">'.$dirItemHTML.'</a>' .
+		
+				//---- tt edition
+				//if .sql, then show "RESTORE" button
+				 ( (pathinfo($dirItem, PATHINFO_EXTENSION) == 'sql') ? ' &nbsp;&nbsp;(<a href="javascript:export_import_db(\'importt\',\''.$dirItemHTML.'\')">RESTORE INTO DATABASE</a>)' : '').
+				//---- ##tt edition
+		
 		"\n\t" . '<span class="fs"  title="file size">' . getfs($path.'/'.$dirItem) . '</span>' .
 		"\n\t" . '<span class="extension" title="file extension">' . $ext . '</span>' .
 		"\n\t" . '<span class="filemtime" title="'.date('c', $mtime).'">' . date('y-m-d | H:i:s', $mtime + $tz_offset) . '</span>' .
@@ -869,9 +942,8 @@ function getFiles($path){
 
 
 
-//-------------------------edit ttt
-function downld($zip_name)
-{
+//----------------------------------------------------edit ttt -------------------------------------------------------
+function downld($zip_name){
 	ob_get_clean();
 	//if (stristr($zip_name,'..')) {die("incorrrrrrect fileeee..");}
 	header("Pragma: public");	header("Expires: 0");	header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
@@ -881,156 +953,102 @@ function downld($zip_name)
 	header("Content-Length: " . filesize($zip_name));
 	readfile($zip_name);
 }	
-
-if (!empty($_GET['delete_filee']))
-{
-	chdir(dirname(__file__));
-	if	(unlink($_GET['delete_filee'])) {die('file_deleted');} 
-	else						{die("file doesnt exist");}
-}
-if (!empty($_GET['fildown']))
-{
-	chdir(dirname(__file__));
-	downld($_GET['fildown']);
-}
+if (!empty($_GET['delete_filee'])){ chdir(dirname(__file__)); 	die( (unlink($_GET['delete_filee']) ? 'deleted':'file doesnt exist')  ); }
+if (!empty($_GET['fildown'])){	chdir(dirname(__file__));	downld($_GET['fildown']);}
 
 
 
 // ====================================================== ZIPPER ====================================== //
-class ModifiedFlxZipArchive extends ZipArchive 
-{
-	public function addDirDoo($location, $name , $prohib_filenames=false) 
-	{
-		if (!file_exists($location)) {	die("maybe file/folder path ( $location ) incorrect:");}
-		$this->addEmptyDir($name);
-		$name .= '/';
-		$location .= "/";
-		$dir = opendir ($location);   // Read all Files in Dir
-		
+// https://github.com/tazotodua/useful-php-scripts
+class ModifiedFlxZipArchive extends ZipArchive {
+	public function addDirDoo($location, $name , $prohib_filenames=array()) 	{
+		if (!file_exists($location)) {	die("maybe file/folder path ( $location ) incorrect.");}
+		$this->addEmptyDir($name);     $name .='/';   $location .="/";   $dir=opendir($location);   // Read all Files in Dir
 		while ($file = readdir($dir)){
-			if ($file == '.' || $file == '..') continue;
-			if (!in_array($name.$file,$prohib_filenames)){
-				if (filetype( $location . $file) == 'dir'){
-					$this->addDirDoo($location . $file, $name . $file,$prohib_filenames );
-				}
-				else {
-					$this->addFile($location . $file, $name . $file);
-				}
-			}
-		}
+			if ($file != '.' && $file != '..') {
+				if (!in_array($name.$file,$prohib_filenames)){
+					if (filetype( $location . $file) == 'dir'){	$this->addDirDoo($location . $file, $name . $file,$prohib_filenames );	}
+					else {	$this->addFile($location . $file, $name . $file); }
+	}}}}
+	public function FoldeerAdd($new_zip_filename1,$foldernameee1,$prohib_filenames1=array() ) {
+		if	($this->open(dirname($foldernameee1).'/'.$new_zip_filename1, ZipArchive::CREATE)) {
+			$this->addDirDoo($foldernameee1, basename($foldernameee1), $prohib_filenames1);
+		}else {die('cantttt start zipper. error_699');}
 	}
+
 }
-	
-if (!empty($_GET['startzip'])) 
-{
-	chdir(dirname(__file__));
-
-	if (!empty($_GET['pathh']))
-	{
-		
-		$foldernameee	= $_GET['pathh'];
-		$foldernameee	= preg_replace("/%u([0-9a-f]{3,4})/i","&#x\\1;",urldecode($foldernameee)); 
-		$foldernameee	= html_entity_decode($foldernameee,null,'UTF-8');
-			//remove starting dot
-			//$foldernameee = substr($foldernameee,1);
-			
-		$new_zip_filename=basename($foldernameee).'___compressed.zip';	
-		
-		$excl_var	=$_GET['exlcud'];
-		$excl_var 	= preg_replace("/%u([0-9a-f]{3,4})/i","&#x\\1;",urldecode($excl_var)); 
-		$excl_var	= html_entity_decode($excl_var,null,'UTF-8');
-		$exclude_some_files= explode(',',$excl_var);
-		// delte previous action
-		if (file_exists($new_zip_filename)) {unlink($new_zip_filename);}
-		$za = new ModifiedFlxZipArchive;
-		//create an archive
-		if	($za->open($new_zip_filename, ZipArchive::CREATE)) {
-			$za->addDirDoo($foldernameee, basename($foldernameee), $exclude_some_files); $za->close();
-		}else {die('cantttt start zipper_99');}
-
-		//download archive
-		//on the same execution,this made problems in some hostings, so better redirect
-		//downld($new_zip_filename);
-		//header("location:?startzip=ok&fildown=".$new_zip_filename);
-		$new_zip_filename_final = dirname($foldernameee).'/'.$new_zip_filename;
-		rename($new_zip_filename,$new_zip_filename_final );
-		die('Download archive: <a target="_blank" href="?fildown='.$new_zip_filename_final.'">'.$new_zip_filename_final.'</a> <br/><br/>After downloading, <a target="_blank" href="?delete_filee='.$new_zip_filename_final.'">delete it!</a> ');
-	}
-}
-
+$MyZipper = new ModifiedFlxZipArchive;
 // ====================================================== ###ZIPPER### ====================================== //
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-// ====================================================== DataBase RESTORE ====================================== //
-function EXPORT_TABLES($host,$user,$pass,$name,  $tables=false, $backup_name=false )
-{
-	$mysqli = new mysqli($host,$user,$pass,$name); if ($mysqli->connect_errno){ echo "ConnecttError: " . $mysqli->connect_error;} $mysqli->select_db($name); $mysqli->query("SET NAMES 'utf8'");
-	$queryTables = $mysqli->query('SHOW TABLES'); while($row = $queryTables->fetch_row()) { $target_tables[] = $row[0]; }	if($tables !== false) { $target_tables = array_intersect( $target_tables, explode(',',$tables)); }
-	
-	$content='';    //start cycle
-	foreach($target_tables as $table){
-		$result	= $mysqli->query('SELECT * FROM '.$table); 	$fields_amount=$result->field_count;  $rows_num=$mysqli->affected_rows;
-		$res = $mysqli->query('SHOW CREATE TABLE '.$table);	$TableMLine=$res->fetch_row();
-		$content	.= "\n\n".$TableMLine[1].";\n\n";
-		for ($i = 0; $i < $fields_amount; $i++) {
-			$st_counter= 0;
-			while($row = $result->fetch_row())	{
-					//when started (and every after 100 command cycle)
-					if ($st_counter%100 == 0 || $st_counter == 0 )	{$content .= "\nINSERT INTO ".$table." VALUES";}
-				$content .= "\n(";
-				for($j=0; $j<$fields_amount; $j++)  {
-					$row[$j] = str_replace("\n","\\n", addslashes($row[$j]) );
-					if (isset($row[$j])) { $content .= '"'.$row[$j].'"' ; } else { $content .= '""'; }
-					if ($j<($fields_amount-1)) { $content.= ','; }
-				}
-				$content .=")";
-					//every after 100 command cycle [or at last line] ....p.s. but should be inserted 1 cycle eariler
-					if ( (($st_counter+1)%100==0 && $st_counter!=0) || $st_counter+1==$rows_num) {$content .= ";";} else {$content .= ",";}	$st_counter=$st_counter+1;
-			}
-		}$content .="\n\n\n";
+//download
+if (!empty($_GET['startzip'])) {
+	chdir(dirname(__file__));
+	if (!empty($_GET['pathh']))	{
+		$foldernameee= $_GET['pathh'];
+		$foldernameee= preg_replace("/%u([0-9a-f]{3,4})/i","&#x\\1;",urldecode($foldernameee)); 
+		$foldernameee= html_entity_decode($foldernameee,null,'UTF-8');
+			//remove starting dot
+			//$foldernameee = substr($foldernameee,1);
+		$zip_filename=basename($foldernameee).'___compressed.zip';	
+		$excl_var	=$_GET['exlcud'];
+		$excl_var 	= preg_replace("/%u([0-9a-f]{3,4})/i","&#x\\1;",urldecode($excl_var)); 
+		$excl_var	= html_entity_decode($excl_var,null,'UTF-8');
+		$exclude_some_files= explode(',',$excl_var);
+		// delte previous existing file
+		if (file_exists($zip_filename)) {unlink($zip_filename);}
+		//create an archive
+		$MyZipper->FoldeerAdd($zip_filename,$foldernameee, $exclude_some_files);
+		//download archive
+		//downld($zip_filename); //on the same ZIPPER execution, this made problems in some hostings, so better to redirect
+		$zip_old_path =  str_replace('\\',DIRECTORY_SEPARATOR, str_replace('/',DIRECTORY_SEPARATOR, __DIR__.'/'.$zip_filename)) ;
+		$zip_new_path = dirname($foldernameee).'/'.$zip_filename;
+		echo('Download archive: <a target="_blank" href="?fildown='.$zip_new_path.'">'.$zip_new_path.'</a> <br/><br/>After downloading, <a target="_blank" href="?delete_filee='.$zip_new_path.'">delete it!</a> '); exit;
 	}
+}
 
-	//save file
+
+
+
+// ====================================================== DataBase BACKUP/RESTORE ====================================== //
+// https://github.com/tazotodua/useful-php-scripts
+function EXPORT_TABLES($host,$user,$pass,$name,  $tables=false, $backup_name=false ){
+	$mysqli = new mysqli($host,$user,$pass,$name); $mysqli->select_db($name); $mysqli->query("SET NAMES 'utf8'");
+	$queryTables = $mysqli->query('SHOW TABLES'); while($row = $queryTables->fetch_row()) { $target_tables[] = $row[0]; }	if($tables !== false) { $target_tables = array_intersect( $target_tables, $tables); }
+	foreach($target_tables as $table){
+		$result	= $mysqli->query('SELECT * FROM '.$table); 	$fields_amount=$result->field_count;  $rows_num=$mysqli->affected_rows; 	$res = $mysqli->query('SHOW CREATE TABLE '.$table);	$TableMLine=$res->fetch_row();
+		$content = (!isset($content) ?  '' : $content) . "\n\n".$TableMLine[1].";\n\n";
+		for ($i = 0; $i < $fields_amount;   $i++, $st_counter=0) {
+			while($row = $result->fetch_row())	{ //when started (and every after 100 command cycle):
+				if ($st_counter%100 == 0 || $st_counter == 0 )	{$content .= "\nINSERT INTO ".$table." VALUES";}
+					$content .= "\n(";
+					for($j=0; $j<$fields_amount; $j++)  { $row[$j] = str_replace("\n","\\n", addslashes($row[$j]) ); if (isset($row[$j])){$content .= '"'.$row[$j].'"' ; }else {$content .= '""';}	   if ($j<($fields_amount-1)){$content.= ',';}		}
+					$content .=")";
+				//every after 100 command cycle [or at last line] ....p.s. but should be inserted 1 cycle eariler
+				if ( (($st_counter+1)%100==0 && $st_counter!=0) || $st_counter+1==$rows_num) {$content .= ";";} else {$content .= ",";}	$st_counter=$st_counter+1;
+			}
+		} $content .="\n\n\n";
+	}
 	$backup_name = $backup_name ? $backup_name : $name."___(".date('H-i-s')."_".date('d-m-Y').")__rand".rand(1,11111111).".sql";
 	header('Content-Type: application/octet-stream');	header("Content-Transfer-Encoding: Binary"); header("Content-disposition: attachment; filename=\"".$backup_name."\"");  echo $content; exit;
 }
 
-
-function IMPORT_TABLES($host,$user,$pass,$dbname,$sql_file)
-{
-	if (!file_exists($sql_file)) {die('Input the SQL filename correctly! <button onclick="window.history.back();">Click Back</button>');} $allLines = file($sql_file);
-	
+//https://github.com/tazotodua/useful-php-scripts
+function IMPORT_TABLES($host,$user,$pass,$dbname,$sql_file){
+	if (!file_exists($sql_file)) {die('Input the SQL filename correctly! Go Back.');} $allLines = file($sql_file);
 	$mysqli = new mysqli($host, $user, $pass, $dbname); if (mysqli_connect_errno()){echo "Failed to connect to MySQL: " . mysqli_connect_error();} 
-		$zzzzzz = $mysqli->query('SET foreign_key_checks = 0');
-		preg_match_all("/\nCREATE TABLE(.*?)\`(.*?)\`/si", "\n".file_get_contents($sql_file), $target_tables);
-		foreach ($target_tables[2] as $table) {$mysqli->query('DROP TABLE IF EXISTS '.$table);}
-		$zzzzzz = $mysqli->query('SET foreign_key_checks = 1');
-
-	$mysqli->query("SET NAMES 'utf8'");	$templine = ''; // Temporary variable, used to store current query
-	foreach ($allLines as $line)	{ // Loop through each line
-		if (substr($line, 0, 2) != '--' && $line != '') { // Skip it if it's a comment
-			$templine .= $line; // Add this line to the current segment
-			if (substr(trim($line), -1, 1) == ';') {// If it has a semicolon at the end, it's the end of the query
-				$mysqli->query($templine) or print('Error performing query \'<strong>' . $templine . '\': ' . $mysqli->error . '<br /><br />');
-				$templine = '';// Reset temp variable to empty
+		$zzzzzz = $mysqli->query('SET foreign_key_checks = 0');	        preg_match_all("/\nCREATE TABLE(.*?)\`(.*?)\`/si", "\n".file_get_contents($sql_file), $target_tables); foreach ($target_tables[2] as $table){$mysqli->query('DROP TABLE IF EXISTS '.$table);}         $zzzzzz = $mysqli->query('SET foreign_key_checks = 1');
+	$mysqli->query("SET NAMES 'utf8'");							$templine = '';	// Temporary variable, used to store current query
+	foreach ($allLines as $line)	{											// Loop through each line
+		if (substr($line, 0, 2) != '--' && $line != '') {$templine .= $line; 	// (if it is not a comment..) Add this line to the current segment
+			if (substr(trim($line), -1, 1) == ';') {		// If it has a semicolon at the end, it's the end of the query
+				$mysqli->query($templine) or print('Error performing query \'<strong>' . $templine . '\': ' . $mysqli->error . '<br /><br />');  $templine = '';// Reset temp variable to empty
 			}
 		}
-	}
-	echo 'Importing finished. Now, Delete the import file.';
+	}	echo 'Importing finished. Now, Delete the import file.';
 }
-
 
 
 
@@ -1104,70 +1122,52 @@ if (!empty($_POST['dbaction'])){
 
 
 	<script type="text/javascript">
-					<?php
-					//=======================specific code for WORDPRESS USERS====================
-					 $dH ='';  $dU=''; $dP=''; $dN='';
-					$wordpress_found=false;
-					if  (function_exists('wp_head')) {$wordpress_found=true;}
-					//only use this function, if the url is opened with "wp" parameter (i.e. in standalone version)
-					elseif (!empty($_GET['wp']))	{
-						if (@include(dirname(__file__).'/wp-config.php'))				{$wordpress_found=true;}
-						elseif(@include(dirname(__file__).'/../wp-config.php'))			{$wordpress_found=true;}
-						elseif(@include(dirname(__file__).'/../../wp-config.php'))		{$wordpress_found=true;}
-						elseif(@include(dirname(__file__).'/../../../wp-config.php'))	{$wordpress_found=true;}
-						elseif(@include(dirname(__file__).'/../../../../wp-config.php')){$wordpress_found=true;}
-					}
-					
-					if ($wordpress_found)	{$dH =DB_HOST; $dU=DB_USER; $dP=DB_PASSWORD; $dN=DB_NAME; }
-					//=======================END# for WORDPRESS ====================
-					?>
-	function export_import_db(actionname)
-	{
-		if (actionname == 'importt')
-		{
-			var slqfile=prompt("(I advice, that you restored the .sql file from your HOSTING PHPMYADMIN panel. However, if the filesize is small[about 1mb] you can go on with this method too..) \r\n\r\n Insert the .sql file name (you should have uploaded the file in this directory before this moment. Note, that the existing table will be owerwriten fully. As more as the filesize is bigger, you have to wait more. In case, there will be any problems, you will have to Restore this .sql file from HOSTING PANEL. ALSO KEEP NOTE, that if your .sql file is exported from different domain(site), then open .sql file and replace that website's home urls with this site's home url)", "blabal.sql");
-				if (slqfile =='' || slqfile == null) {return;}
-		}
-		
-		
-		ddHOST=prompt("Database HOST",		"<?php echo $dH;?>");
-		ddUSER=prompt("Database USERNAME",	"<?php echo $dU;?>");
-		ddPASS=prompt("Database PASSWORD",	"<?php echo $dP;?>");
-		ddNAME=prompt("Database Name",		"<?php echo $dN;?>");
-		
-		if(!confirm("READY ?")) {return;}
-		
-		if (actionname == 'exportt')
-		{
-			postm({dbaction:actionname,dbHOST:ddHOST,dbUSER:ddUSER,dbPASS:ddPASS,dbNAME:ddNAME},'', '', '');
-		}
-		else if (actionname == 'importt')
-		{
-			postm({dbaction:actionname,dbHOST:ddHOST,dbUSER:ddUSER,dbPASS:ddPASS,dbNAME:ddNAME,sqlfilenamee: "<?php echo $myzip_pathh;?>/" + slqfile },'', '', '');
-		}
+				<?php
+				//=======================for WORDPRESS ADDITION====================
+				$c1=dirname(dirname(__file__)).'/wp-config.php';
+				$c2=dirname(dirname(dirname(__file__))).'/wp-config.php';
+				$c3=dirname(dirname(dirname(dirname(__file__)))).'/wp-config.php';
+				$c4=dirname(dirname(dirname(dirname(dirname(__file__))))).'/wp-config.php';
+				$c5=dirname(dirname(dirname(dirname(dirname(dirname(__file__)))))).'/wp-config.php';
+				if (!defined('WP_INSTALLING')){ define( 'WP_INSTALLING','this_avoiddsss_redirection_when_not_installed' ); } 	
+				if (@include($c1))		{$wordpress_found=true;}
+				elseif(@include($c2))	{$wordpress_found=true;}
+				elseif(@include($c3))	{$wordpress_found=true;}
+				elseif(@include($c4))	{$wordpress_found=true;}
+				elseif(@include($c5))	{$wordpress_found=true;}
+				
+				if ($avoid_authrz || $wordpress_found)	{$dH =DB_HOST; $dU=DB_USER; $dP=DB_PASSWORD; $dN=DB_NAME; }
+				//=======================### for WORDPRESS addition ====================
+				?>
+	function export_import_db(actionname, importedElement){
+			if (actionname == 'importt'){
+				var importedname = ( (importedElement) ? document.getElementById(importedElement).innerHTML : 'blabla.sql' );
+				var slqfile=prompt("You are restoring a database. (If the filesize is small[about 1-2mb], then you can easily use this method. However, if file is big, then it is more reccommended to restore the .sql file from your HOSTING PHPMYADMIN panel or using special plugins...). \r\nNow,Insert the .sql file name (you should have uploaded the file in this directory already. You can even click the RESTORE button along the .SQL file, and the name will be automatically inserted here. \r\n\r\n(ALSO KEEP NOTE, that if your .sql file is exported from different domain(site), then open .sql file and replace that website's home urls with this site's home url)", importedname);
+					if (slqfile =='' || slqfile == null) {return;}
+					var sqlFullPath = "<?php echo $myzip_pathh;?>/" + slqfile ;
+			}
+		ddHOST=prompt("Database HOST",		"<?php echo $dH;?>");	if (ddHOST == null) {return;}
+		ddUSER=prompt("Database USERNAME",	"<?php echo $dU;?>");	if (ddUSER == null) {return;}
+		ddPASS=prompt("Database PASSWORD",	"<?php echo $dP;?>");	if (ddPASS == null) {return;}
+		ddNAME=prompt("Database Name",		"<?php echo $dN;?>");	if (ddNAME == null) {return;}
+			if (actionname == 'importt'){if(!confirm("READY ?")) {return;} }
+		postForm({dbaction:actionname,dbHOST:ddHOST,dbUSER:ddUSER,dbPASS:ddPASS,dbNAME:ddNAME,  sqlfilenamee: (sqlFullPath ? sqlFullPath : '')  }, '', null, null, "_blank"); 
 	}	
 	
+
 	
-	
-	
-	// LIVE <FORM> creation
-	function postm(params,ConfirmMessage, path, method) 
-	{
-		if (typeof ConfirmMessage != 'undefined' &&  ConfirmMessage != '') { if(!confirm(ConfirmMessage)){return;}}
-		
-		method = method || "post";
-		path   = path	|| "";
-		var form = document.createElement("form");form.setAttribute("method", method);form.setAttribute("action", path);
-		for(var key in params) {
-			if(params.hasOwnProperty(key)) 
-			{
-				var hiddenField = document.createElement("input");	hiddenField.setAttribute("type", "hidden");
-				hiddenField.setAttribute("name", key);				hiddenField.setAttribute("value", params[key]);
-				form.appendChild(hiddenField);
-			}
-		}
-		document.body.appendChild(form);form.submit();
-	}
+	//======== LIVE <FORM> creation ========== https://github.com/tazotodua/useful-javascript/
+	//source: https://github.com/tazotodua/useful-javascript
+	function postForm(params,ConfirmMessage, path, method, targett) {
+		if (typeof ConfirmMessage != 'undefined' &&  ConfirmMessage) { if(!confirm(ConfirmMessage)){return;}}
+			method=method || "POST";	path=path || "";    targett=targett || "";
+			var form = document.createElement("form");form.setAttribute("method", method);form.setAttribute("action", path); form.setAttribute("target", targett); 
+			for(var key in params) {
+				if(params.hasOwnProperty(key)) 	{
+					var f = document.createElement("input");f.setAttribute("type", "hidden");f.setAttribute("name", key);f.setAttribute("value", params[key]);form.appendChild(f);
+				}
+			}	document.body.appendChild(form); form.submit();
+	} 
 	</script>
 </div>
 
@@ -1186,25 +1186,25 @@ if (!empty($_POST['dbaction'])){
 	</ul>
 
 	<ul><?php getDirs($path);?>	</ul>
-
 	<ul><?php getFiles($path);?></ul>
 </div>
 
 <div id="add" class="b">
-  <a href="#" title="Create File" onclick="fOp.create('file', '<?php echo $pathURL; ?>'); return false;"><img src="<?php echo $_R['images/addfile.gif'];?>" alt="Create File"></a>
-  <a href="#" title="Create Folder" onclick="fOp.create('folder', '<?php echo $pathURL; ?>'); return false;"><img src="<?php echo $_R['images/addfolder.gif'];?>" alt="Create Folder"></a>
+  <a href="#" title="Create File" onclick="fOp.create('file', '<?php echo $pathURL; ?>'); return false;">Create File:<img src="<?php echo $_R['images/addfile.gif'];?>" alt="Create File"></a>
+  <a href="#" title="Create Folder" onclick="fOp.create('folder', '<?php echo $pathURL; ?>'); return false;">Create Folder:<img src="<?php echo $_R['images/addfolder.gif'];?>" alt="Create Folder"></a>
+  <a href="#" title="Upload File" onclick="upload.init('<?php echo $pathURL; ?>', <?php echo $maxUpload; ?>); return false;">Upload File:<img src="<?php echo $_R['images/upload.gif'];?>" alt="Upload File"></a>
+  <!-- <a href="#" title="Remote Copy File" onclick="fOp.remoteCopy('<?php echo $pathURL; ?>'); return false;"><img src="<?php echo $_R['images/remotecopy.png'];?>" alt="Remote Copy"></a> -->
   <br>
-  <a href="#" title="Remote Copy File" onclick="fOp.remoteCopy('<?php echo $pathURL; ?>'); return false;"><img src="<?php echo $_R['images/remotecopy.png'];?>" alt="Remote Copy"></a>
-  <a href="#" title="Upload File" onclick="upload.init('<?php echo $pathURL; ?>', <?php echo $maxUpload; ?>); return false;"><img src="<?php echo $_R['images/upload.gif'];?>" alt="Upload File"></a>
-  <br>
-  <a href="#" title="Open Shell" onclick="shell.init('<?php echo @trim(shell_exec('whoami')); ?>', '<?php echo @trim(shell_exec('pwd')); ?>'); return false;"><img src="<?php echo $_R['images/terminal.png'];?>" alt="Terminal"></a>
+  <a href="#" title="Open Shell" onclick="shell.init('<?php echo @trim(shell_exec('whoami')); ?>', '<?php echo @trim(shell_exec('pwd')); ?>'); return false;">Open Shell:<img src="<?php echo $_R['images/terminal.png'];?>" alt="Terminal"></a>
 </div>
 
 <div id="footer">
-  <p><?php echo $footer; ?></p>
-  <?php
-	if (PASSWORD == 'auth') echo '<script type="text/javascript">alert("please,change your password");</script>';
-  ?>
+	<br/> <?php if (defined('is_WP')) { echo 'For quick entry, you can visit: <b>'.home_url().'/?filemanager</b>'; } ?>
+	<div style="float:right;">
+		<br/>(FILEMANAGER Standalone PHP version can be downloaded from  <a href="https://github.com/tazotodua/useful-php-scripts/" target="_blank">here</a>. )
+		<p><?php echo $footer; ?></p>
+	</div>
+  <?php	//if (PASSWORD == 'auth') echo '<script type="text/javascript">alert("please,change your password");</script>'; ?>
 </div>
 
 </body>

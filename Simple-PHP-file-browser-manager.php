@@ -1,5 +1,5 @@
 <?php
-define('PASSWORD', 'xxxxxx');									 //SET your password
+define('PASSWORD', 'xxxxxx');					 //SET your password
 $ALLOWED_IPs = array ( '277.277.277.277',  '299.299.299.299',);  //insert your correct IP
 
 

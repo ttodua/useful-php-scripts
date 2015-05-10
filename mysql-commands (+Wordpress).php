@@ -5,7 +5,7 @@
 <?php
 //=================================CONENCT TO MYSQL	
  	**********TYPICAL**********
-	$CONNECTED = new mysqli($host,$user,$pass,$DBname);
+	$MANUAL = new mysqli($host,$user,$pass,$DBname);
 
 	**********FOR WODRPRESS**********	
 	global $wpdb;  //(in Wordpress,before starting your SQL commands, you need to global that only once
@@ -13,9 +13,8 @@
   
   		
 	=================== Example of Query execution :=======================
-				$command = "......";
 				**********TYPICAL QUERY**********
-					$zzzzzz = $CONNECTED->query($command);
+					$zzzzzz = $MANUAL->query($command);
 				**********WODRPRESS QUERY**********
 					$zzzzzz = $wpdb->query($command);
    
@@ -27,7 +26,7 @@
 //================================= DELETE  DATABASE	=================================	
   	$command="DROP DATABASE my_database";
 //================================= CREATE sample TABLE	=================================
-	$command="CREATE TABLE IF NOT EXISTS `aa_tasks_table2` (
+	$command="CREATE TABLE IF NOT EXISTS `aa_my_table2` (
 		`IDD` int(11) NOT NULL AUTO_INCREMENT,
 		`userid` int(11) NOT NULL,
 		`mycolumn1` varchar(150) NOT NULL,
@@ -36,10 +35,12 @@
 		`mytime` datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
 		PRIMARY KEY (`IDD`),
 		UNIQUE KEY `IDD` (`IDD`)
-	) ENGINE=InnoDB DEFAULT CHARSET=utf8    AUTO_INCREMENT=10; "; 
-	//......................CHARSET=latin1	AUTO_INCREMENT=1;
+	)   ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 ;"; 
+	//i.e......................................CHARSET=latin1 COLLATE=utf8_general_ci;
 	//!!!!!!!!!!!!!!!!Check your database and make sure the whole database + tables + fields have the same charset!!!!!!!!!!!!!!!!!
-
+	//p.s. If your Mysql doesnt support "InnoDB", then use "MyISAM"...    check with this command, if result not empy, then it supports InnoDB: $wpdb->get_results("SELECT SUPPORT FROM INFORMATION_SCHEMA.ENGINES WHERE ENGINE = 'InnoDB'")[0]->SUPPORT
+	
+	
 	//p.s. For Wordpress, there can be used this too: (more at http://codex.wordpress.org/Creating_Tables_with_Plugins#Creating_or_Updating_the_Table) :
 	require_once( ABSPATH . 'wp-admin/includes/upgrade.php' ); dbDelta("CREATE TABLE..........");
  
@@ -47,10 +48,10 @@
 	
 
 //================================= DELETE  TABLES	=================================
-			if ($result = $CONNECTED->query("SHOW TABLES"))	{	
-				$zzzzzz = $CONNECTED->query('SET foreign_key_checks = 0');
-				while($row = $zzzzzz->fetch_array()) {$CONNECTED->query('DROP TABLE IF EXISTS '.$row[0]);}
-				$zzzzzz = $CONNECTED->query('SET foreign_key_checks = 1');
+			if ($result = $MANUAL->query("SHOW TABLES"))	{	
+				$zzzzzz = $MANUAL->query('SET foreign_key_checks = 0');
+				while($row = $zzzzzz->fetch_array()) {$MANUAL->query('DROP TABLE IF EXISTS '.$row[0]);}
+				$zzzzzz = $MANUAL->query('SET foreign_key_checks = 1');
 			}
 //=================================INSERT=================================	
 	$command="INSERT INTO my_tablee (Mycolumn_1, Mycolumn_2) VALUES ('aaaaaa', 'tttttttt')";
@@ -62,7 +63,7 @@
 	$command="DELETE FROM my_tablee WHERE post_status = 'www'";
 //=================================SELECT=================================
 	**********DIRECT
-	$zzzzzz = $CONNECTED->query("SELECT `Mycolumn_1` from `my_tablee` WHERE Mycolumn_2 = 'excerpt' ");
+	$zzzzzz = $MANUAL->query("SELECT `Mycolumn_1` from `my_tablee` WHERE Mycolumn_2 = 'excerpt' ");
 	while ($row = $zzzzzz->fetch_array($zzzzzz)) 	{ 
 		echo $row['Mycolumn_1'];
 	}
@@ -78,12 +79,12 @@
 
 p.s. during the command execution, you can enable to show error reports(in case they happens):
 	**********DIRECT
-	  query(....) or die($mysqli->error);
+	  ->query(....);  if ($mysqli->error) die($mysqli->error);
 	
 	**********WODRPRESS
-	  query(....) or die($wpdb->last_error);
-					
-p.s. for Wordpress, for secutiry, its better to use "PREPARE" function inside the query  - http://codex.wordpress.org/Class_Reference/wpdb#Examples			
+	  ->query(....);  if ($wpdb->last_error) die($wpdb->last_error);
+
+p.s. for Wordpress, for secutiry, its better to use "PREPARE" function inside the query: $wpdb->query($wpdb->prepare("INSERT .....", null));     [ more at: http://codex.wordpress.org/Class_Reference/wpdb#Examples	]
 			
 			
 			
@@ -110,9 +111,9 @@ p.s. for Wordpress, for secutiry, its better to use "PREPARE" function inside th
 		$value1	=stripslashes("my Market office");	$value2	=stripslashes("consultant");	 $useriid = 12;
 			
 		//////Method 1//////
-		$CONNECTED->query("UPDATE my_tablename SET	content1='$value1',content2='$value2'		WHERE userid = '$useriid'")
+		$MANUAL->query("UPDATE my_tablename SET	content1='$value1',content2='$value2'		WHERE userid = '$useriid'")
 		or 
-		$CONNECTED->query("INSERT INTO my_tablename (content1, content2, userid) VALUES ('$value1', '$value2','$useriid')");
+		$MANUAL->query("INSERT INTO my_tablename (content1, content2, userid) VALUES ('$value1', '$value2','$useriid')");
 		
 			
 					//////Method 2 (only for  wordpress, sanitized)//////

@@ -38,7 +38,7 @@
 	)   ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 ;"; 
 	//i.e......................................CHARSET=latin1 COLLATE=utf8_general_ci;
 	//!!!!!!!!!!!!!!!!Check your database and make sure the whole database + tables + fields have the same charset!!!!!!!!!!!!!!!!!
-	//p.s. If your Mysql doesnt support "InnoDB", then use "MyISAM"...    check with this command, if result not empy, then it supports InnoDB: $wpdb->get_results("SELECT SUPPORT FROM INFORMATION_SCHEMA.ENGINES WHERE ENGINE = 'InnoDB'")[0]->SUPPORT
+	//p.s. If your Mysql doesnt support "InnoDB", then use "MyISAM"...    you can find out the InnoDB support with this automatic command:  $myType= ($wpdb->get_results("SELECT SUPPORT FROM INFORMATION_SCHEMA.ENGINES WHERE ENGINE = 'InnoDB'")[0]->SUPPORT) ? "InnoDB" : "MyISAM");
 	
 	
 	//p.s. For Wordpress, there can be used this too: (more at http://codex.wordpress.org/Creating_Tables_with_Plugins#Creating_or_Updating_the_Table) :

@@ -1,5 +1,5 @@
 ======================USAGE=====================//see the IMPORT.php too
-EXPORT_TABLES("localhost","user","pass","db_name" );  //or add 5th parameter(array of specific tables): array("mytable1","mytable2","mytable3")
+EXPORT_TABLES("localhost","user","pass","db_name" );  //or add 5th parameter(array) of specific tables: array("mytable1","mytable2","mytable3")
 
 <?php
 //https://github.com/tazotodua/useful-php-scripts

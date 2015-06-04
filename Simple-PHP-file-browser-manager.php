@@ -1,6 +1,6 @@
 <?php
-define('PASSWORD', 'xxxxxx');					 //SET your password
-$ALLOWED_IPs = array ( '277.277.277.277',  '299.299.299.299',);  //insert your correct IP
+$Password	= 'xxxxxx';									 	//SET your password
+$Allowed_IPs= array( '277.277.277.277','299.299.299.299');  //insert your correct IP
 
 
 
@@ -24,77 +24,83 @@ $ALLOWED_IPs = array ( '277.277.277.277',  '299.299.299.299',);  //insert your c
 	This program is free software; you can redistribute it and/or modify it under the terms of the
 	GNU General Public License as published by the Free Software Foundation. See COPYING
 */
-function separator__WFMB($input){return  str_replace('\\',DIRECTORY_SEPARATOR, str_replace('/',DIRECTORY_SEPARATOR, $input)) ; }
+function separator__WFMB($input){return  str_replace('\\',DIRECTORY_SEPARATOR, str_replace('/',DIRECTORY_SEPARATOR, $input)) ; } $avoid_authrz = false;
 //set memory limits
+define('PASSWORD__WFMB', $Password);
+$GLOBALS['ALLOWED_IP__WFMB']= $Allowed_IPs;
 $result=ini_set('max_execution_time', 3000);
 $result=ini_set('memory_limit','100M');
 $result=ini_set('mysql.connect_timeout', 300);
 $result=ini_set('default_socket_timeout', 300);
 
 
-//================================= WORDPRESS  addition=============================
-	//if included in wordpress plugin folder
-	if (file_exists('readme.txt') && strstr(file_get_contents('readme.txt'),'Tested up to:') ){
-		$w1=dirname(dirname(__file__)).'/wp-load.php';
-		$w2=dirname(dirname(dirname(__file__))).'/wp-load.php';
-		$w3=dirname(dirname(dirname(dirname(__file__)))).'/wp-load.php';
-		$w4=dirname(dirname(dirname(dirname(dirname(__file__))))).'/wp-load.php';
-		$w5=dirname(dirname(dirname(dirname(dirname(dirname(__file__)))))).'/wp-load.php';
-		if    (file_exists($w1)) {$wordpress_found=true;$wpc=$w1;}
-		elseif(file_exists($w2)) {$wordpress_found=true;$wpc=$w2;}
-		elseif(file_exists($w3)) {$wordpress_found=true;$wpc=$w3;}
-		elseif(file_exists($w4)) {$wordpress_found=true;$wpc=$w4;}
-		elseif(file_exists($w5)) {$wordpress_found=true;$wpc=$w5;}
-		else					 { die('no_access. cant find wp-load.php'); } 	
-				//wp bug
-				if (substr($_SERVER['REQUEST_URI'],-21) == '/wp-admin/install.php') {}
-				
-		$coredir=dirname($wpc); 	if (!defined('WP_INSTALLING')){define( 'WP_INSTALLING','this_avoiddsss_redirection_when_not_installed' ); } 	
-		require_once($coredir.'/wp-load.php'); 	
-		if (is_blog_installed()) {
-			$startdir=dirname($_SERVER['DOCUMENT_ROOT'].home_url('','relative'));
-			// ========================== CHECK IF ADMIN
-			//$randomnum=get_option('myfmg_random_numb'); if (!$randomnum) {update_option('myfmg_random_numb',rand(1,111111)*rand(1,1111111)); header("location:" . $_SERVER['REQUES_URI']); exit;}
-			global $current_user;
-			$user_info= get_userdata( $current_user->ID ); //http://codex.wordpress.org/Function_Reference/get_userdata
-			$lvl=$user_info->user_level;	 
-			if ($lvl == '10' )	{$avoid_authrz = true; define('is_WP', true); }
-			else {	die('you are not logged in as Wordpress ADMIN.. At first, <a href="'.home_url().'/wp-login.php?redirect_to='.urlencode($_SERVER['PHP_SELF']).'&reauth=1">LOGIN</a> and then come back here.<br/><br/><br/>'); }
-			//else {	echo 'you are not logged in as Wordpress ADMIN.. however, I will display typical authorization.<br/><br/><br/>'; }
-		}
-		else{
-			$wp_not_installed=true; $noinst_message= 'seems wordpress not correctly installed....However I will allow a basic authorization..<br/><br/>';
-		}
-	}
+//=================================  useful addition for WORDPRESS users=============================
+				//if included in wordpress plugin folder
+				if (file_exists('readme.txt') && strstr(file_get_contents('readme.txt'),'Tested up to:') ){
+					$w1=dirname(dirname(__file__)).'/wp-load.php';
+					$w2=dirname(dirname(dirname(__file__))).'/wp-load.php';
+					$w3=dirname(dirname(dirname(dirname(__file__)))).'/wp-load.php';
+					$w4=dirname(dirname(dirname(dirname(dirname(__file__))))).'/wp-load.php';
+					$w5=dirname(dirname(dirname(dirname(dirname(dirname(__file__)))))).'/wp-load.php';
+					if    (file_exists($w1)) {$wordpress_found=true;$wpc=$w1;}
+					elseif(file_exists($w2)) {$wordpress_found=true;$wpc=$w2;}
+					elseif(file_exists($w3)) {$wordpress_found=true;$wpc=$w3;}
+					elseif(file_exists($w4)) {$wordpress_found=true;$wpc=$w4;}
+					elseif(file_exists($w5)) {$wordpress_found=true;$wpc=$w5;}
+					else					 { die('no_access_error24144. cant find wp-load.php'); } 	
+							//=====wp bug====== avoid redirection when not installed
+							//in /wp-includes/load.php  -------->  "WP_INSTALLING" constant..
+								//if (substr($_SERVER['REQUEST_URI'],-21) == '/wp-admin/install.php') {}
+								//if (!defined('WP_INSTALLING')){define( 'WP_INSTALLING',true ); }   <----------- causes Plugins Not-Load.
+							if (!defined('WP_REPAIRING')){define( 'WP_REPAIRING',true ); } 
+							
+					$coredir=dirname($wpc); require_once($coredir.'/wp-load.php');
+							//if not disabled from Wordpress
+							if (defined('DISALLOW_FILE_EDIT') || defined('DISALLOW_FILE_MODS') || defined('WFMB__DISABLERUN')){exit("This plugin is defined as disabled. error_21241");}
+					if (is_blog_installed()) {
+						$startdir=dirname($_SERVER['DOCUMENT_ROOT'].home_url('','relative'));
+						// ========================== CHECK IF ADMIN
+						//$randomnum=get_option('myfmg_random_numb'); if (!$randomnum) {update_option('myfmg_random_numb',rand(1,111111)*rand(1,1111111)); header("location:" . $_SERVER['REQUES_URI']); exit;}
+						global $current_user;
+						$user_info= get_userdata( $current_user->ID ); //http://codex.wordpress.org/Function_Reference/get_userdata
+						$lvl=$user_info->user_level;	 
+						if ($lvl == '10' )	{$avoid_authrz = true; define('is_WP', true); }
+						else {	die('you are not logged in as Wordpress ADMIN.. At first, <a href="'.home_url().'/wp-login.php?redirect_to='.urlencode($_SERVER['PHP_SELF']).'&reauth=1">LOGIN</a> and then come back here.<br/><br/><br/>'); }
+						//else {	echo 'you are not logged in as Wordpress ADMIN.. however, I will display typical authorization.<br/><br/><br/>'; }
+					}
+					else{
+						$wp_not_installed=true; $noinst_message= 'seems wordpress not correctly installed....However I will allow a basic authorization..<br/><br/>';
+					}
+				}
 //================================= ### WORDPRESS addition=============================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /*
 configuration
 */
 if (!isset($avoid_authrz)){
 	if (isset($wp_not_installed)) {echo $noinst_message;}
-	if(!in_array($_SERVER['REMOTE_ADDR'] ,$ALLOWED_IPs)){die("Incorect ip: <b>".$_SERVER['REMOTE_ADDR'].'</b> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;(in FTP, open <b>'.$_SERVER['PHP_SELF'].'</b> and insert your IP in the ALLOWED list).');}
-	if ('xxxxxx' == PASSWORD) { die('please, open this file and SET your password');}
+	if(!in_array($_SERVER['REMOTE_ADDR'] ,$GLOBALS['ALLOWED_IP__WFMB'])){die("Incorect ip: <b>".$_SERVER['REMOTE_ADDR'].'</b> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;(in FTP, open <b>'.$_SERVER['PHP_SELF'].'</b> and insert your IP in the ALLOWED list).');}
+	if ('xxxxxx' == PASSWORD__WFMB) { die('please, open this file('.$_SERVER['REQUEST_URI'].') and SET your password');}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 define('PASSWORD_SALT', 'P5`SU2"6]NALYR}');
@@ -376,7 +382,7 @@ function doAuth(){
 	$pwd = isset($_SESSION['pwd']) ? $_SESSION['pwd'] : '';
 	if ($do == 'login' || $do == 'logout')
 		return; //TODO: login/logout take place here
-	if ($pwd != crypt(PASSWORD, PASSWORD_SALT))
+	if ($pwd != crypt(PASSWORD__WFMB, PASSWORD_SALT))
 		if ($do)
 			exit('Please refresh the page and login');
 		else
@@ -421,9 +427,9 @@ function doLogin(){
 					. ($bruteforce_contents[0] + BRUTEFORCE_TIME_LOCK - time()) . ' seconds');
 	}
 
-	if ($pwd == PASSWORD){
+	if ($pwd == PASSWORD__WFMB){
 		$_SESSION['tz_offset'] = intval($_POST['tz_offset']);
-		$_SESSION['pwd'] = crypt(PASSWORD, PASSWORD_SALT);
+		$_SESSION['pwd'] = crypt(PASSWORD__WFMB, PASSWORD_SALT);
 		$_SESSION['nonce'] = crypt(uniqid(), rand());
 		$bruteforce_file_exists && unlink(BRUTEFORCE_FILE);
 		return redirect();
@@ -1204,7 +1210,7 @@ if (!empty($_POST['dbaction'])){
 		<br/>(FILEMANAGER Standalone PHP version can be downloaded from  <a href="https://github.com/tazotodua/useful-php-scripts/" target="_blank">here</a>. )
 		<p><?php echo $footer; ?></p>
 	</div>
-  <?php	//if (PASSWORD == 'auth') echo '<script type="text/javascript">alert("please,change your password");</script>'; ?>
+  <?php	//if (PASSWORD__WFMB == 'auth') echo '<script type="text/javascript">alert("please,change your password");</script>'; ?>
 </div>
 
 </body>

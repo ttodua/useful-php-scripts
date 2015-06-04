@@ -34,6 +34,12 @@ $result=ini_set('mysql.connect_timeout', 300);
 $result=ini_set('default_socket_timeout', 300);
 
 
+
+
+
+
+
+
 //=================================  useful addition for WORDPRESS users=============================
 				//if included in wordpress plugin folder
 				if (file_exists('readme.txt') && strstr(file_get_contents('readme.txt'),'Tested up to:') ){

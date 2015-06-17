@@ -1092,7 +1092,7 @@ if (!empty($_POST['dbaction'])){
 <html>
 <head>
   <meta charset="UTF-8">
-  <title><?php echo str_replace('www.', '', $_SERVER['HTTP_HOST']); ?> | pafm</title>
+  <title><?php echo basename(dirname(getcwd().$pathHTML)).'/'.basename(getcwd().$pathURL); ?> | pafm</title>
   <style type="text/css"><?php echo $_R['css'] ;?>";</style>
   <script type="text/javascript">var nonce = "<?php echo $_SESSION['nonce']; ?>";</script>
   <script type="text/javascript"><?php echo $_R['js'];?></script>

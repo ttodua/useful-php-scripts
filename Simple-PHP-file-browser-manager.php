@@ -1159,10 +1159,10 @@ if (!empty($_POST['dbaction'])){
 					if (slqfile =='' || slqfile == null) {return;}
 					var sqlFullPath = "<?php echo $myzip_pathh;?>/" + slqfile ;
 			}
-		ddHOST=prompt("Database HOST",		"<?php echo $dH;?>");	if (ddHOST == null) {return;}
-		ddUSER=prompt("Database USERNAME",	"<?php echo $dU;?>");	if (ddUSER == null) {return;}
-		ddPASS=prompt("Database PASSWORD",	"<?php echo $dP;?>");	if (ddPASS == null) {return;}
-		ddNAME=prompt("Database Name",		"<?php echo $dN;?>");	if (ddNAME == null) {return;}
+		ddHOST=prompt("Database HOST",		"<?php echo (isset($dH)? $dH : '');?>");	if (ddHOST == null) {return;}
+		ddUSER=prompt("Database USERNAME",	"<?php echo (isset($dU)? $dU : '');?>");	if (ddUSER == null) {return;}
+		ddPASS=prompt("Database PASSWORD",	"<?php echo (isset($dP)? $dP : '');?>");	if (ddPASS == null) {return;}
+		ddNAME=prompt("Database Name",		"<?php echo (isset($dN)? $dN : '');?>");	if (ddNAME == null) {return;}
 			if (actionname == 'importt'){if(!confirm("READY ?")) {return;} }
 		postForm({dbaction:actionname,dbHOST:ddHOST,dbUSER:ddUSER,dbPASS:ddPASS,dbNAME:ddNAME,  sqlfilenamee: (sqlFullPath ? sqlFullPath : '')  }, '', null, null, "_blank"); 
 	}	

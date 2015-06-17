@@ -1,6 +1,6 @@
 <?php
-$Password	= 'xxxxxx';					//SET your password
-$Allowed_IPs= array( '277.277.277.277','299.299.299.299');	//insert your correct IP
+$Password	= 'xxxxxx';									 	//SET your password
+$Allowed_IPs= array( '277.277.277.277','299.299.299.299');  //insert your correct IP
 
 
 
@@ -102,7 +102,7 @@ $result=ini_set('default_socket_timeout', 300);
 /*
 configuration
 */
-if (!isset($avoid_authrz)){
+if (!$avoid_authrz){
 	if (isset($wp_not_installed)) {echo $noinst_message;}
 	if(!in_array($_SERVER['REMOTE_ADDR'] ,$GLOBALS['ALLOWED_IP__WFMB'])){die("Incorect ip: <b>".$_SERVER['REMOTE_ADDR'].'</b> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;(in FTP, open <b>'.$_SERVER['PHP_SELF'].'</b> and insert your IP in the ALLOWED list).');}
 	if ('xxxxxx' == PASSWORD__WFMB) { die('please, open this file('.$_SERVER['REQUEST_URI'].') and SET your password');}
@@ -143,7 +143,7 @@ define('BRUTEFORCE_ATTEMPTS', 5);
  */
 define('BRUTEFORCE_TIME_LOCK', 15 * 60);
 
-define('AUTHORIZE', (!isset($avoid_authrz) ? true : false) );
+define('AUTHORIZE', (!$avoid_authrz ? true : false) );
 
 /**
  * files larger than this are not editable
@@ -1094,7 +1094,7 @@ if (!empty($_POST['dbaction'])){
   <meta charset="UTF-8">
   <title><?php echo basename(dirname(getcwd().$pathHTML)).'/'.basename(getcwd().$pathURL); ?> | pafm</title>
   <style type="text/css"><?php echo $_R['css'] ;?>";</style>
-  <script type="text/javascript">var nonce = "<?php echo $_SESSION['nonce']; ?>";</script>
+  <script type="text/javascript">var nonce = "<?php echo $nonce; ?>";</script>
   <script type="text/javascript"><?php echo $_R['js'];?></script>
 </head>
 <body>
@@ -1135,6 +1135,7 @@ if (!empty($_POST['dbaction'])){
 
 	<script type="text/javascript">
 				<?php
+				$wordpress_found=false;
 				//=======================for WORDPRESS ADDITION====================
 				$c1=dirname(dirname(__file__)).'/wp-config.php';
 				$c2=dirname(dirname(dirname(__file__))).'/wp-config.php';

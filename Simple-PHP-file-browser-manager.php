@@ -1,6 +1,6 @@
 <?php
-$Password	= 'xxxxxx';									 	//SET your password
-$Allowed_IPs= array( '277.277.277.277','299.299.299.299');  //insert your correct IP
+$Password	= 'xxxxxx';					//SET your password
+$Allowed_IPs= array( '277.277.277.277','299.299.299.299')	//insert your correct IP
 
 
 

@@ -117,7 +117,7 @@ p.s. for Wordpress, for secutiry, its better to use "PREPARE" function inside th
 		
 			
 					//////Method 2 (only for  wordpress, sanitized)//////
-					function UPDATEE_OR_INSERTTT__MPCC($tablename, $NewArray, $WhereArray){	global $wpdb; $arrayNames= array_keys($WhereArray);
+					function UPDATEE_OR_INSERTTT($tablename, $NewArray, $WhereArray){	global $wpdb; $arrayNames= array_keys($WhereArray);
 						//convert array to STRING
 						$o=''; $i=1; foreach ($WhereArray as $key=>$value){ $o .= $key . ' = \''. $value .'\''; if ($i != count($WhereArray)) { $o .=' AND '; $i++;}  }
 						//check if already exist

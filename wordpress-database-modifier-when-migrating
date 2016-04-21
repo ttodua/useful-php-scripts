@@ -1,0 +1,35 @@
+Description: 
+
+
+
+<?php
+/* DESCRIPTION: this script will help you MUCH!! sometimes, when migrating site, 
+you must replace domain names in SERIALIZED ARRAYS too. so, this tool will help! 
+just put the .SQL file in the same directory as this file */
+
+
+// CHANGE these parameters
+$old_domain	= 'http://oldsite.com';	
+$new_domain	= 'http://newwdomain.com';
+$database_sql_file = 'my_dbase_file.sql';
+
+
+
+//start modifying
+	if(!file_exists($database_sql_file)) exit("INCORRECT sql file");
+	$content= file_get_contents($database_sql_file);
+	$length_difference= strlen($old_domain)- strlen($new_domain);
+	preg_match_all('/s\:(\d{1,4})\:\"'. str_replace('/','\/',$old_domain).'/si',$content,$n, PREG_SET_ORDER);
+	foreach($n as $each){
+		$found_occurence= $each[0];	  $found_chars= $each[1];
+		$changed_value	= str_replace('s:'.$found_chars, 's:'. ($found_chars-$length_difference), $found_occurence);
+		$new_value		= str_replace($old_domain, $new_domain, $changed_value);
+		$content		= str_replace($found_occurence,  $new_value,$content);
+	}
+
+	$content=str_replace($old_domain,$new_domain,$content);
+	
+	$new_database_filename= str_replace('.sql','_NEW.sql',$database_sql_file);
+	file_put_contents($new_database_filename,$content );
+exit('<a href="'.$new_database_filename . '">'.$new_database_filename.'</a>  <b>CREATED! </b>');
+?>

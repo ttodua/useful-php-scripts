@@ -1,7 +1,3 @@
-Description: 
-
-
-
 <?php
 /* DESCRIPTION: this script will help you MUCH!! sometimes, when migrating site, 
 you must replace domain names in SERIALIZED ARRAYS too. so, this tool will help! 

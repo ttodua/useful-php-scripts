@@ -4,6 +4,10 @@ you must replace domain names in SERIALIZED ARRAYS too. so, this tool will help!
 just put the .SQL file in the same directory as this file */
 
 
+
+
+
+
 // CHANGE these parameters
 $old_domain	= 'http://oldsite.com';	
 $new_domain	= 'http://newwdomain.com';

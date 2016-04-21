@@ -1,22 +1,20 @@
 <?php
-/* DESCRIPTION: this script will help you MUCH!! sometimes, when migrating site, 
-you must replace domain names in SERIALIZED ARRAYS too. so, this tool will help! 
-just put the .SQL file in the same directory as this file */
+/* DESCRIPTION: this PHP script will help you!!! sometimes, when migrating website, 
+you must replace domain names in SERIALIZED ARRAYS too!!  so, use this tool to make automatic replacement. */
 
 
 
 
+if (empty($_FILES['dbfilee'])) { ?>
 
-
-// CHANGE these parameters
-$old_domain	= 'http://oldsite.com';	
-$new_domain	= 'http://newwdomain.com';
-$database_sql_file = 'my_dbase_file.sql';
-
-
-
-//start modifying
-	if(!file_exists($database_sql_file)) exit("INCORRECT sql file");
+	<form action="" method="POST" enctype="multipart/form-data">
+	old domain name<input type="text" value="" placeholder="http://domain1.com" name="olddomain" /><br/> new domain name<input type="text" value="" placeholder="http://domain2.com"  name="newdomain" /><br/> drag .sql file here:<input type="file" name="dbfilee" /><br/><input type="submit" value="GENERATE NEW DB" />
+	</form>
+	<?php 
+}
+else {
+	$old_domain=$_POST['olddomain'];   $new_domain=$_POST['newdomain'];
+	$database_sql_file =  basename($_FILES["dbfilee"]["name"]);
 	$content= file_get_contents($database_sql_file);
 	$length_difference= strlen($old_domain)- strlen($new_domain);
 	preg_match_all('/s\:(\d{1,4})\:\"'. str_replace('/','\/',$old_domain).'/si',$content,$n, PREG_SET_ORDER);
@@ -28,8 +26,7 @@ $database_sql_file = 'my_dbase_file.sql';
 	}
 
 	$content=str_replace($old_domain,$new_domain,$content);
-	
 	$new_database_filename= str_replace('.sql','_NEW.sql',$database_sql_file);
-	file_put_contents($new_database_filename,$content );
-exit('<a href="'.$new_database_filename . '">'.$new_database_filename.'</a>  <b>CREATED! </b>');
+	header('Content-Type: application/octet-stream');	header("Content-Transfer-Encoding: Binary"); header("Content-disposition: attachment; filename=\"".$new_database_filename."\"");  echo $content; exit;
+}
 ?>

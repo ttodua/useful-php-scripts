@@ -1,6 +1,10 @@
 <?php
 /* DESCRIPTION: this PHP script will help you!!! sometimes, when migrating website, 
-you must replace domain names in SERIALIZED ARRAYS too!!  so, use this tool to make automatic replacement. */
+you must replace domain names in SERIALIZED ARRAYS too!!  so, use this tool to make automatic replacement.
+
+WHY?  because when changing value in SERIALIZED array,  NUMBER of CHARACTERS should be updated too!..  for example:<br/>
+.....s:19:"http://site1.com/hi".....  ( length of value is 19)
+*/
 
 
 

@@ -1,5 +1,4 @@
-<?php
-// https://github.com/tazotodua/useful-php-scripts/blob/master/wordpress-database-modifier-when-migrating
+<?php   // https://github.com/tazotodua/useful-php-scripts/
 
 /* DESCRIPTION: this script will help you MUCH!! sometimes, when migrating site (or in SQL file, you want to replace strings), 
 dont do it manually! because the strings should be changed in SERIALIZED ARRAYS too, and that needs special replacement, 
@@ -22,10 +21,10 @@ if (empty($_FILES['dbfilee'])) { ?>
 
 // execute function
 else {   
-	DOMAIN_or_STRING_modifier_in_DB($_POST['oldstr'], $_POST['newstr'],     file_get_contents($_FILES["dbfilee"]["name"])    );
+	DOMAIN_or_STRING_modifier_in_DB($_POST['oldstr'], $_POST['newstr'],     file_get_contents($_FILES["dbfilee"]["name"]),    true);
 	
 	
-	function DOMAIN_or_STRING_modifier_in_DB($old_string,  $new_string, $sql_content,     $echo = true){
+	function DOMAIN_or_STRING_modifier_in_DB($old_string,  $new_string, $sql_content,     $download = false){
 		set_time_limit(1000);
 		$length_difference= strlen($old_string)- strlen($new_string);
 		$old_string_slashed=str_replace('/','\/',$old_string);
@@ -44,7 +43,7 @@ else {
 		}
 		// Now, we can freely replace  typical occurences
 		$sql_content=str_replace($old_string,$new_string,$sql_content);
-		if ($echo) { header('Content-Type: application/octet-stream');	header("Content-Transfer-Encoding: Binary"); header('Content-disposition: attachment; filename="db_'.rand(1,99999).'.sql"');  echo $sql_content; exit; }   else {return $sql_content;}
+		if ($download) { header('Content-Type: application/octet-stream');	header("Content-Transfer-Encoding: Binary"); header('Content-disposition: attachment; filename="db_'.rand(1,99999).'.sql"');  echo $sql_content; exit; }   else {return $sql_content;}
 	}
 
 }

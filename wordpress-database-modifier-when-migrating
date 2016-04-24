@@ -8,27 +8,31 @@ if (empty($_FILES['dbfilee'])) { ?>
 
 
 	<form action="" method="POST" enctype="multipart/form-data"><h1>Intelligent .SQL database modifier! (i.e. replace words or domains with new values)</h1><br/><br/>
-	Old string <input type="text" value="" placeholder="i.e. word1 or http://domain1.com" name="olddomain" style="width:300px;" /><br/> new string<input type="text" value="" placeholder="i.e. word2 or http://domain2.com" style="width:300px;" name="newdomain" /><br/> drag database file here:<input type="file" name="dbfilee" /><br/><input type="submit" value="GENERATE NEW DB" />
+	Old string <input type="text" value="" placeholder="i.e. word1 or http://domain1.com" name="olddomain" style="width:300px;" /><br/> new string<input type="text" value="" placeholder="i.e. word2 or http://domain2.com" style="width:300px;" name="newdomain" /><br/> drag database file here:<input type="file" name="dbfilee" /><br/><input type="submit" value="GENERATE NEW DB" /> (and wait some time...)
 	</form>
 	<?php 
 }
 else {
-	$old_domain=$_POST['olddomain'];   $new_domain=$_POST['newdomain'];
+	set_time_limit(300);
+	$old_string=$_POST['olddomain'];   $new_string=$_POST['newdomain'];
 	$database_sql_file =  basename($_FILES["dbfilee"]["name"]);
 	$content= file_get_contents($database_sql_file);
-	$length_difference= strlen($old_domain)- strlen($new_domain);
+	$length_difference= strlen($old_string)- strlen($new_string);
+	$old_string_slashed=str_replace('/','\/',$old_string);
 	// Find every occurence of i.e. {s:32:"blablabla"}
-	preg_match_all('/(\{|\}|\;)s\:(\d{1,6})\:\"(|.*?)'. str_replace('/','\/',$old_domain).'/si',$content,$n, PREG_SET_ORDER);
+	preg_match_all('/(\}|\{|\;)s\:(.*?){1,5}\:\"(.*?)\"/si', $content, $n, PREG_SET_ORDER);
 	foreach($n as $each){
+		if(!is_numeric($each[2])) {continue;}  else { $found_char_length= $each[2];}
+		if(stripos($each[3],$old_string)===false){ continue; }
 		$before_s_SYMBOL = $each[1]; //i.e.  | or } or {
-		$found_line	= $each[0];	  $found_chars= $each[2];
+		$found_line	= $each[0];	 
 		$found_line_changed	= str_replace(
-			array($before_s_SYMBOL.'s:'.$found_chars,							$old_domain),
-			array($before_s_SYMBOL.'s:'.($found_chars - $length_difference),	$new_domain),
+			array($before_s_SYMBOL.'s:'.$found_char_length,							$old_string),
+			array($before_s_SYMBOL.'s:'.($found_char_length - $length_difference),	$new_string),
 			$found_line);
-		$content	= str_replace($found_line,	    str_replace($old_domain,$new_domain,$found_line_changed),    $content);
+		$content	= str_replace($found_line,	    str_replace($old_string,$new_string,$found_line_changed),    $content);
 	}
-	$content=str_replace($old_domain,$new_domain,$content);
+	$content=str_replace($old_string,$new_string,$content);
 	$new_database_filename= str_replace('.sql','_NEW.sql',$database_sql_file);
 	header('Content-Type: application/octet-stream');	header("Content-Transfer-Encoding: Binary"); header("Content-disposition: attachment; filename=\"".$new_database_filename."\"");  echo $content; exit;
 }

@@ -5,8 +5,8 @@ you must replace domain names in SERIALIZED ARRAYS too. so, this tool will help!
 if (empty($_FILES['dbfilee'])) { ?>
 
 
-	<form action="" method="POST" enctype="multipart/form-data">
-	old domain name<input type="text" value="http://" placeholder="http://domain1.com" name="olddomain" /><br/> new domain name<input type="text" value="http://" placeholder="http://domain2.com"  name="newdomain" /><br/> drag .sql file here:<input type="file" name="dbfilee" /><br/><input type="submit" value="GENERATE NEW DB" />
+	<form action="" method="POST" enctype="multipart/form-data"><h1>Intelligent .SQL database modifier! (i.e. replace words or domains with new values)</h1><br/><br/>
+	Old string <input type="text" value="" placeholder="i.e. word1 or http://domain1.com" name="olddomain" style="width:300px;" /><br/> new string<input type="text" value="" placeholder="i.e. word2 or http://domain2.com" style="width:300px;" name="newdomain" /><br/> drag database file here:<input type="file" name="dbfilee" /><br/><input type="submit" value="GENERATE NEW DB" />
 	</form>
 	<?php 
 }

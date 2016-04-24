@@ -1,4 +1,4 @@
-<?php   // https://github.com/tazotodua/useful-php-scripts/
+<?php  // https://github.com/tazotodua/useful-php-scripts/
 
 /* DESCRIPTION: this script will help you MUCH!! sometimes, when migrating site (or in SQL file, you want to replace strings), 
 dont do it manually! because the strings should be changed in SERIALIZED ARRAYS too, and that needs special replacement, 
@@ -6,23 +6,7 @@ not just the direct replacement...   so, this script will do that... */
 
 
 
-// display SQL upload form	
-
-if (empty($_FILES['dbfilee'])) { ?>
-
-	<form action="" method="POST" enctype="multipart/form-data"><h1>Intelligenty replaces words or domains with new values</h1><br/><br/>
-	Old string <input type="text" value="" placeholder="i.e. word1 or http://domain1.com" name="oldstr" style="width:300px;" /><br/>
-	new string<input type="text" value="" placeholder="i.e. word2 or http://domain2.com" style="width:300px;" name="newstr" /><br/>
-	drag database file here:<input type="file" name="dbfilee" /><br/><input type="submit" value="GENERATE NEW DB" /> (and wait some time...)
-	</form>
-	<?php 
-}
-
-
-// execute function
-else {   
-	DOMAIN_or_STRING_modifier_in_DB($_POST['oldstr'], $_POST['newstr'],     file_get_contents($_FILES["dbfilee"]["name"]),    true);
-	
+if (!empty($_FILES['dbfilee'])) {
 	
 	function DOMAIN_or_STRING_modifier_in_DB($old_string,  $new_string, $sql_content,     $download = false){
 		set_time_limit(1000);
@@ -45,6 +29,17 @@ else {
 		$sql_content=str_replace($old_string,$new_string,$sql_content);
 		if ($download) { header('Content-Type: application/octet-stream');	header("Content-Transfer-Encoding: Binary"); header('Content-disposition: attachment; filename="db_'.rand(1,99999).'.sql"');  echo $sql_content; exit; }   else {return $sql_content;}
 	}
+	// EXECUTION !!!
+	DOMAIN_or_STRING_modifier_in_DB($_POST['oldstr'], $_POST['newstr'],     file_get_contents($_FILES["dbfilee"]["name"]),    true);
+}
 
+
+else { ?>
+	<form action="" method="POST" enctype="multipart/form-data"><h1>Intelligenty replaces words or domains with new values</h1><br/><br/>
+	Old string <input type="text" value="" placeholder="i.e. word1 or http://domain1.com" name="oldstr" style="width:300px;" /><br/>
+	new string<input type="text" value="" placeholder="i.e. word2 or http://domain2.com" style="width:300px;" name="newstr" /><br/>
+	drag database file here:<input type="file" name="dbfilee" /><br/><input type="submit" value="GENERATE NEW DB" /> (and wait some time...)
+	</form>
+	<?php
 }
 ?>

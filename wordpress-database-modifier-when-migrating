@@ -1,6 +1,8 @@
 <?php
 /* DESCRIPTION: this script will help you MUCH!! sometimes, when migrating site, 
 you must replace domain names in SERIALIZED ARRAYS too. so, this tool will help!  */
+// https://github.com/tazotodua/useful-php-scripts/blob/master/wordpress-database-modifier-when-migrating
+
 
 if (empty($_FILES['dbfilee'])) { ?>
 

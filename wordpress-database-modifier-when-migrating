@@ -3,6 +3,7 @@
 /* DESCRIPTION: this script will help you MUCH!! sometimes, when migrating site (or in SQL file, you want to replace strings), 
 dont do it manually! because the strings should be changed in SERIALIZED ARRAYS too, and that needs special replacement, 
 not just the direct replacement...   so, this script will do that... */
+// LIVE DEMO:  http://protectpages.com/files/WordpressMigrator.php
 
 
 

@@ -1,31 +1,5 @@
 <?php
-/* DESCRIPTION: this script will help you MUCH!! sometimes, when migrating site (or in SQL file, you want to replace strings), 
-dont do it manually! because the strings should be changed in SERIALIZED ARRAYS too, and that needs special replacement, 
-not just the direct replacement...   so, this script will do that... */
-
-// LIVE DEMO:  http://protectpages.com/files/WordpressMigrator.php
-// github url: https://github.com/tazotodua/useful-php-scripts/
-
-
-
-
-
-
-/*
-    UPDATE!!!!!!!!!!!   PLEASE, finally i think, that there exists better solutions, than my script:
-        1->  http://wptavern.com/3-efficient-tools-for-wordpress-database-migration
-        2->  https://wordpress.org/plugins/better-search-replace/
-*/
-
-
-
-
-
-
-
-
-
-
+// LIVE DEMO (with README + ALTERNATIVES):  http://www.protectpages.com/software/WordpressMigrator.php
 
 
 if (!empty($_FILES['dbfilee'])) {

@@ -13,20 +13,23 @@ if (empty($_FILES['dbfilee'])) { ?>
 else { 
 	function DOMAIN_or_STRING_modifier_in_DB($old_string,  $new_string, $sql_content,     $download = false){
 		set_time_limit(1000);
-		$length_difference= strlen($old_string)- strlen($new_string);
+		$length_difference= strlen($old_string)- strlen($new_string);			//i.e. FROM  site.com TO example.com
 		$old_string_slashed=str_replace('/','\/',$old_string);
 		// Replace every occurence of Serialized arrays, i.e. {s:32:"blablabla"}
-		preg_match_all('/(\}|\{|\;)s\:(.*?){1,5}\:\"(.*?)\"/si', $sql_content, $n, PREG_SET_ORDER);
-		foreach($n as $each){
-			if(!is_numeric($each[2])) {continue;}  else { $found_char_length= $each[2];}
-			if(stripos($each[3],$old_string)===false){ continue; }
-			$before_s_SYMBOL = $each[1]; //i.e.  | or } or {
-			$found_line	= $each[0];	 
+		preg_match_all('/(|\}|\{|\;\|)s\:(\d{1,5})\:\"(.*?)\";/si', $sql_content, $n1, PREG_SET_ORDER);
+		preg_match_all('/(|\}|\{|\;\|)s\:(\d{1,5})\:\\\"(.*?)\";/si', $sql_content, $n2, PREG_SET_ORDER);  $n=array_merge($n1,$n2);
+
+		foreach($n as $Each_Serialized_String){ $e=$Each_Serialized_String;	//var_dump($e); 0=>{s:12:"blablablabla"   1=>;     2=>17    3=>"blablablabla"
+			if(stripos($e[3],$old_string)!==false){ //if string  found in line, then go to next
+			if(!is_numeric($e[2])) { continue; }  else { $found_char_length= intval($e[2]);}  
+			$before_s = $e[1]; //i.e.   } or { or ; or | 
+			$found_line	= $e[0];	  
 			$found_line_changed	= str_replace(
-				array($before_s_SYMBOL.'s:'.$found_char_length,							$old_string),
-				array($before_s_SYMBOL.'s:'.($found_char_length - $length_difference),	$new_string),
-				$found_line);
+				array($before_s.'s:'.$found_char_length,							$old_string),
+				array($before_s.'s:'.($found_char_length - $length_difference),	$new_string),
+				$found_line); 
 			$sql_content	= str_replace($found_line,	    str_replace($old_string,$new_string,$found_line_changed),    $sql_content);
+		  }
 		}
 		// Now, we can freely replace  typical occurences
 		$sql_content=str_replace($old_string,$new_string,$sql_content);

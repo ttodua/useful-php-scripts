@@ -11,8 +11,6 @@ if (empty($_FILES['dbfilee'])) { ?>
 }
 
 else { 
-		// EXECUTION !!!
-		 DOMAIN_or_STRING_modifier_in_DB($_POST['oldstr'], $_POST['newstr'],     file_get_contents($_FILES["dbfilee"]["tmp_name"]),    true);
 	function DOMAIN_or_STRING_modifier_in_DB($old_string,  $new_string, $sql_content,     $download = false){
 		set_time_limit(1000);
 		$length_difference= strlen($old_string)- strlen($new_string);			//i.e. FROM  site.com TO example.com
@@ -36,6 +34,9 @@ else {
 		// Now, we can freely replace  typical occurences
 		$sql_content=str_replace($old_string,$new_string,$sql_content);
 		if ($download) { header('Content-Type: application/octet-stream');	header("Content-Transfer-Encoding: Binary"); header('Content-disposition: attachment; filename="db_'.rand(1,99999).'.sql"');  echo $sql_content; exit; }   else {return $sql_content;}
-	}
+	}	
+	// EXECUTION !!!
+	DOMAIN_or_STRING_modifier_in_DB($_POST['oldstr'], $_POST['newstr'],     file_get_contents($_FILES["dbfilee"]["tmp_name"]),    true);
+
 }
 ?>

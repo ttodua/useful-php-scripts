@@ -1,9 +1,9 @@
 <?php
 	// https://github.com/tazotodua/useful-php-scripts 
-	// EXAMPLE:     EXPORT_TABLES("localhost","user","pass","db_name" );  
-					//optional: 5th parameter(array) - to backup specific tables only: array("mytable1","mytable2","mytable3")   
-    					//optional: 6th parameter(array) - backup filename
-    					// NOTE! to adequatelly replace strings in DB, MUST READ:  goo.gl/2fZDQL
+	// EXAMPLE:   EXPORT_TABLES("localhost","user","pass","db_name" );  
+				//optional: 5th parameter(array) - to backup specific tables only: array("mytable1","mytable2",...)   
+				//optional: 6th parameter(array) - backup filename
+				// NOTE! to adequatelly replace strings in DB, MUST READ:  goo.gl/2fZDQL
 					
 function EXPORT_TABLES($host,$user,$pass,$name,       $tables=false, $backup_name=false){ 
 	set_time_limit(3000); $mysqli = new mysqli($host,$user,$pass,$name); $mysqli->select_db($name); $mysqli->query("SET NAMES 'utf8'");

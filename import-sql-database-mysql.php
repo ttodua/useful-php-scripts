@@ -3,7 +3,8 @@
 				//optional: 6th parameter(array) to adequatelly replace strings in DB!! MUST READ!!!! - https://goo.gl/2fZDQL 
 
 function IMPORT_TABLES($host,$user,$pass,$dbname, $sql_file_OR_content,      $replacements=array('OLD_DOMAIN.com','NEW_DOMAIN.com') ){
-	set_time_limit(3000); $SQL_CONTENT = (strlen($sql_file_OR_content) > 200 ?  $sql_file_OR_content : file_get_contents($sql_file_OR_content)  );        if (function_exists('DOMAIN_or_STRING_modifier_in_DB')) { $SQL_CONTENT = DOMAIN_or_STRING_modifier_in_DB($replacements[0], $replacements[1], $SQL_CONTENT); }
+	set_time_limit(3000);  if(
+	$SQL_CONTENT = (strlen($sql_file_OR_content) > 300 ?  $sql_file_OR_content : file_get_contents($sql_file_OR_content)  );        if (function_exists('DOMAIN_or_STRING_modifier_in_DB')) { $SQL_CONTENT = DOMAIN_or_STRING_modifier_in_DB($replacements[0], $replacements[1], $SQL_CONTENT); }
 	$allLines = explode("\n",$SQL_CONTENT); 
 	$mysqli = new mysqli($host, $user, $pass, $dbname); if (mysqli_connect_errno()){echo "Failed to connect to MySQL: " . mysqli_connect_error();} 
 		$zzzzzz = $mysqli->query('SET foreign_key_checks = 0');	        preg_match_all("/\nCREATE TABLE(.*?)\`(.*?)\`/si", "\n". $SQL_CONTENT, $target_tables); foreach ($target_tables[2] as $table){$mysqli->query('DROP TABLE IF EXISTS '.$table);}         $zzzzzz = $mysqli->query('SET foreign_key_checks = 1');    $mysqli->query("SET NAMES 'utf8'");	
@@ -14,6 +15,6 @@ function IMPORT_TABLES($host,$user,$pass,$dbname, $sql_file_OR_content,      $re
 				$mysqli->query($templine) or print('Error performing query \'<strong>' . $templine . '\': ' . $mysqli->error . '<br /><br />');  $templine = ''; // set variable to empty, to start picking up the lines after ";"
 			}
 		}
-	}	echo 'Importing finished. Now, Delete the import file.';
+	}	return 'Importing finished. Now, Delete the import file.';
 }   //see also export.php 
 ?>

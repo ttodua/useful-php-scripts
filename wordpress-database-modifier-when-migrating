@@ -13,6 +13,7 @@ if (empty($_FILES['dbfilee'])) { ?>
 else { 
 	function DOMAIN_or_STRING_modifier_in_DB($old_string,  $new_string, $sql_content,     $download = false){
 		set_time_limit(1000);
+		if(empty($old_string) || empty($new_string) || empty($sql_content)) return;
 		$length_difference= strlen($old_string)- strlen($new_string);			//i.e. FROM  site.com TO example.com
 		$old_string_slashed=str_replace('/','\/',$old_string);
 		// Replace every occurence of Serialized arrays, i.e. {s:32:"blablabla"}

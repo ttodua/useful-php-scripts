@@ -2,7 +2,7 @@
 // EXAMPLE:   EXPORT_TABLES("localhost","user","pass","db_name" ); 
 		//optional: 5th parameter - to backup specific tables only: array("mytable1","mytable2",...)   
 		//optional: 6th parameter - backup filename
-		// NOTE! to adequatelly replace strings in DB, MUST READ:  goo.gl/2fZDQL
+		// IMPORTANT NOTE for people who try to change strings in SQL FILE before importing, MUST READ:  goo.gl/2fZDQL
 					
 // https://github.com/tazotodua/useful-php-scripts  
 function EXPORT_TABLES($host,$user,$pass,$name,       $tables=false, $backup_name=false){ 

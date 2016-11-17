@@ -1,6 +1,6 @@
-<?php	// https://github.com/tazotodua/useful-php-scripts  
+<?php	// ===================== https://github.com/tazotodua/useful-php-scripts ========================   
 	// EXAMPLE:	IMPORT_TABLES("localhost","user","pass","db_name", "my_baseeee.sql"); //TABLES WILL BE OVERWRITTEN
-				// If you need to replace STRINGS in DB (i.e. DOMAIN names replacements and etc),  at first ( instead of simple "STR_REPLACE") use this function :  MUST READ!!!! - https://goo.gl/2fZDQL ) 
+				// P.S.    If you need to replace STRINGS in DB (i.e. DOMAIN names replacements and etc),  at first ( instead of simple "STR_REPLACE") use this function :  MUST READ!!!! - https://goo.gl/2fZDQL ) 
 
 function IMPORT_TABLES($host,$user,$pass,$dbname, $sql_file_OR_content){
 	set_time_limit(3000);  if(

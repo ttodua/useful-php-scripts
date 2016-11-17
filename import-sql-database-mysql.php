@@ -1,8 +1,8 @@
 <?ph	// https://github.com/tazotodua/useful-php-scripts  
 	// EXAMPLE:	IMPORT_TABLES("localhost","user","pass","db_name", "my_baseeee.sql"); //TABLES WILL BE OVERWRITTEN
-				//optional: 6th parameter(array) to adequatelly replace strings in DB!! MUST READ!!!! - https://goo.gl/2fZDQL 
+				//optional: 6th parameter-> array('OLD_DOMAIN.com','NEW_DOMAIN.com') to adequatelly replace strings in DB!! ( MUST READ!!!! - https://goo.gl/2fZDQL ) 
 
-function IMPORT_TABLES($host,$user,$pass,$dbname, $sql_file_OR_content,      $replacements=array('OLD_DOMAIN.com','NEW_DOMAIN.com') ){
+function IMPORT_TABLES($host,$user,$pass,$dbname, $sql_file_OR_content,      $replacements=array('','') ){
 	set_time_limit(3000);  if(
 	$SQL_CONTENT = (strlen($sql_file_OR_content) > 300 ?  $sql_file_OR_content : file_get_contents($sql_file_OR_content)  );        if (function_exists('DOMAIN_or_STRING_modifier_in_DB')) { $SQL_CONTENT = DOMAIN_or_STRING_modifier_in_DB($replacements[0], $replacements[1], $SQL_CONTENT); }
 	$allLines = explode("\n",$SQL_CONTENT); 

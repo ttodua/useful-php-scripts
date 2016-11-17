@@ -1,4 +1,4 @@
-<?ph	// https://github.com/tazotodua/useful-php-scripts  
+<?php	// https://github.com/tazotodua/useful-php-scripts  
 	// EXAMPLE:	IMPORT_TABLES("localhost","user","pass","db_name", "my_baseeee.sql"); //TABLES WILL BE OVERWRITTEN
 				// If you need to replace STRINGS in DB (i.e. DOMAIN names replacements and etc),  at first ( instead of simple "STR_REPLACE") use this function :  MUST READ!!!! - https://goo.gl/2fZDQL ) 
 

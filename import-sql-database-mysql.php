@@ -2,7 +2,7 @@
 	// EXAMPLE:	IMPORT_TABLES("localhost","user","pass","db_name", "my_baseeee.sql"); //TABLES WILL BE OVERWRITTEN
 				// If you need to replace STRINGS in DB (i.e. DOMAIN names replacements and etc),  at first ( instead of simple "STR_REPLACE") use this function :  MUST READ!!!! - https://goo.gl/2fZDQL ) 
 
-function IMPORT_TABLES($host,$user,$pass,$dbname, $sql_file_OR_content,      $replacements=array('','') ){
+function IMPORT_TABLES($host,$user,$pass,$dbname, $sql_file_OR_content){
 	set_time_limit(3000);  if(
 	$SQL_CONTENT = (strlen($sql_file_OR_content) > 300 ?  $sql_file_OR_content : file_get_contents($sql_file_OR_content)  );  
 	$allLines = explode("\n",$SQL_CONTENT); 

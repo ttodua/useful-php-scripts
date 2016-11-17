@@ -1,7 +1,8 @@
-<?php	// ===================== https://github.com/tazotodua/useful-php-scripts ========================   
+<?php	  
 	// EXAMPLE:	IMPORT_TABLES("localhost","user","pass","db_name", "my_baseeee.sql"); //TABLES WILL BE OVERWRITTEN
 				// P.S. IMPORTANT NOTE for people who try to change/replace some strings  in SQL FILE before importing, MUST READ:  https://goo.gl/2fZDQL
 
+// https://github.com/tazotodua/useful-php-scripts 
 function IMPORT_TABLES($host,$user,$pass,$dbname, $sql_file_OR_content){
 	set_time_limit(3000);  if(
 	$SQL_CONTENT = (strlen($sql_file_OR_content) > 300 ?  $sql_file_OR_content : file_get_contents($sql_file_OR_content)  );  

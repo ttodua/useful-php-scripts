@@ -117,13 +117,13 @@ p.s. for Wordpress, for secutiry, its better to use "PREPARE" function inside th
 		
 			
 					//////Method 2 (only for  wordpress, sanitized)//////
-					function UPDATEE_OR_INSERTTT($tablename, $NewArray, $WhereArray){	global $wpdb; $arrayNames= array_keys($WhereArray);
+					function UPDATE_OR_INSERT($tablename, $NewArray, $WhereArray){	global $wpdb; $arrayNames= array_keys($WhereArray);
 						//convert array to STRING
 						$o=''; $i=1; foreach ($WhereArray as $key=>$value){ $o .= $key . ' = \''. $value .'\''; if ($i != count($WhereArray)) { $o .=' AND '; $i++;}  }
 						//check if already exist
 						$CheckIfExists = $wpdb->get_var("SELECT ".$arrayNames[0]." FROM ".$tablename." WHERE ".$o);
-						if (!empty($CheckIfExists))	{	$wpdb->update($tablename,	$NewArray,	$WhereArray	);}
-						else				{	$wpdb->insert($tablename, 	array_merge($NewArray, $WhereArray)	);	}
+						if (!empty($CheckIfExists))	{ return $wpdb->update($tablename,	$NewArray,	$WhereArray	);}
+						else				{ return $wpdb->insert($tablename, 	array_merge($NewArray, $WhereArray)	);	} 
 					}
 					
 					**EXECUTE**

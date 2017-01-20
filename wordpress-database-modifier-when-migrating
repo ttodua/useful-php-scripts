@@ -1,19 +1,38 @@
 <?php
-// LIVE DEMO (with README + ALTERNATIVES):  http://www.protectpages.com/software/WordpressMigrator.php
+// LIVE DEMO:  http://www.protectpages.com/files/WordpressMigrator.php
 
-if (empty($_FILES['dbfilee'])) { ?>
-	<form action="" method="POST" enctype="multipart/form-data"><h1>Intelligenty replaces words or domains with new values</h1><br/><br/>
+if (empty($_FILES['dbfilee'])) { 
+									echo '<!DOCTYPE html><head><title>Replace strings in DB</title></head><body>';
+?>
+<h1>Intelligently replace strings and domains with new values</h1>
+<b>DESCRIPTION:</b> this script will help you MUCH!! sometimes, when migrating site (or in SQL file, you want to replace strings), dont do it manually! because the strings may be present in SERIALIZED ARRAYS too, and that needs special replacement, not just the direct replacement...   so, this script will do that... ( But also, read some notes <a href="http://www.protectpages.com/blog/migrating-normal-wp-site-as-multisite.html" target="_blank">HERE</a>;  You can download <a href="https://github.com/tazotodua/useful-php-scripts/">SOURCE CODE</a> of this script)
+<br/><br/>
+	<form style="background:rgb(184, 231, 133);padding:10px;" action="" method="POST" enctype="multipart/form-data">
+	drag database file here:<input type="file" name="dbfilee" /><br/>
+	
 	Old string <input type="text" value="" placeholder="i.e. word1 or http://domain1.com" name="oldstr" style="width:300px;" /><br/>
 	new string<input type="text" value="" placeholder="i.e. word2 or http://domain2.com" style="width:300px;" name="newstr" /><br/>
-	drag database file here:<input type="file" name="dbfilee" /><br/><input type="submit" value="GENERATE NEW DB" /> (and wait some time...)
+	(Case sensitive replacement :  <input type="hidden" name="case_sensitive" value="0" /> <input type="checkbox" name="case_sensitive" value="1" /> )<br/>
+	
+	<input type="submit" value="GENERATE NEW DB" />  (then wait some seconds ,according to DB size ...)
 	</form>
+	
+<div style=" padding:10px;margin:30px 0 0;">
+	<br/>p.s. at this moment, i can also advise to use more advanced scripts, like :
+	<br/>1) http://wptavern.com/3-efficient-tools-for-wordpress-database-migration
+	<br/>2) https://wordpress.org/plugins/better-search-replace/
+</div>	
+
+
+
 	<?php
 }
 
-else { 
-	function DOMAIN_or_STRING_modifier_in_DB($old_string,  $new_string, $sql_content,     $download = false){
+else {
+	
+	function DOMAIN_or_STRING_modifier_in_DB($old_string,  $new_string, $sql_content,     $download = false, $case_sensitive=false){
 		set_time_limit(1000);
-		if(empty($old_string) || empty($new_string) || empty($sql_content)) return;
+		$replace_type = $case_sensitive ? 'str_replace' : 'str_ireplace';
 		$length_difference= strlen($old_string)- strlen($new_string);			//i.e. FROM  site.com TO example.com
 		$old_string_slashed=str_replace('/','\/',$old_string);
 		// Replace every occurence of Serialized arrays, i.e. {s:32:"blablabla"}
@@ -29,15 +48,14 @@ else {
 				array($before_s.'s:'.$found_char_length,							$old_string),
 				array($before_s.'s:'.($found_char_length - $length_difference),	$new_string),
 				$found_line); 
-			$sql_content	= str_replace($found_line,	    str_replace($old_string,$new_string,$found_line_changed),    $sql_content);
+			$sql_content	= str_replace($found_line,	    call_user_func($replace_type, $old_string,$new_string,$found_line_changed),    $sql_content);
 		  }
 		}
 		// Now, we can freely replace  typical occurences
-		$sql_content=str_replace($old_string,$new_string,$sql_content);
+		$sql_content=call_user_func($replace_type, $old_string,$new_string,$sql_content);
 		if ($download) { header('Content-Type: application/octet-stream');	header("Content-Transfer-Encoding: Binary"); header('Content-disposition: attachment; filename="db_'.rand(1,99999).'.sql"');  echo $sql_content; exit; }   else {return $sql_content;}
-	}	
+	}
 	// EXECUTE !!!
-	DOMAIN_or_STRING_modifier_in_DB($_POST['oldstr'], $_POST['newstr'],     file_get_contents($_FILES["dbfilee"]["tmp_name"]),    true);
-
-}
+	 DOMAIN_or_STRING_modifier_in_DB($_POST['oldstr'], $_POST['newstr'],     file_get_contents($_FILES["dbfilee"]["tmp_name"]),    true,  $_POST['case_sensitive']);
+} 
 ?>

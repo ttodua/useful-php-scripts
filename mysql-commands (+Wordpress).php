@@ -116,14 +116,15 @@ p.s. for Wordpress, for secutiry, its better to use "PREPARE" function inside th
 		$MANUAL->query("INSERT INTO my_tablename (content1, content2, userid) VALUES ('$value1', '$value2','$useriid')");
 		
 			
-					//////Method 2 (only for  wordpress, sanitized)//////
-					function UPDATE_OR_INSERT($tablename, $NewArray, $WhereArray){	global $wpdb; $arrayNames= array_keys($WhereArray);
+					//////Method 2 (only for  wordpress, sanitized)////// (check Updates:::: https://github.com/tazotodua/useful-php-scripts/blob/master/mysql-commands%20%28%2BWordpress%29.php )
+					public function UPDATE_OR_INSERT($tablename, $NewArray, $WhereArray=array()){	  global $wpdb; 
+						$array_for_check =   !empty($WhereArray) ? $WhereArray :  $NewArray;
+						$arrayNames= array_keys($array_for_check);
 						//convert array to STRING
-						$o=''; $i=1; foreach ($WhereArray as $key=>$value){ $o .= $key . ' = \''. $value .'\''; if ($i != count($WhereArray)) { $o .=' AND '; $i++;}  }
-						//check if already exist
-						$CheckIfExists = $wpdb->get_var("SELECT ".$arrayNames[0]." FROM ".$tablename." WHERE ".$o);
-						if (!empty($CheckIfExists))	{ return $wpdb->update($tablename,	$NewArray,	$WhereArray	);}
-						else				{ return $wpdb->insert($tablename, 	array_merge($NewArray, $WhereArray)	);	} 
+						$o=''; $i=0; foreach ($array_for_check as $key=>$value){$i++; $o .= $key . " = ". (is_numeric($value) ? $value : "'".addslashes($value)."'"); if ($i != count($array_for_check)) { $o .=' AND ';}  }
+						//check if already exists
+						$CheckIfExists = $wpdb->get_var("SELECT ".$arrayNames[0]." FROM $tablename WHERE $o");
+						return (  empty($CheckIfExists) ?         $wpdb->insert($tablename, array_merge($WhereArray, $NewArray))     :    $wpdb->update($tablename, $NewArray, $array_for_check)    );  
 					}
 					
 					**EXECUTE**

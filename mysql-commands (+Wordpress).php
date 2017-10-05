@@ -129,5 +129,5 @@ p.s. for Wordpress, for secutiry, its better to use "PREPARE" function inside th
 					
 					**EXECUTE**
 					UPDATEE_OR_INSERTTT('myyy_tableee', 
-							array('mycolumn_1'=> 'myvalueeee' ),
+							array('mycolumn_1'=> 'Hello World' ),
 							array('mycolumn_5'=> 'Gonzales', 'mycolumn_6'=> 'France' ) );

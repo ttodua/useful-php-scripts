@@ -8,7 +8,7 @@ header('Content-Type: text/html; charset=utf-8');
 $divideeeeeeeeer='<td>------------------------------------------------------------------------------------</td><td>-----------------------------------------------------------</td></tr>';
 echo '<style>table { border-collapse:collapse; }  table tr {border:1px solid #f5f5f5;}  td:nth-child(2) { max-width: 600px; position:relative; top:-3px; color:green; } td { max-width: 500px; } </style>';
 echo '<table><tbody>';
-echo '<tr style="background-color:rgb(205, 245, 205);"><td> &nbsp;string &nbsp;<b>'.htmlentities($text).'</b> (initial)</td><td> (USED FUNCTION)</td></tr>';
+echo '<tr style="background-color:rgb(205, 245, 205);"><td><b>'.htmlentities($text).'</b> (used text)</td><td> (USED FUNCTION)</td></tr>';
 echo $divideeeeeeeeer;
 echo '<tr><td><code>'.(is_numeric($text) ? "true":"false").'</code></td><td> <code> if (is_numeric($text))</code> [returns true or false]</td></tr>';
 echo '<tr><td><code>'.(preg_match('/[\`\~\!\@\#\$\%\^\&\*\(\)\-\_\+\=\{\}\[\]\}\\\|:\;\"\'\<\,\>\.\?\/]/si',$text) ? "true":"false").'</code></td><td><code> if (preg_match(\'/[\`\~\!\@\#\$\%\^\&\*\(\)\-\_\+\=\{\}\[\]\}\\\|:\;\"\'\<\,\>\.\?\/]/si\',$text))</code> [if string contains your determined chars: true or false]</td></tr>';

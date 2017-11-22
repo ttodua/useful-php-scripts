@@ -5,7 +5,7 @@
 <?php
 $text='a 1`-=[]\;\',./~!@#$%^&*()_+{}|:"<>?';
 header('Content-Type: text/html; charset=utf-8');
-$divideeeeeeeeer='<td>------------------------------------------------------------------------------------</td><td>-----------------------------------------------------------</td></tr>';
+$divideeeeeeeeer='<td>-----------------------------------------------</td><td>-----------------------------------------------</td></tr>';
 echo '<style>table { border-collapse:collapse; }  table tr {border:1px solid #f5f5f5;}  td:nth-child(2) { max-width: 600px; position:relative; top:-3px; color:green; } td { max-width: 500px; } </style>';
 echo '<table><tbody>';
 echo '<tr style="background-color:rgb(205, 245, 205);"><td><b>'.htmlentities($text).'</b> (used text)</td><td> (USED FUNCTION)</td></tr>';

@@ -29,7 +29,6 @@ function get_remote_data($url, $post_paramtrs=false,            $extra_params=ar
 	curl_setopt($c, CURLOPT_COOKIE, 'CookieName1=Value;'); 
 		$header[]= "User-Agent: Mozilla/5.0 (Windows NT 6.1; rv:33.0) Gecko/20100101 Firefox/33.0";	 $header[]= "Pragma: ";  $header[]= "Cache-Control: max-age=0";
 		if (is_object(json_decode($post_paramtrs))){ $header[]= 'Content-Type: application/json'; $header[]= 'Content-Length: '.strlen($post_paramtrs); }
-	curl_setopt($c, CURLOPT_HEADER, true); 
 	curl_setopt($c, CURLOPT_HTTPHEADER, $header);
 	curl_setopt($c, CURLOPT_MAXREDIRS, 10); 
 	//if SAFE_MODE or OPEN_BASEDIR is set,then FollowLocation cant be used.. so...

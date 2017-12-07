@@ -1,5 +1,5 @@
 // =====================================(experiment to clean+sanitize php strings)======================= \\                                    <br/>
-// ==========================================  SEE DEMO - https://goo.gl/PNBKSj  ======================== \\
+// =================  To see DEMO, in address bar, add word "RunFor" in front of Github domain  ======================== \\
 
 
 <?php

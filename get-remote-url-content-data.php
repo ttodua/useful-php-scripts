@@ -60,9 +60,7 @@ function get_remote_data($url, $post_paramtrs=false,            $extra_params=ar
 	// if not redirected,and nor "status 200" page, then error..
 	elseif ( $status['http_code'] != 200 ) { $data =  "ERRORCODE22 with $url<br/><br/>Last status codes:".json_encode($status)."<br/><br/>Last data got:$data";}
 	$answer = ( !empty($extra_params['return_array']) ? array('data'=>$data,'info'=>$status) : $data);
-	return $answer;    
-		}	   
-		function url_corrections_for_content_HELPER( $content=false, $url=false, 	$extra_opts=array('schemeless'=>false, 'replace_src'=>false, 'rawgit_replace'=>false) ) { 
+	return $answer;      }     function url_corrections_for_content_HELPER( $content=false, $url=false, 	$extra_opts=array('schemeless'=>false, 'replace_src'=>false, 'rawgit_replace'=>false) ) { 
 	$GLOBALS['rdgr']['schemeless'] =$extra_opts['schemeless'];
 	$GLOBALS['rdgr']['replace_src']=$extra_opts['replace_src'];
 	$GLOBALS['rdgr']['rawgit_replace']=$extra_opts['rawgit_replace'];

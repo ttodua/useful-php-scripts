@@ -37,7 +37,7 @@ function get_remote_data($url, $post_paramtrs=false,            $extra_params=ar
 	curl_setopt($c, CURLOPT_AUTOREFERER, true);
 	curl_setopt($c, CURLOPT_ENCODING, 'gzip,deflate');  
 	curl_setopt($c, CURLOPT_HEADER, true);  
-	$answer=curl_exec($c); $x=explode("\r\n\r\n",$answer); $header=$x[0]; $data=$x[1];  $status=curl_getinfo($c); curl_close($c);
+		$answer=curl_exec($c); preg_match("/(.*?\r\Content-Type: .*?)\r\n\r\n(.*)/si",$answer, $x); $header=$x[1]; $data=$x[2];  $status=curl_getinfo($c); curl_close($c);
 	//URLS correction
 	if(function_exists('url_corrections_for_content_HELPER')){	    $data= url_corrections_for_content_HELPER($data, $status['url'],   array('schemeless'=>!empty($extra_params['schemeless']), 'replace_src'=>!empty($extra_params['replace_src']), 'rawgit_replace'=>!empty($extra_params['rawgit_replace']) )  );    	}
 	// if redirected, then get that redirected page

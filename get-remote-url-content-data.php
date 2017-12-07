@@ -18,7 +18,7 @@ Notes:
 ############################################################################################
 */
 
-function get_remote_data($url, $post_paramtrs=false,            $extra_params=array('schemeless'=>false,'replace_src'=>false))	{ 
+function get_remote_data($url, $post_paramtrs=false,            $extra_params=array('schemeless'=>false,'replace_src'=>false, 'return_array'=false))	{ 
 	// start curl
 	$c = curl_init();curl_setopt($c, CURLOPT_URL, $url);
 	curl_setopt($c, CURLOPT_RETURNTRANSFER, 1);
@@ -36,9 +36,10 @@ function get_remote_data($url, $post_paramtrs=false,            $extra_params=ar
 	curl_setopt($c, CURLOPT_CONNECTTIMEOUT, 9);
 	curl_setopt($c, CURLOPT_REFERER, $url);    
 	curl_setopt($c, CURLOPT_TIMEOUT, 60);
-	curl_setopt($c, CURLOPT_AUTOREFERER, true);  
-	curl_setopt($c, CURLOPT_ENCODING, 'gzip,deflate');
-	$data=curl_exec($c); $status=curl_getinfo($c); curl_close($c);
+	curl_setopt($c, CURLOPT_AUTOREFERER, true);
+	curl_setopt($c, CURLOPT_ENCODING, 'gzip,deflate');  
+	curl_setopt($c, CURLOPT_HEADER, true);  
+	$answer=curl_exec($c); $x=explode("\r\n\r\n",$answer); $header=$x[0]; $data=$x[1];  $status=curl_getinfo($c); curl_close($c);
 	//URLS correction
 	if(function_exists('url_corrections_for_content_HELPER')){	    $data= url_corrections_for_content_HELPER($data, $status['url'],   array('schemeless'=>!empty($extra_params['schemeless']), 'replace_src'=>!empty($extra_params['replace_src']), 'rawgit_replace'=>!empty($extra_params['rawgit_replace']) )  );    	}
 	// if redirected, then get that redirected page
@@ -58,7 +59,7 @@ function get_remote_data($url, $post_paramtrs=false,            $extra_params=ar
 	}
 	// if not redirected,and nor "status 200" page, then error..
 	elseif ( $status['http_code'] != 200 ) { $data =  "ERRORCODE22 with $url<br/><br/>Last status codes:".json_encode($status)."<br/><br/>Last data got:$data";}
-	$answer = ( !empty($extra_params['return_array']) ? array('data'=>$data,'info'=>$status) : $data);
+	$answer = ( !empty($extra_params['return_array']) ? array('data'=>$data, 'header'=>$header, 'info'=>$status) : $data);
 	return $answer;      }     function url_corrections_for_content_HELPER( $content=false, $url=false, 	$extra_opts=array('schemeless'=>false, 'replace_src'=>false, 'rawgit_replace'=>false) ) { 
 	$GLOBALS['rdgr']['schemeless'] =$extra_opts['schemeless'];
 	$GLOBALS['rdgr']['replace_src']=$extra_opts['replace_src'];

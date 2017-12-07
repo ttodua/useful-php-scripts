@@ -60,18 +60,15 @@ echo '<tr><td><code>same as above</code></td><td><code>  filter_var($text, FILTE
 echo '<tr><td><code>same as above</code></td><td><code>  filter_var($text, FILTER_UNSAFE_RAW, FILTER_FLAG_ENCODE_LOW)</code></td></tr>';
 echo '<tr><td><code>same as above</code></td><td><code>  filter_var($text, FILTER_UNSAFE_RAW, FILTER_FLAG_ENCODE_HIGH)</code></td></tr>';
 echo '<tr><td><code>same as above</code></td><td><code>  filter_var($text, FILTER_UNSAFE_RAW, FILTER_FLAG_ENCODE_AMP)</code></td></tr>';
-if(function_exists('sanitize_title')){ 
 echo $divideeeeeeeeer;
-echo '<tr><td><h3 style="color:red;">for WordPress bulit-in functions</h3><td></tr>';
-echo '<tr><td><code>'.htmlentities(sanitize_title($text)).'</code></td><td><code>sanitize_title($text)</code></td></tr>';
-//echo '<tr><td><code>'.(sanitize_title_with_dashes($text)).'</code></td><td><code>sanitize_title_with_dashes($text)</code></td></tr>';
-//echo '<tr><td><code>'.(sanitize_title_for_query($text)).'</code></td><td><code>sanitize_title_for_query($text)</code></td></tr>';
-echo '<tr><td><code>'.htmlentities(sanitize_text_field($text)).'</code></td><td><code>sanitize_text_field($text)</code></td></tr>';
-echo '<tr><td><code>'.htmlentities(sanitize_key($text)).'</code></td><td><code>sanitize_key($text)</code></td></tr>';
-echo '<tr><td><code>'.htmlentities(sanitize_html_class($text)).'</code></td><td><code>sanitize_html_class($text)</code></td></tr>';
-echo '<tr><td><code>'.htmlentities(sanitize_file_name($text)).'</code></td><td><code>sanitize_file_name($text)</code></td></tr>';
-echo '<tr><td><code>'.htmlentities(sanitize_email($text)).'</code></td><td><code>sanitize_email($text)</code></td></tr>';
-}
+// =============================== For Wordpress =========================//
+echo '<tr><td><h3 style="color:red;">for WordPress built-in functions</h3><td></tr>';
+echo '<tr><td><code>'.htmlentities(defined('ABSPATH') ? sanitize_title_for_query($text): 'a-1-_').'</code></td><td><code>sanitize_title($text)</code></td></tr>';
+echo '<tr><td><code>'.htmlentities(defined('ABSPATH') ? sanitize_text_field($text): 'a 1`-=[]\\;\',./~!@#$%^&*()_+{}|:"?').'</code></td><td><code>sanitize_text_field($text)</code></td></tr>';
+echo '<tr><td><code>'.htmlentities(defined('ABSPATH') ? sanitize_key($text): 'a1-_').'</code></td><td><code>sanitize_key($text)</code></td></tr>';
+echo '<tr><td><code>'.htmlentities(defined('ABSPATH') ? sanitize_html_class($text): 'a1-_').'</code></td><td><code>sanitize_html_class($text)</code></td></tr>';
+echo '<tr><td><code>'.htmlentities(defined('ABSPATH') ? sanitize_file_name($text) : 'a-1-.@^').'</code></td><td><code>sanitize_file_name($text)</code></td></tr>';
+echo '<tr><td><code>'.htmlentities(defined('ABSPATH') ? sanitize_email($text) : '').'</code></td><td><code>sanitize_email($text)</code></td></tr>';
 echo $divideeeeeeeeer;
 echo '<tr><td cospan="2">source code at : <b>github.com/tazotodua</b><td></tr>';
 echo '</tbody></table>';

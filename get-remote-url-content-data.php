@@ -1,18 +1,21 @@
 <?php
 /*
- ============================================================================================= 
- ============================   advanced cURL function (TT's version)   ====================== 
- ============================================================================================= 
+##############################################################################################
+########################     advanced cURL function (TT's version)    ########################
+##############################################################################################
 echo get_remote_data('http://example.com/');                                   //GET (pure) request
 echo get_remote_data('http://example.com/', "var2=something&var3=blabla" );    //POST request 	
 
 Notes:
-  * It automatically handes FOLLOWLOCATION problem;
-  * When using 'replace_src'=>true, it will fix urls ,i.e:           src="./file.jpg" 
-					                     ----->  src="http://example.com/file.jpg" 
-  * When using 'schemeless'=>true, it will converts urls into schemeless,i.e:           src="http://example.com" 
-					                                        ----->  src="//example.com" 
-  * You can generate minified version from: http://www.cuho.eu/php-minify/
+    * It automatically handes FOLLOWLOCATION problem;
+    * When using 'replace_src'=>true, it will fix urls ,i.e:           src="./file.jpg" 
+					                       ----->  src="http://example.com/file.jpg" 
+    * When using 'schemeless'=>true, it will converts urls into schemeless,i.e:           src="http://example.com" 
+					                                          ----->  src="//example.com" 
+    * Get minified code from: http://protectpages.com/tools/php-minify.php
+###########################################################################################
+####################### [https://github.com/tazotodua/useful-php-scripts] ##################
+############################################################################################
 */
 
 function get_remote_data($url, $post_paramtrs=false,            $extra_params=array('schemeless'=>'false','replace_src'=>false))	{

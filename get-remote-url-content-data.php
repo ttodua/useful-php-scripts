@@ -1,17 +1,15 @@
 <?php
 /*
 ##############################################################################################
-########################     advanced cURL function (TT's version)    ########################
+############### useful PHP cURL function for your library (TT's version) #####################
 ##############################################################################################
-echo get_remote_data('http://example.com/');                                   //GET (pure) request
-echo get_remote_data('http://example.com/', "var2=something&var3=blabla" );    //POST request 	
+echo get_remote_data("http://example.com/");                                   //GET request
+echo get_remote_data("http://example.com/", "var2=something&var3=blabla" );    //POST request 	
 
 Notes:
     * It automatically handes FOLLOWLOCATION problem;
-    * When using 'replace_src'=>true, it will fix urls ,i.e:           src="./file.jpg" 
-					                       ----->  src="http://example.com/file.jpg" 
-    * When using 'schemeless'=>true, it will converts urls into schemeless,i.e:           src="http://example.com" 
-					                                          ----->  src="//example.com" 
+    * When using 'replace_src'=>true, it fixes domain-relative urls  (i.e.:   src="./file.jpg"  ----->  src="http://example.com/file.jpg" )
+    * When using 'schemeless'=>true, it converts urls in schemeless  (i.e.:   src="http://exampl..  ----->  src="//exampl... )
     * Get minified code from: http://protectpages.com/tools/php-minify.php
 ###########################################################################################
 ####################### [https://github.com/tazotodua/useful-php-scripts] ##################

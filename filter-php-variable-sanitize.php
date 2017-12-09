@@ -1,8 +1,11 @@
+<?php
+
+
 // =====================================(experiment to clean+sanitize php strings)======================= \\                                    <br/>
 // =================  To see DEMO, in address bar, add word "RunFor" in front of Github domain  ======================== \\
 
 
-<?php
+
 $text='a 1`-=[]\;\',./~!@#$%^&*()_+{}|:"<>?';
 header('Content-Type: text/html; charset=utf-8');
 $divideeeeeeeeer='<td>-----------------------------------------------</td><td>-----------------------------------------------</td></tr>';

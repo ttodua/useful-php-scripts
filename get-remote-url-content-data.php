@@ -14,7 +14,7 @@ Notes:
 ###########################################################################################
 ####################### [https://github.com/tazotodua/useful-php-scripts] ##################
 ############################################################################################
-*/
+*/ 
 
 function get_remote_data($url, $post_paramtrs=false,            $extra=array('schemeless'=>true, 'replace_src'=>true, 'return_array'=>false))	{ 
 	// start curl

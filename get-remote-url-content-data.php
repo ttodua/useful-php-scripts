@@ -25,7 +25,7 @@ function get_remote_data($url, $post_paramtrs=false,            $extra=array('sc
 	curl_setopt($c, CURLOPT_SSL_VERIFYHOST,false); 
 	curl_setopt($c, CURLOPT_SSL_VERIFYPEER,false);
 	curl_setopt($c, CURLOPT_COOKIE, 'CookieName1=Value;'); 
-		$header[]= "User-Agent: Mozilla/5.0 (Windows NT 6.1; rv:33.0) Gecko/20100101 Firefox/33.0";	 $header[]= "Pragma: ";  $header[]= "Cache-Control: max-age=0";
+		$header[]= "User-Agent: Mozilla/6.0 (Windows NT 6.1; rv:76.0) Gecko/20100101 Firefox/76.0";	 $header[]= "Pragma: ";  $header[]= "Cache-Control: max-age=0";
 		if (is_object(json_decode($post_paramtrs))){ $header[]= 'Content-Type: application/json'; $header[]= 'Content-Length: '.strlen($post_paramtrs); }
 	curl_setopt($c, CURLOPT_HTTPHEADER, $header);
 	curl_setopt($c, CURLOPT_MAXREDIRS, 10); 

@@ -1,8 +1,8 @@
 <?php
 
 
-// =====================================(experiment to clean+sanitize php strings)======================= \\                                    <br/>
-// =================  To see DEMO, in address bar, add word "RunFor" in front of Github domain  ======================== \\
+// ================================  (experiment to clean+sanitize php strings)    ======================= \\                                    <br/>
+// =============  To see DEMO, in address bar, add word "RunFor" in front of Github domain  ============== \\
 
 
 

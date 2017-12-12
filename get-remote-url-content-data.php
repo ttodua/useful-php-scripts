@@ -3,13 +3,13 @@
 ##############################################################################################
 ############### useful PHP cURL function for your library (TT's version) #####################
 ##############################################################################################
-echo get_remote_data("http://example.com/");                                   //GET request
-echo get_remote_data("http://example.com/", "var2=something&var3=blabla" );    //POST request 	
-
-Notes:
-    * Automatically handles FOLLOWLOCATION problem;
-    * Using 'replace_src'=>true, it fixes domain-relative urls  (i.e.:   src="./file.jpg"  ----->  src="http://example.com/file.jpg" )
-    * Using 'schemeless'=>true, it converts urls in schemeless  (i.e.:   src="http://exampl..  ----->  src="//exampl... )
+### echo get_remote_data("http://example.com/");                                   //GET request
+### echo get_remote_data("http://example.com/", "var2=something&var3=blabla" );    //POST request 	
+### 
+### Notes:
+###    * Automatically handles FOLLOWLOCATION problem;
+###    * Using 'replace_src'=>true, it fixes domain-relative urls  (i.e.:   src="./file.jpg"  ----->  src="http://example.com/file.jpg" )
+###    * Using 'schemeless'=>true, it converts urls in schemeless  (i.e.:   src="http://exampl..  ----->  src="//exampl... )
 ###########################################################################################
 ####################### [https://github.com/tazotodua/useful-php-scripts] ##################
 #########   Get minified code from: http://protectpages.com/tools/php-minify.php   #########
@@ -26,7 +26,7 @@ function get_remote_data($url, $post_paramtrs=false,            $extra=array('sc
 	curl_setopt($c, CURLOPT_SSL_VERIFYPEER,false);
 	curl_setopt($c, CURLOPT_COOKIE, 'CookieName1=Value;'); 
 		$header[]= "User-Agent: Mozilla/6.0 (Windows NT 6.1; rv:76.0) Gecko/20100101 Firefox/76.0";	 $header[]= "Pragma: ";  $header[]= "Cache-Control: max-age=0";
-		if (is_object(json_decode($post_paramtrs))){ $header[]= 'Content-Type: application/json'; $header[]= 'Content-Length: '.strlen($post_paramtrs); }
+		if (!empty($post_paramtrs) && !is_array($post_paramtrs) && is_object(json_decode($post_paramtrs))){ $header[]= 'Content-Type: application/json'; $header[]= 'Content-Length: '.strlen($post_paramtrs); }
 	curl_setopt($c, CURLOPT_HTTPHEADER, $header);
 	curl_setopt($c, CURLOPT_MAXREDIRS, 10); 
 	//if SAFE_MODE or OPEN_BASEDIR is set,then FollowLocation cant be used.. so...

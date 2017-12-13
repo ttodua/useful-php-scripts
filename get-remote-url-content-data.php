@@ -25,7 +25,7 @@ function get_remote_data($url, $post_paramtrs=false,            $extra=array('sc
 	curl_setopt($c, CURLOPT_SSL_VERIFYHOST,false); 
 	curl_setopt($c, CURLOPT_SSL_VERIFYPEER,false);
 	curl_setopt($c, CURLOPT_COOKIE, 'CookieName1=Value;'); 
-		$header[]= "User-Agent: Mozilla/6.0 (Windows NT 6.1; rv:76.0) Gecko/20100101 Firefox/76.0";	 $header[]= "Pragma: ";  $header[]= "Cache-Control: max-age=0";
+		$header[]= "User-Agent: Mozilla/5.0 (Windows NT 6.1; rv:76.0) Gecko/20100101 Firefox/76.0";	 $header[]= "Pragma: ";  $header[]= "Cache-Control: max-age=0";
 		if (!empty($post_paramtrs) && !is_array($post_paramtrs) && is_object(json_decode($post_paramtrs))){ $header[]= 'Content-Type: application/json'; $header[]= 'Content-Length: '.strlen($post_paramtrs); }
 	curl_setopt($c, CURLOPT_HTTPHEADER, $header);
 	curl_setopt($c, CURLOPT_MAXREDIRS, 10); 
@@ -37,9 +37,8 @@ function get_remote_data($url, $post_paramtrs=false,            $extra=array('sc
 	curl_setopt($c, CURLOPT_AUTOREFERER, true);
 	curl_setopt($c, CURLOPT_ENCODING, 'gzip,deflate');  
 	curl_setopt($c, CURLOPT_HEADER, true);  
-	$result=curl_exec($c); preg_match("/(.*?\r\nContent-Type:\s.*?)\r\n\r\n(.*)/si",$result, $x); $header=$x[1]; $data=$x[2];  $status=curl_getinfo($c); curl_close($c);
-	//URLS correction
-	if(function_exists('url_corrections_for_content_HELPER')){	    $data= url_corrections_for_content_HELPER($data, $status['url'],   array('schemeless'=>!empty($extra['schemeless']), 'replace_src'=>!empty($extra['replace_src']), 'rawgit_replace'=>!empty($extra['rawgit_replace']) )  );    	}
+	$result=curl_exec($c); preg_match("/(.*?\r\n(Content-Type|Connection|Expires):\s.*?)\r\n\r\n(.*)/si",$result, $x); $status=curl_getinfo($c); curl_close($c);  
+	$header=$x[1]; $data=$x[2];
 	// if redirected, then get that redirected page
 	if($status['http_code']==301 || $status['http_code']==302) { 
 		//if we FOLLOWLOCATION was not allowed, then re-get REDIRECTED URL
@@ -57,8 +56,10 @@ function get_remote_data($url, $post_paramtrs=false,            $extra=array('sc
 	}
 	// if not redirected,and nor "status 200" page, then error..
 	elseif ( $status['http_code'] != 200 ) { $data =  "ERRORCODE22 with $url<br/><br/>Last status codes:".json_encode($status)."<br/><br/>Last data got:$data";}
+	//URLS correction
+	if(function_exists('url_corrections_for_content_HELPER')){	    $data= url_corrections_for_content_HELPER($data, $status['url'],   array('schemeless'=>!empty($extra['schemeless']), 'replace_src'=>!empty($extra['replace_src']), 'rawgit_replace'=>!empty($extra['rawgit_replace']) )  );    	}
 	$answer = ( !empty($extra['return_array']) ? array('data'=>$data, 'header'=>$header, 'info'=>$status) : $data);
-	return $answer;      }     function url_corrections_for_content_HELPER( $content=false, $url=false, 	$extra_opts=array('schemeless'=>true, 'replace_src'=>true, 'rawgit_replace'=>true) ) { 
+	return $answer;      }     function url_corrections_for_content_HELPER( $content=false, $url=false, 	$extra_opts=array('schemeless'=>false, 'replace_src'=>false, 'rawgit_replace'=>false) ) { 
 	$GLOBALS['rdgr']['schemeless'] =$extra_opts['schemeless'];
 	$GLOBALS['rdgr']['replace_src']=$extra_opts['replace_src'];
 	$GLOBALS['rdgr']['rawgit_replace']=$extra_opts['rawgit_replace'];

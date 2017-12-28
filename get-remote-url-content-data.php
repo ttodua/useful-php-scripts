@@ -73,7 +73,7 @@ function get_remote_data($url, $post_paramtrs=false,            $extra=array('sc
 			'src'	=> array('audio','embed','iframe','img','input','script','source','track','video'),
 			'srcset'=> array('source'),
 			'data'	=> array('object'),
-			'href'	=> array('link','area'),  //'a' is excluded, because that is set manually in source
+			'href'	=> array('link','area','a'),
 			'action'=> array('form')
 			//'param', 'applet' and 'base' tags are exclusion, because of a bit complex structure 
 		);

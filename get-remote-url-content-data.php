@@ -130,6 +130,15 @@ function get_remote_data($url, $post_paramtrs=false,            $extra=array('sc
 			},
 			$content
 		); 
+		$content= preg_replace_callback( 
+			'/style="(.*?)background(\-image|)(.*?|)\:(.*?|)url\((\'|\"|)(.*?)(\'|\"|)\)/i', 
+			function($matches_A){
+				$url = $matches_A[7];
+				$url = (substr($url,0,2)=='//' || substr($url,0,7)=='http://' || substr($url,0,8)=='https://' ? $url : '#');
+				return 'style="'.$matches_A[1].'background'.$matches_A[2].$matches_A[3].':'.$matches_A[4].'url('.$url.')'; //$matches_A[5] is url taged ,7 is url
+			},
+			$content
+		);
 	}
 	return $content;
 }

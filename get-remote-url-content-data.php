@@ -37,7 +37,7 @@ function get_remote_data($url, $post_paramtrs=false,            $extra=array('sc
 	curl_setopt($c, CURLOPT_AUTOREFERER, true);
 	curl_setopt($c, CURLOPT_ENCODING, 'gzip,deflate');  
 	curl_setopt($c, CURLOPT_HEADER, true);  
-		$result=curl_exec($c); preg_match("/(.*?\r\n(Content-Type|Connection|Expires):\s.*?)\r\n\r\n(.*)/si",$result, $x);  $header=$x[2]; $data=$x[3]; $status=curl_getinfo($c); curl_close($c);
+	$result=curl_exec($c); preg_match("/(.*?)\r\n\r\n(.*)/si",$result, $x);  $header=trim($x[1]); $data=trim($x[2]); $status=curl_getinfo($c); curl_close($c);
 	// if redirected, then get that redirected page
 	if($status['http_code']==301 || $status['http_code']==302) { 
 		//if we FOLLOWLOCATION was not allowed, then re-get REDIRECTED URL

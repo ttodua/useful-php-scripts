@@ -6,14 +6,12 @@
 ### echo get_remote_data("http://example.com/");                                   //GET request
 ### echo get_remote_data("http://example.com/", "var2=something&var3=blabla" );    //POST request 	
 ### 
-### Notes:
 ###    * Automatically handles FOLLOWLOCATION problem;
 ###    * Using 'replace_src'=>true, it fixes domain-relative urls  (i.e.:   src="./file.jpg"  ----->  src="http://example.com/file.jpg" )
-###    * Using 'schemeless'=>true, it converts urls in schemeless  (i.e.:   src="http://exampl..  ----->  src="//exampl... )
+###    * Using 'schemeless'=>true, it converts urls in schemeless  (i.e.:   src="http://exampl..  ----->  src="//exampl... )\
+###### // source: https://github.com/tazotodua/useful-php-scripts]               ##########
+###### // Get minified code from: http://protectpages.com/tools/php-minify.php   ##########
 ###########################################################################################
-####################### [https://github.com/tazotodua/useful-php-scripts] ##################
-#########   Get minified code from: http://protectpages.com/tools/php-minify.php   #########
-############################################################################################
 */ 
 
 function get_remote_data($url, $post_paramtrs=false,            $extra=array('schemeless'=>true, 'replace_src'=>true, 'return_array'=>false))	{ 
@@ -35,9 +33,13 @@ function get_remote_data($url, $post_paramtrs=false,            $extra=array('sc
 	curl_setopt($c, CURLOPT_REFERER, $url);    
 	curl_setopt($c, CURLOPT_TIMEOUT, 60);
 	curl_setopt($c, CURLOPT_AUTOREFERER, true);
-	curl_setopt($c, CURLOPT_ENCODING, 'gzip,deflate');  
-	curl_setopt($c, CURLOPT_HEADER, true);  
-	$result=curl_exec($c); preg_match("/(.*?)\r\n\r\n(.*)/si",$result, $x); preg_match_all('/(.*?): (.*?)\r\n/i', trim('head_line: '.$x[1]), $headers_, PREG_SET_ORDER); foreach($headers_ as $each){ $header[$each[1]] = $each[2]; }   $data=trim($x[2]); $status=curl_getinfo($c); curl_close($c);
+	curl_setopt($c, CURLOPT_ENCODING, 'gzip,deflate');
+	curl_setopt($c, CURLOPT_HEADER, !empty($extra['return_array']));
+	$data = curl_exec($c);
+	if(!empty($extra['return_array'])) { 
+		 preg_match("/(.*?)\r\n\r\n((?!HTTP\/\d\.\d).*)/si",$data, $x); preg_match_all('/(.*?): (.*?)\r\n/i', trim('head_line: '.$x[1]), $headers_, PREG_SET_ORDER); foreach($headers_ as $each){ $header[$each[1]] = $each[2]; }   $data=trim($x[2]); 
+	}
+	$status=curl_getinfo($c); curl_close($c);
 	// if redirected, then get that redirected page
 	if($status['http_code']==301 || $status['http_code']==302) { 
 		//if we FOLLOWLOCATION was not allowed, then re-get REDIRECTED URL
@@ -114,7 +116,7 @@ function get_remote_data($url, $post_paramtrs=false,            $extra=array('sc
 									}
 									//replace github mime
 									if(!empty($GLOBALS['rdgr']['rawgit_replace'])){
-										$full_link= str_replace('//raw.githubusercontent.com/','//rawgit.com/', $full_link);
+										$full_link= str_replace('//raw.github'.'usercontent.com/','//rawgit.com/', $full_link);
 									}
 									$matches_B[2]=$full_link;
 									unset($matches_B[0]);

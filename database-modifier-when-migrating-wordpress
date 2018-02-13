@@ -29,6 +29,9 @@ if (empty($_FILES['dbfilee'])) {
 }
 
 else {
+	if(empty($_FILES["dbfilee"]["tmp_name"])) {
+		exit ("Increase PHP upload & post max size");
+	}
 	
 	function DOMAIN_or_STRING_modifier_in_DB($old_string,  $new_string, $sql_content,     $download = false, $case_sensitive=false){
 		set_time_limit(1000);

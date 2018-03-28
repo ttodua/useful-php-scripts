@@ -9,7 +9,7 @@
 ###    * Automatically handles FOLLOWLOCATION problem;
 ###    * Using 'replace_src'=>true, it fixes domain-relative urls  (i.e.:   src="./file.jpg"  ----->  src="http://example.com/file.jpg" )
 ###    * Using 'schemeless'=>true, it converts urls in schemeless  (i.e.:   src="http://exampl..  ----->  src="//exampl... )\
-###### // source: https://github.com/tazotodua/useful-php-scripts]               ##########
+###### // source: https://github.com/tazotodua/useful-php-scripts                ##########
 ###### // Get minified code from: http://protectpages.com/tools/php-minify.php   ##########
 ###########################################################################################
 */ 

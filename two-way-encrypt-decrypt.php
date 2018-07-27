@@ -9,7 +9,7 @@
 $message   = 'hello there';
 $secret_key= 'sdfejkv6r7twefdgef';
 $encrypted = Cryptor::encrypt( $message, $secret_key);
-$decrypted = Cryptor::encrypt( $encrypted, $secret_key);
+$decrypted = Cryptor::decrypt( $encrypted, $secret_key);
 */
 
 class Cryptor 

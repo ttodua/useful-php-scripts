@@ -2,19 +2,15 @@
 /*
 #########################################################################################
 ############  Sample Class for 2-way encrypt/decrypt data (string) in php ###############
+################ ( https://goo.gl/hZJaEB , https://goo.gl/TcFkun ) ######################
 #########################################################################################
-######################################## Usage ##########################################
 
- includ_once("path/thisfile.php");
-
- $message   = 'hello there';
- $secret_key= 'sdfejkv6r7twefdgef';
- $encrypted = Cryptor::encrypt( $message, $secret_key);
- $decrypted = Cryptor::encrypt( $encrypted, $secret_key);
- 
-# thanks to: https://stackoverflow.com/questions/9262109/simplest-two-way-encryption-using-php
+////////// example ///////////
+$message   = 'hello there';
+$secret_key= 'sdfejkv6r7twefdgef';
+$encrypted = Cryptor::encrypt( $message, $secret_key);
+$decrypted = Cryptor::encrypt( $encrypted, $secret_key);
 */
-
 
 class Cryptor 
 {

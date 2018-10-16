@@ -1,5 +1,6 @@
 /*     ========== https://github.com/tazotodua/useful-php-scripts ======== 
-### Usage ###   
+
+Usage:
 
 new GoodZipArchive('path/to/input/folder',    'path/to/output_zip_file.zip') ;
 */

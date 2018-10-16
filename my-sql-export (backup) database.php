@@ -1,9 +1,13 @@
 <?php
-// EXAMPLE:   EXPORT_TABLES("localhost","user","pass","db_name" ); 
-		//optional: 5th parameter - to backup specific tables only: array("mytable1","mytable2",...)   
-		//optional: 6th parameter - backup filename
-		// IMPORTANT NOTE for people who try to change strings in SQL FILE before importing, MUST READ:  goo.gl/2fZDQL
-					
+/* 
+##### EXAMPLE #####
+   EXPORT_TABLES("localhost","user","pass","db_name" ); 
+   
+     * (optional) 5th parameter: to backup specific tables only,like: array("mytable1","mytable2",...)   
+     * (optional) 6th parameter: backup filename (otherwise, it starts download)
+     * IMPORTANT NOTE ! Many people replaces strings in SQL file, which is not recommended. READ THIS:  http://itask.software/tools/wordpress-migrator
+*/
+
 // https://github.com/tazotodua/useful-php-scripts  
 function EXPORT_TABLES($host,$user,$pass,$name,       $tables=false, $backup_name=false){ 
 	set_time_limit(3000); $mysqli = new mysqli($host,$user,$pass,$name); $mysqli->select_db($name); $mysqli->query("SET NAMES 'utf8'");

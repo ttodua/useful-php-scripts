@@ -1,14 +1,18 @@
 <?php
 /* 
+##### Origin #####
+    https://github.com/tazotodua/useful-php-scripts 
+
 ##### EXAMPLE #####
    EXPORT_TABLES("localhost","user","pass","db_name" ); 
    
+##### Notes #####
      * (optional) 5th parameter: to backup specific tables only,like: array("mytable1","mytable2",...)   
      * (optional) 6th parameter: backup filename (otherwise, it starts download)
      * IMPORTANT NOTE ! Many people replaces strings in SQL file, which is not recommended. READ THIS:  http://itask.software/tools/wordpress-migrator
+     * If you need, you can check "import.php" too
 */
-
-// https://github.com/tazotodua/useful-php-scripts  
+ 
 function EXPORT_TABLES($host,$user,$pass,$name,       $tables=false, $backup_name=false){ 
 	set_time_limit(3000); $mysqli = new mysqli($host,$user,$pass,$name); $mysqli->select_db($name); $mysqli->query("SET NAMES 'utf8'");
 	$queryTables = $mysqli->query('SHOW TABLES'); while($row = $queryTables->fetch_row()) { $target_tables[] = $row[0]; }	if($tables !== false) { $target_tables = array_intersect( $target_tables, $tables); } 
@@ -30,5 +34,5 @@ function EXPORT_TABLES($host,$user,$pass,$name,       $tables=false, $backup_nam
 	$backup_name = $backup_name ? $backup_name : $name.'___('.date('H-i-s').'_'.date('d-m-Y').').sql';
 	ob_get_clean(); header('Content-Type: application/octet-stream');  header("Content-Transfer-Encoding: Binary");  header('Content-Length: '. (function_exists('mb_strlen') ? mb_strlen($content, '8bit'): strlen($content)) );    header("Content-disposition: attachment; filename=\"".$backup_name."\""); 
 	echo $content; exit;
-}      //see import.php too
+}
 ?>

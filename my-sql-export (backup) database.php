@@ -1,8 +1,5 @@
 <?php
 /* 
-##### Origin #####
-    https://github.com/tazotodua/useful-php-scripts 
-
 ##### EXAMPLE #####
    EXPORT_TABLES("localhost","user","pass","db_name" ); 
    
@@ -12,8 +9,10 @@
      * IMPORTANT NOTE ! Many people replaces strings in SQL file, which is not recommended. READ THIS:  http://itask.software/tools/wordpress-migrator
      * If you need, you can check "import.php" too
 */
- 
-function EXPORT_TABLES($host,$user,$pass,$name,       $tables=false, $backup_name=false){ 
+
+// by https://github.com/tazotodua/useful-php-scripts //
+function EXPORT_TABLES($host,$user,$pass,$name,       $tables=false, $backup_name=false)
+{ 
 	set_time_limit(3000); $mysqli = new mysqli($host,$user,$pass,$name); $mysqli->select_db($name); $mysqli->query("SET NAMES 'utf8'");
 	$queryTables = $mysqli->query('SHOW TABLES'); while($row = $queryTables->fetch_row()) { $target_tables[] = $row[0]; }	if($tables !== false) { $target_tables = array_intersect( $target_tables, $tables); } 
 	$content = "SET SQL_MODE = \"NO_AUTO_VALUE_ON_ZERO\";\r\nSET time_zone = \"+00:00\";\r\n\r\n\r\n/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;\r\n/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;\r\n/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;\r\n/*!40101 SET NAMES utf8 */;\r\n--\r\n-- Database: `".$name."`\r\n--\r\n\r\n\r\n";

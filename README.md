@@ -10,7 +10,6 @@ A collection of useful PHP scripts and functions. They're all designed to be _co
 - [MySQL Export Database](https://github.com/tazotodua/useful-php-scripts/blob/master/my-sql-export%20(backup)%20database.php)
 - [MySQL Import Database](https://github.com/tazotodua/useful-php-scripts/blob/master/my-sql-import%20(restore)%20database.php)
 - [MySQL Commands](https://github.com/tazotodua/useful-php-scripts/blob/master/mysql-commands%20(%2BWordpress).php)
-- [Paypal API Examples](https://github.com/tazotodua/useful-php-scripts/blob/master/paypal-examples%2BAPI-php)
 - [Remove Directory Recursively](https://github.com/tazotodua/useful-php-scripts/blob/master/remove-directory-recursively-(delete-folder%2Bsub-files))
 - [Text to Image](https://github.com/tazotodua/useful-php-scripts/blob/master/text-to-image.php)
 - [Two Way Encrypt-Decrypt](https://github.com/tazotodua/useful-php-scripts/blob/master/two-way-encrypt-decrypt.php)

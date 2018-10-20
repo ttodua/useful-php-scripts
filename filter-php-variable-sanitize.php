@@ -66,8 +66,13 @@ echo '<tr><td><code>same as above</code></td><td><code>  filter_var($text, FILTE
 echo $divideeeeeeeeer;
 // =============================== For Wordpress =========================//
 echo '<tr><td><h3 style="color:red;">for WordPress built-in functions</h3><td></tr>';
-echo '<tr><td><code>'.htmlentities(defined('ABSPATH') ? sanitize_title_for_query($text): 'a-1-_').'</code></td><td><code>sanitize_title($text)</code></td></tr>';
+echo '<tr><td><code>'.htmlentities(defined('ABSPATH') ? sanitize_title($text): 'a-1-_').'</code></td><td><code>sanitize_title($text)</code></td></tr>';
+echo '<tr><td><code>'.htmlentities(defined('ABSPATH') ? sanitize_title_for_query($text): 'a-1-_').'</code></td><td><code>sanitize_title_for_query($text)</code></td></tr>';
+echo '<tr><td><code>'.htmlentities(defined('ABSPATH') ? sanitize_title_with_dashes($text): 'a-1-_').'</code></td><td><code>sanitize_title_with_dashes($text)</code></td></tr>';
 echo '<tr><td><code>'.htmlentities(defined('ABSPATH') ? sanitize_text_field($text): 'a 1`-=[]\\;\',./~!@#$%^&*()_+{}|:"?').'</code></td><td><code>sanitize_text_field($text)</code></td></tr>';
+echo '<tr><td><code>'.htmlentities(defined('ABSPATH') ? sanitize_textarea_field($text): 'a 1`-=[]\;\',./~!@#$%^&*()_+{}|:"?').'</code></td><td><code>sanitize_textarea_field($text)</code></td></tr>';
+echo '<tr><td><code>'.htmlentities(defined('ABSPATH') ? sanitize_user($text): 'a 1`-=[]\;\',./~!@#$%^&*()_+{}|:"?').'</code></td><td><code>sanitize_user($text)</code></td></tr>';
+echo '<tr><td><code>'.htmlentities(defined('ABSPATH') ? sanitize_mime_type($text): 'a1-./*+').'</code></td><td><code>sanitize_mime_type($text)</code></td></tr>';
 echo '<tr><td><code>'.htmlentities(defined('ABSPATH') ? sanitize_key($text): 'a1-_').'</code></td><td><code>sanitize_key($text)</code></td></tr>';
 echo '<tr><td><code>'.htmlentities(defined('ABSPATH') ? sanitize_html_class($text): 'a1-_').'</code></td><td><code>sanitize_html_class($text)</code></td></tr>';
 echo '<tr><td><code>'.htmlentities(defined('ABSPATH') ? sanitize_file_name($text) : 'a-1-.@^').'</code></td><td><code>sanitize_file_name($text)</code></td></tr>';

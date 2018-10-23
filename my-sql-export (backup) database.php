@@ -1,7 +1,7 @@
 <?php
 /* 
 ##### EXAMPLE #####
-   EXPORT_TABLES("localhost","user","pass","db_name" ); 
+   EXPORT_DATABASE("localhost","user","pass","db_name" ); 
    
 ##### Notes #####
      * (optional) 5th parameter: to backup specific tables only,like: array("mytable1","mytable2",...)   
@@ -11,7 +11,7 @@
 */
 
 // by https://github.com/tazotodua/useful-php-scripts //
-function EXPORT_TABLES($host,$user,$pass,$name,       $tables=false, $backup_name=false)
+function EXPORT_DATABASE($host,$user,$pass,$name,       $tables=false, $backup_name=false)
 { 
 	set_time_limit(3000); $mysqli = new mysqli($host,$user,$pass,$name); $mysqli->select_db($name); $mysqli->query("SET NAMES 'utf8'");
 	$queryTables = $mysqli->query('SHOW TABLES'); while($row = $queryTables->fetch_row()) { $target_tables[] = $row[0]; }	if($tables !== false) { $target_tables = array_intersect( $target_tables, $tables); } 

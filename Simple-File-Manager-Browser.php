@@ -1,6 +1,6 @@
 <?php
 $Password = 'xxxxxx';                        //SET your password
-$Allowed_IPs = array('277.277.277.277', '299.299.299.299');    //insert your correct IP   (YOUR IP here: https://goo.gl/2cfpaa )
+$Allowed_IPs = array('127.0.0.1', '::1');    //insert your correct IP   (YOUR IP here: https://goo.gl/2cfpaa )
 
 
 /*	// based on  pafm(https://github.com/mustafa0x/pafm), added ZIP functionality and minor changes..
@@ -29,81 +29,15 @@ $avoid_authrz = false;
 //set memory limits
 define('PASSWORD__WFMB', $Password);
 $GLOBALS['ALLOWED_IP__WFMB'] = $Allowed_IPs;
-$result = ini_set('max_execution_time', 3000);
-$result = ini_set('memory_limit', '100M');
-$result = ini_set('mysql.connect_timeout', 300);
-$result = ini_set('default_socket_timeout', 300);
-
-
-//=================================  useful addition for WORDPRESS users=============================
-//if included in wordpress plugin folder
-if (file_exists('readme.txt') && strstr(file_get_contents('readme.txt'), 'Tested up to:')) {
-    $w1 = dirname(dirname(__file__)) . '/wp-load.php';
-    $w2 = dirname(dirname(dirname(__file__))) . '/wp-load.php';
-    $w3 = dirname(dirname(dirname(dirname(__file__)))) . '/wp-load.php';
-    $w4 = dirname(dirname(dirname(dirname(dirname(__file__))))) . '/wp-load.php';
-    $w5 = dirname(dirname(dirname(dirname(dirname(dirname(__file__)))))) . '/wp-load.php';
-    if (file_exists($w1)) {
-        $wordpress_found = true;
-        $wpc = $w1;
-    } elseif (file_exists($w2)) {
-        $wordpress_found = true;
-        $wpc = $w2;
-    } elseif (file_exists($w3)) {
-        $wordpress_found = true;
-        $wpc = $w3;
-    } elseif (file_exists($w4)) {
-        $wordpress_found = true;
-        $wpc = $w4;
-    } elseif (file_exists($w5)) {
-        $wordpress_found = true;
-        $wpc = $w5;
-    } else {
-        die('no_access_error24144. cant find wp-load.php');
-    }
-    //=====wp bug====== avoid redirection when not installed
-    //in /wp-includes/load.php  -------->  "WP_INSTALLING" constant..
-    //if (substr($_SERVER['REQUEST_URI'],-21) == '/wp-admin/install.php') {}
-    //if (!defined('WP_INSTALLING')){define( 'WP_INSTALLING',true ); }   <----------- causes Plugins Not-Load.
-    if (!defined('WP_REPAIRING')) {
-        define('WP_REPAIRING', true);
-    }
-
-    $coredir = dirname($wpc);
-    require_once($coredir . '/wp-load.php');
-    //if not disabled from Wordpress
-    if (defined('DISALLOW_FILE_EDIT') || defined('DISALLOW_FILE_MODS') || defined('WFMB__DISABLERUN')) {
-        exit("This plugin is defined as disabled. error_21241");
-    }
-    if (is_blog_installed()) {
-        $startdir = dirname($_SERVER['DOCUMENT_ROOT'] . home_url('', 'relative'));
-        // ========================== CHECK IF ADMIN
-        //$randomnum=get_option('myfmg_random_numb'); if (!$randomnum) {update_option('myfmg_random_numb',rand(1,111111)*rand(1,1111111)); header("location:" . $_SERVER['REQUES_URI']); exit;}
-        global $current_user;
-        $user_info = get_userdata($current_user->ID); //http://codex.wordpress.org/Function_Reference/get_userdata
-        $lvl = $user_info->user_level;
-        if ($lvl == '10') {
-            $avoid_authrz = true;
-            define('is_WP', true);
-        } else {
-            die('you are not logged in as Wordpress ADMIN.. At first, <a href="' . home_url() . '/wp-login.php?redirect_to=' . urlencode($_SERVER['PHP_SELF']) . '&reauth=1">LOGIN</a> and then come back here.<br/><br/><br/>');
-        }
-        //else {	echo 'you are not logged in as Wordpress ADMIN.. however, I will display typical authorization.<br/><br/><br/>'; }
-    } else {
-        $wp_not_installed = true;
-        $noinst_message = 'seems wordpress not correctly installed....However I will allow a basic authorization..<br/><br/>';
-    }
-}
-//================================= ### WORDPRESS addition=============================
-
+ini_set('max_execution_time', 3000);
+ini_set('memory_limit', '100M');
+ini_set('mysql.connect_timeout', 300);
+ini_set('default_socket_timeout', 300);
 
 /*
 configuration
 */
 if (!$avoid_authrz) {
-    if (isset($wp_not_installed)) {
-        echo $noinst_message;
-    }
     if (!in_array($_SERVER['REMOTE_ADDR'], $GLOBALS['ALLOWED_IP__WFMB'])) {
         die("Incorect ip: <b>" . $_SERVER['REMOTE_ADDR'] . '</b> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;(in FTP, open <b>' . $_SERVER['PHP_SELF'] . '</b> and insert your IP in the ALLOWED list).');
     }
@@ -896,7 +830,7 @@ function getDirs($path) {
 		var excludeFiles= prompt("If you need, you can exclude folders/files (separated by comma). example:\r\n " + foldernamee_just_for_reference + "/folder1," + foldernamee_just_for_reference + "/folder2,\r\n\r\nOtherwise, just click OK.\r\n\r\n(NOTICE: Ensure, if you have enough free space" + FreeSpacemessage + " on your FTP to create archive of this folder. Otherwise, you will only be able to do download this directory backup from HOSTING PANEL) ", "");
 		if (excludeFiles != null)
 		{
-			var finalURL="?startzip=1&pathh=" + encodeURIComponent(pathhh) + "&exlcud=" + encodeURIComponent(excludeFiles); 
+			var finalURL="?startzip=1&pathh=" + encodeURIComponent(pathhh) + "&exlcud=" + encodeURIComponent(excludeFiles);
 			window.open(finalURL, \'target="_blank"\');
 		}
 		else
@@ -905,7 +839,7 @@ function getDirs($path) {
 		}
 	}
 	</script>';
-    //------------------------###edit ttt	
+    //------------------------###edit ttt
 
 
     foreach ($dirContents['folders'] as $dirItem) {
@@ -1248,37 +1182,6 @@ if (!empty($_POST['dbaction'])) {
 
 
     <script type="text/javascript">
-        <?php
-        $wordpress_found = false;
-        //=======================for WORDPRESS ADDITION====================
-        $c1 = dirname(dirname(__file__)) . '/wp-config.php';
-        $c2 = dirname(dirname(dirname(__file__))) . '/wp-config.php';
-        $c3 = dirname(dirname(dirname(dirname(__file__)))) . '/wp-config.php';
-        $c4 = dirname(dirname(dirname(dirname(dirname(__file__))))) . '/wp-config.php';
-        $c5 = dirname(dirname(dirname(dirname(dirname(dirname(__file__)))))) . '/wp-config.php';
-        if (!defined('WP_INSTALLING')) {
-            define('WP_INSTALLING', 'this_avoiddsss_redirection_when_not_installed');
-        }
-        if (@include($c1)) {
-            $wordpress_found = true;
-        } elseif (@include($c2)) {
-            $wordpress_found = true;
-        } elseif (@include($c3)) {
-            $wordpress_found = true;
-        } elseif (@include($c4)) {
-            $wordpress_found = true;
-        } elseif (@include($c5)) {
-            $wordpress_found = true;
-        }
-
-        if ($avoid_authrz || $wordpress_found) {
-            $dH = DB_HOST;
-            $dU = DB_USER;
-            $dP = DB_PASSWORD;
-            $dN = DB_NAME;
-        }
-        //=======================### for WORDPRESS addition ====================
-        ?>
         function export_import_db(actionname, importedElement) {
             if (actionname == 'importt') {
                 var importedname = ( (importedElement) ? document.getElementById(importedElement).innerHTML : 'blabla.sql' );
@@ -1288,19 +1191,19 @@ if (!empty($_POST['dbaction'])) {
                 }
                 var sqlFullPath = "<?php echo $myzip_pathh;?>/" + slqfile;
             }
-            ddHOST = prompt("Database HOST", "<?php echo(isset($dH) ? $dH : '');?>");
+            ddHOST = prompt("Database HOST");
             if (ddHOST == null) {
                 return;
             }
-            ddUSER = prompt("Database USERNAME", "<?php echo(isset($dU) ? $dU : '');?>");
+            ddUSER = prompt("Database USERNAME");
             if (ddUSER == null) {
                 return;
             }
-            ddPASS = prompt("Database PASSWORD", "<?php echo(isset($dP) ? $dP : '');?>");
+            ddPASS = prompt("Database PASSWORD");
             if (ddPASS == null) {
                 return;
             }
-            ddNAME = prompt("Database Name", "<?php echo(isset($dN) ? $dN : '');?>");
+            ddNAME = prompt("Database Name");
             if (ddNAME == null) {
                 return;
             }

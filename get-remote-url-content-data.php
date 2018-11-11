@@ -14,7 +14,8 @@
 ###########################################################################################
 */ 
 
-function get_remote_data($url, $post_paramtrs=false,            $extra=array('schemeless'=>true, 'replace_src'=>true, 'return_array'=>false))	{ 
+function get_remote_data($url, $post_paramtrs=false,            $extra=array('schemeless'=>true, 'replace_src'=>true, 'return_array'=>false))	
+{ 
 	// start curl
 	$c = curl_init();curl_setopt($c, CURLOPT_URL, $url);
 	curl_setopt($c, CURLOPT_RETURNTRANSFER, 1);

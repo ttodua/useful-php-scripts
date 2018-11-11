@@ -145,4 +145,3 @@ function get_remote_data($url, $post_paramtrs=false,            $extra=array('sc
 	}
 	return $content;
 }
-?>

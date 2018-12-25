@@ -6,7 +6,7 @@
 
 
 
-$text='a 1`-=[]\;\',./~!@#$%^&*()_+{}|:"<>?';
+$text='A 1`-=[]\;\',./~!@#$%^&*()_+{}|:"<>?';
 header('Content-Type: text/html; charset=utf-8');
 $divideeeeeeeeer='<td>-----------------------------------------------</td><td>-----------------------------------------------</td></tr>';
 echo '<style>table { border-collapse:collapse; }  table tr {border:1px solid #f5f5f5;}  td:nth-child(2) { max-width: 600px; position:relative; top:-3px; color:green; } td { max-width: 500px; } </style>';
@@ -69,13 +69,13 @@ echo '<tr><td><h3 style="color:red;">for WordPress built-in functions</h3><td></
 echo '<tr><td><code>'.htmlentities(defined('ABSPATH') ? sanitize_title($text): 'a-1-_').'</code></td><td><code>sanitize_title($text)</code></td></tr>';
 echo '<tr><td><code>'.htmlentities(defined('ABSPATH') ? sanitize_title_for_query($text): 'a-1-_').'</code></td><td><code>sanitize_title_for_query($text)</code></td></tr>';
 echo '<tr><td><code>'.htmlentities(defined('ABSPATH') ? sanitize_title_with_dashes($text): 'a-1-_').'</code></td><td><code>sanitize_title_with_dashes($text)</code></td></tr>';
-echo '<tr><td><code>'.htmlentities(defined('ABSPATH') ? sanitize_text_field($text): 'a 1`-=[]\\;\',./~!@#$%^&*()_+{}|:"?').'</code></td><td><code>sanitize_text_field($text)</code></td></tr>';
-echo '<tr><td><code>'.htmlentities(defined('ABSPATH') ? sanitize_textarea_field($text): 'a 1`-=[]\;\',./~!@#$%^&*()_+{}|:"?').'</code></td><td><code>sanitize_textarea_field($text)</code></td></tr>';
-echo '<tr><td><code>'.htmlentities(defined('ABSPATH') ? sanitize_user($text): 'a 1`-=[]\;\',./~!@#$%^&*()_+{}|:"?').'</code></td><td><code>sanitize_user($text)</code></td></tr>';
-echo '<tr><td><code>'.htmlentities(defined('ABSPATH') ? sanitize_mime_type($text): 'a1-./*+').'</code></td><td><code>sanitize_mime_type($text)</code></td></tr>';
+echo '<tr><td><code>'.htmlentities(defined('ABSPATH') ? sanitize_text_field($text): 'A 1`-=[]\\;\',./~!@#$%^&*()_+{}|:"?').'</code></td><td><code>sanitize_text_field($text)</code></td></tr>';
+echo '<tr><td><code>'.htmlentities(defined('ABSPATH') ? sanitize_textarea_field($text): 'A 1`-=[]\;\',./~!@#$%^&*()_+{}|:"?').'</code></td><td><code>sanitize_textarea_field($text)</code></td></tr>';
+echo '<tr><td><code>'.htmlentities(defined('ABSPATH') ? sanitize_user($text): 'A 1`-=[]\;\',./~!@#$%^&*()_+{}|:"?').'</code></td><td><code>sanitize_user($text)</code></td></tr>';
+echo '<tr><td><code>'.htmlentities(defined('ABSPATH') ? sanitize_mime_type($text): 'A1-./*+').'</code></td><td><code>sanitize_mime_type($text)</code></td></tr>';
 echo '<tr><td><code>'.htmlentities(defined('ABSPATH') ? sanitize_key($text): 'a1-_').'</code></td><td><code>sanitize_key($text)</code></td></tr>';
-echo '<tr><td><code>'.htmlentities(defined('ABSPATH') ? sanitize_html_class($text): 'a1-_').'</code></td><td><code>sanitize_html_class($text)</code></td></tr>';
-echo '<tr><td><code>'.htmlentities(defined('ABSPATH') ? sanitize_file_name($text) : 'a-1-.@^').'</code></td><td><code>sanitize_file_name($text)</code></td></tr>';
+echo '<tr><td><code>'.htmlentities(defined('ABSPATH') ? sanitize_html_class($text): 'A1-_').'</code></td><td><code>sanitize_html_class($text)</code></td></tr>';
+echo '<tr><td><code>'.htmlentities(defined('ABSPATH') ? sanitize_file_name($text) : 'A-1-.@^').'</code></td><td><code>sanitize_file_name($text)</code></td></tr>';
 echo '<tr><td><code>'.htmlentities(defined('ABSPATH') ? sanitize_email($text) : '(empty)').'</code></td><td><code>sanitize_email($text)</code></td></tr>';
 echo $divideeeeeeeeer;
 echo '<tr><td cospan="2">source code at : <b>github.com/tazotodua/useful-php-scripts</b><td></tr>';

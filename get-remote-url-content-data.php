@@ -14,7 +14,7 @@
 ###########################################################################################
 */ 
 
-function get_remote_data($url, $post_paramtrs=false,            $extra=array('schemeless'=>true, 'replace_src'=>true, 'return_array'=>false))	
+function get_remote_data($url, $post_paramtrs=false,            $extra=array('schemeless'=>true, 'replace_src'=>true, 'return_array'=>false, "curl_opts"=>[]))	
 { 
 	$c = curl_init(); 
 	curl_setopt($c, CURLOPT_URL, $url);
@@ -36,6 +36,8 @@ function get_remote_data($url, $post_paramtrs=false,            $extra=array('sc
 	curl_setopt($c, CURLOPT_AUTOREFERER, true);
 	curl_setopt($c, CURLOPT_ENCODING, 'gzip,deflate');
 	curl_setopt($c, CURLOPT_HEADER, !empty($extra['return_array']));
+	//set extra options if passed
+	if(!empty($extra['curl_opts'])) foreach($extra['curl_opts'] as $key=>$value) curl_setopt($c, constant($key), $value);
 	$data = curl_exec($c);
 	if(!empty($extra['return_array'])) { 
 		 preg_match("/(.*?)\r\n\r\n((?!HTTP\/\d\.\d).*)/si",$data, $x); preg_match_all('/(.*?): (.*?)\r\n/i', trim('head_line: '.$x[1]), $headers_, PREG_SET_ORDER); foreach($headers_ as $each){ $header[$each[1]] = $each[2]; }   $data=trim($x[2]); 

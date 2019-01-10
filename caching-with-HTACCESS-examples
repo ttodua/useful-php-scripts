@@ -1,0 +1,195 @@
+##################################################################################
+########################### HTACCESS optimization (TT's version) #################
+##################################################################################
+######################### ShortLink:  https://git.io/v6ykm #######################
+# NOTE 1: READ ALL NOTES & COMMENTS in this file, PLEASE!
+#         It's better if you paste this page fully in your HTACCESS. 
+#         Suggestions are welcome! Mail me: tazotodua+github@gmail.com
+# NOTE 2: In some low-quality hostings, these codes wont work in HTACCESS.
+# NOTE 3: In some cases, if your hosting is limited, you can use different "CACHING" and
+#            "COMPRESSION" methods, rather than the my codes. For this, read the commented lines
+#            in "CACHING" and "COMPRESSION" blocks.
+# NOTE 3: In case you dont have access to HTACCESS, see doing it with PHP: https://git.io/v6yfp
+# NOTE 4: Remember, in HTACCESS, instead of ONE-LINE fileType commands, i.e.
+#            ExpiresByType image/jpg "access plus 3 months"  
+#        You can use:
+#            <FilesMatch "\.(jpg|png)$">
+#              ExpiresDefault "access plus 3 months"
+#            </FilesMatch>
+# NOTE 5: Most users wont ever need Manifest files. (Who needs them, read: http://goo.gl/3AFjt3 )
+# NOTE 6: If you use this with Wordpress, it's better to insert this block before `WP` block.
+# NOTE 7: Thanks to all contributors! 
+###################################################################################
+###################################################################################
+
+
+###########################################################
+########### Turn off `Last-Modified`     ##################
+#Description:  If you remove the `Last-Modified` and `ETag` header, you will totally eliminate
+#              `If-Modified-Since` and `If-None-Match` requests and their `304 Not Modified` 
+#              responses, so a file will stay cached without checking for updates until the 
+#              `Expires` header indicates new content is available!
+# NOTE 1: Sometimes, your existing .htaccess may contains strange `Vary` commands (i.e.  WordFence
+#         sets it to "Accept-Encoding, Cookie" --> https://goo.gl/9h2v52 ), so I re-set `Vary`. 
+#         Otherwise images,js... CACHING doesnt work!
+###########################################################
+<ifModule mod_headers.c>
+    Header unset Last-Modified
+    Header set Vary "Accept-Encoding"
+</ifModule>
+	
+###########################################################
+################## Declaring MIME types ###################
+# Description: Sometimes hosting doesnt automatically do this. (more at: https://goo.gl/imoiAd )
+###########################################################
+<IfModule mod_mime.c>
+  # Data interchange
+    AddType application/atom+xml                        atom
+    AddType application/json                            json map topojson
+    AddType application/ld+json                         jsonld
+    AddType application/rss+xml                         rss
+    AddType application/vnd.geo+json                    geojson
+    AddType application/xml                             rdf xml
+  # JavaScript
+    AddType application/javascript                      js
+  # Media files
+    AddType audio/mp4                                   f4a f4b m4a
+    AddType audio/ogg                                   oga ogg opus
+    AddType image/bmp                                   bmp
+    AddType image/svg+xml                               svg svgz
+    AddType image/webp                                  webp
+    AddType video/mp4                                   f4v f4p m4v mp4
+    AddType video/ogg                                   ogv
+    AddType video/webm                                  webm
+    AddType video/x-flv                                 flv
+    AddType image/x-icon                                cur ico
+  # Web fonts
+    AddType application/font-woff                       woff
+    AddType application/font-woff2                      woff2
+    AddType application/vnd.ms-fontobject               eot
+	  # This is needed for some Browsers (more at: http://pastebin.com/raw/Av9n2RqR )
+    AddType application/x-font-ttf                      ttc ttf
+    AddType font/opentype                               otf
+  # Other
+    AddType application/octet-stream                    safariextz
+    AddType application/x-bb-appworld                   bbaw
+    AddType application/x-chrome-extension              crx
+    AddType application/x-opera-extension               oex
+    AddType application/x-xpinstall                     xpi
+    AddType text/vcard                                  vcard vcf
+    AddType text/vnd.rim.location.xloc                  xloc
+    AddType text/vtt                                    vtt
+    AddType text/x-component                            htc
+</IfModule>
+	
+	
+	
+	
+	
+	
+	
+	
+##############################################################
+##############     CACHING (`EXPIRE`  method)     ############
+### Description:  cache your files with `EXPIRES` method.
+# NOTE 1: Caching explained:  (a) https://goo.gl/kF3Nzb (b) https://goo.gl/USqPGl
+# NOTE 2: If caching doesnt work, read the above paragraph "Turning off LAST-MODIFIED"
+# NOTE 3: If your hosting cant use `EXPIRES`,try such `Cache-Control`: http://goo.gl/gME7cA
+# NOTE 4: `EXPIRES` activates `mod_expires`, which automatically 
+#           generates "Cache-Control:max-age=xxxx" header,  so you dont need to add that.
+# NOTE 5: Instead of "access plus 1 day" you can use A86400 (or whatever seconds you want ).
+# NOTE 6: If you use FALCON/HTML caching, then remove the "text/html" line.
+
+##############################################################
+<IfModule mod_headers.c>
+    Header append Cache-Control "public"
+</IfModule>
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresDefault                         "access plus 1 month"
+    # Media
+    ExpiresByType image/jpg                "access plus 1 year"
+    ExpiresByType image/jpeg               "access plus 1 year"
+    ExpiresByType image/gif                "access plus 1 year"
+    ExpiresByType image/png                "access plus 1 year"
+    ExpiresByType image/bmp                "access plus 1 year"
+    ExpiresByType image/webp               "access plus 1 year"
+    ExpiresByType video/ogg                "access plus 1 year"
+    ExpiresByType audio/ogg                "access plus 1 year"
+    ExpiresByType video/mp4                "access plus 1 year"
+    ExpiresByType video/webm               "access plus 1 year"
+    ExpiresByType image/x-icon             "access plus 1 week"
+    ExpiresByType image/vnd.microsoft.icon "access plus 1 week"
+    # Webfonts
+    ExpiresByType image/svg+xml            "access plus 1 month"
+    ExpiresByType application/vnd.ms-fontobject "access plus 3 months"
+    ExpiresByType font/eot                 "access plus 3 months"
+    ExpiresByType font/opentype            "access plus 3 months"
+    ExpiresByType font/truetype            "access plus 3 months"
+    ExpiresByType application/x-font-ttf   "access plus 3 months"
+    ExpiresByType application/font-woff    "access plus 3 months"
+    ExpiresByType application/x-font-woff  "access plus 3 months"
+    ExpiresByType font/woff                "access plus 3 months"
+    ExpiresByType application/font-woff2   "access plus 3 months"
+    # Other
+    ExpiresByType text/html                "access plus 1 day"
+    ExpiresByType text/css                 "access plus 1 week"
+    ExpiresByType text/javascript          "access plus 1 month"
+    ExpiresByType text/x-javascript        "access plus 1 month"
+    ExpiresByType application/x-javascript "access plus 1 month"
+    ExpiresByType application/javascript   "access plus 1 month"
+    ExpiresByType application/pdf          "access plus 4 months"
+    ExpiresByType application/x-shockwave-flash "access plus 1 month"
+	# Data interchange
+    ExpiresByType text/xml                 "access plus 0 seconds"
+    ExpiresByType application/xml          "access plus 0 seconds"
+    ExpiresByType application/json         "access plus 0 seconds"
+    ExpiresByType application/ld+json      "access plus 0 seconds"
+    ExpiresByType application/schema+json  "access plus 0 seconds"
+    ExpiresByType application/vnd.geo+json "access plus 0 seconds"
+    ExpiresByType application/rss+xml      "access plus 1 hour"
+    ExpiresByType application/rdf+xml      "access plus 1 hour"
+    ExpiresByType application/atom+xml     "access plus 1 hour"
+</IfModule>
+
+	
+	
+###########################################################
+########### Turn off ETags (Entity tags) ##################
+# Description: ETags are a mechanism to check for a newer version of a cached file. By removing
+#               the ETag header, you disable caches & browsers from being able to validate files,
+#               so they are forced to rely on your Cache-Control and Expires header.  
+###########################################################
+<ifModule mod_headers.c>
+    Header unset ETag
+</ifModule>
+# the above "unset" is better, because `FileETag None` doesn't work always
+FileETag None
+
+
+###################### For Security  ######################
+# Disable sniff (more at: http://pastebin.com/raw/KWYyHwLy )
+<IfModule mod_headers.c>
+    Header set X-Content-Type-Options "nosniff"
+</IfModule>	
+
+        
+#############################################################
+################ COMPRESSION (`DEFLATE` method)  ############
+# Description:  send compressed data to visitor, thus saving Bandwith and SPEED-UP site.
+# NOTE 1: If your hosting cant use `DEFLATE` method, use GZIP: http://goo.gl/qEW8Zb
+#############################################################
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/css text/html text/javascript text/plain text/xml
+    AddOutputFilterByType DEFLATE font/opentype font/otf font/ttf image/svg+xml image/x-icon
+    AddOutputFilterByType DEFLATE application/vnd.ms-fontobject application/x-font-ttf
+    AddOutputFilterByType DEFLATE application/x-font application/x-font-truetype
+    AddOutputFilterByType DEFLATE application/x-font-opentype application/x-font-otf
+    AddOutputFilterByType DEFLATE application/javascript application/x-javascript
+    AddOutputFilterByType DEFLATE application/xhtml+xml application/xml application/rss+xml
+</IfModule>
+
+##################################################################################
+###################################### END #######################################
+#######################   HTACCESS optimization (TT's version)    ################
+##################################################################################

@@ -131,3 +131,23 @@ p.s. for Wordpress, for secutiry, its better to use "PREPARE" function inside th
 					UPDATEE_OR_INSERTTT('myyy_tableee', 
 							array('mycolumn_1'=> 'Hello World' ),
 							array('mycolumn_5'=> 'Gonzales', 'mycolumn_6'=> 'France' ) );
+																		  
+																		  
+																		  
+																		  
+																		  
+																		  
+																		  
+																		  
+
+
+//===========================================================================================//
+//================================= Commands for VPS  ======================================//
+//===========================================================================================//
+																		  ::export::
+
+::for export::
+mysqldump -u USERNAME -p DBNAME [table1 table2] > "/var/www/example.sql"
+
+::for import::
+mysqldump -u USERNAME -p DBNAME [table1 table2] < "/var/www/example.sql"

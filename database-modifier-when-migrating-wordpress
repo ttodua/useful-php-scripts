@@ -1,5 +1,5 @@
 <?php
-// LIVE DEMO:  https://www.protectpages.com/tools/WordpressMigrator
+// LIVE DEMO:  https://puvox.software/tools/wordpress-migrator
 
 if (empty($_FILES['dbfilee'])) { 
 									echo '<!DOCTYPE html><head><title>Replace strings in DB</title></head><body>';

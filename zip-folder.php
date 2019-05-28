@@ -11,7 +11,7 @@ class GoodZipArchive extends ZipArchive
 	
 	public function create_func($input_folder=false, $output_zip_file=false)
 	{
-		if($input_folder && $output_zip_file)
+		if($input_folder !== false && $output_zip_file !== false)
 		{
 			$res = $this->open($output_zip_file, ZipArchive::CREATE);
 			if($res === TRUE) 	{ $this->addDir($input_folder, basename($input_folder)); $this->close(); }

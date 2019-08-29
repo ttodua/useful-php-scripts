@@ -1,31 +1,27 @@
 ##################################################################################
 ########################### HTACCESS optimization (TT's version) #################
 ##################################################################################
-######################### ShortLink:  https://git.io/v6ykm #######################
+######################### ShortLink: https://git.io/fjxVY #######################
 # NOTE 1: READ ALL NOTES & COMMENTS in this file, PLEASE!
-#         It's better if you paste this page fully in your HTACCESS. 
-#         Suggestions are welcome! Mail me: tazotodua+github@gmail.com
-# NOTE 2: In some low-quality hostings, these codes wont work in HTACCESS.
-# NOTE 3: In some cases, if your hosting is limited, you can use different "CACHING" and
-#            "COMPRESSION" methods, rather than the my codes. For this, read the commented lines
-#            in "CACHING" and "COMPRESSION" blocks.
-# NOTE 3: In case you dont have access to HTACCESS, see doing it with PHP: https://git.io/v6yfp
-# NOTE 4: Remember, in HTACCESS, instead of ONE-LINE fileType commands, i.e.
+# NOTE 2: This approaches are needed very rarely. If you use CMS (i.e. WP or etc) there are excellent caching plugins, and use them.
+# NOTE 3: In some low-quality hostings, these codes won't work in HTACCESS. If you are serious, get a priced hosting.
+# NOTE 4: In some cases, if your hosting is limited, you can use different "CACHING" and "COMPRESSION" methods, 
+# 	  rather than the my codes. For this, read the commented lines in those blocks.
+# NOTE 5: Remember, in HTACCESS, instead of ONE-LINE fileType commands, i.e.
 #            ExpiresByType image/jpg "access plus 3 months"  
 #        You can use:
 #            <FilesMatch "\.(jpg|png)$">
 #              ExpiresDefault "access plus 3 months"
 #            </FilesMatch>
-# NOTE 5: Most users wont ever need Manifest files. (Who needs them, read: http://goo.gl/3AFjt3 )
-# NOTE 6: If you use this with Wordpress, it's better to insert this block before `WP` block.
-# NOTE 7: Thanks to all contributors! 
+# NOTE 6: This doesn't user barely-used "Manifest" approaches. (Who needs them, read: http://goo.gl/3AFjt3 )
 ###################################################################################
 ###################################################################################
 
 
 ###########################################################
 ########### Turn off `Last-Modified`     ##################
-#Description:  If you remove the `Last-Modified` and `ETag` header, you will totally eliminate
+###########################################################
+# Description: If you remove the `Last-Modified` and `ETag` header, you will totally eliminate
 #              `If-Modified-Since` and `If-None-Match` requests and their `304 Not Modified` 
 #              responses, so a file will stay cached without checking for updates until the 
 #              `Expires` header indicates new content is available!
@@ -37,9 +33,11 @@
     Header unset Last-Modified
     Header set Vary "Accept-Encoding"
 </ifModule>
-	
+
+
 ###########################################################
 ################## Declaring MIME types ###################
+###########################################################
 # Description: Sometimes hosting doesnt automatically do this. (more at: https://goo.gl/imoiAd )
 ###########################################################
 <IfModule mod_mime.c>
@@ -90,7 +88,8 @@
 	
 	
 ##############################################################
-##############     CACHING (`EXPIRE`  method)     ############
+##############   CACHING with `EXPIRE`  method)   ############
+##############################################################
 ### Description:  cache your files with `EXPIRES` method.
 # NOTE 1: Caching explained:  (a) https://goo.gl/kF3Nzb (b) https://goo.gl/USqPGl
 # NOTE 2: If caching doesnt work, read the above paragraph "Turning off LAST-MODIFIED"
@@ -156,6 +155,7 @@
 	
 ###########################################################
 ########### Turn off ETags (Entity tags) ##################
+###########################################################
 # Description: ETags are a mechanism to check for a newer version of a cached file. By removing
 #               the ETag header, you disable caches & browsers from being able to validate files,
 #               so they are forced to rely on your Cache-Control and Expires header.  
@@ -167,15 +167,18 @@
 FileETag None
 
 
+###########################################################
 ###################### For Security  ######################
 # Disable sniff (more at: http://pastebin.com/raw/KWYyHwLy )
 <IfModule mod_headers.c>
     Header set X-Content-Type-Options "nosniff"
 </IfModule>	
+###########################################################
 
         
 #############################################################
 ################ COMPRESSION (`DEFLATE` method)  ############
+###########################################################
 # Description:  send compressed data to visitor, thus saving Bandwith and SPEED-UP site.
 # NOTE 1: If your hosting cant use `DEFLATE` method, use GZIP: http://goo.gl/qEW8Zb
 #############################################################

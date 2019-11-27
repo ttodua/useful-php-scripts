@@ -1,8 +1,9 @@
 <?php
+// Usage:   TextToImage("Hiii");
 
-function TextToImage_my(
-  $text, 
-  $separate_line_after_chars=40,  
+function TextToImage(
+  $text="hello world", 
+  $newline_after_letters=40,  
   $font='./myfont.ttf', 
   $size=24,
   $rotate=0,
@@ -11,20 +12,21 @@ function TextToImage_my(
   $color=array('red'=>0,'grn'=>0,'blu'=>0), 
   $bg_color=array('red'=>255,'grn'=>255,'blu'=>255) 
 ){
-    $amount_of_lines= ceil(strlen($text)/$separate_line_after_chars);
-    $x=explode("\n", $text); $final='';
-    foreach($x as $key=>$value){
-        $returnes='';
-        do{ $first_part=mb_substr($value, 0, $separate_line_after_chars, 'utf-8');
-            $value= "\n".mb_substr($value, $separate_line_after_chars, null, 'utf-8');
-            $returnes .=$first_part;
-        }  while( mb_strlen($value,'utf-8')>$separate_line_after_chars);
-        $final .= $returnes."\n";
-    }
-    $text=$final;
+	//other version: pastebin(dot).com/XVVUyWGD
+	$amount_of_lines= ceil(strlen($text)/$newline_after_letters)+substr_count($text, '\n')+1;
+	$all_lines=explode("\n", $text); $text=""; $amount_of_lines = count($all_lines);
+	foreach($all_lines as $key=>$value){ 
+		while( mb_strlen($value,'utf-8')>$newline_after_letters){	
+			$text_final .= mb_substr($value, 0, $newline_after_letters, 'utf-8')."\n";
+			$value = mb_substr($value, $newline_after_letters, null, 'utf-8');
+		}  
+		$text .= mb_substr($value, 0, $newline_after_letters, 'utf-8') . ( $amount_of_lines-1 == $key ? "" : "\n");
+	}
+	
+	//
     Header("Content-type: image/png");
     $width=$height=$offset_x=$offset_y = 0;
-    if(!is_file($font)) { file_put_contents($font,file_get_contents('https://github.com/edx/edx-certificates/raw/master/template_data/fonts/Arial%20Unicode.ttf')); }
+    if(!is_file($font)) { file_put_contents($font,file_get_contents('https://github.com/potyt/fonts/raw/master/macfonts/Arial%20Unicode%20MS/Arial%20Unicode.ttf')); }
 
     // get the font height.
     $bounds = ImageTTFBBox($size, $rotate, $font, "W");
@@ -57,20 +59,3 @@ function TextToImage_my(
   // output PNG object.
     imagePNG($image);
 }
-
-	//======helper function==========
-	if(!function_exists('mb_substr_replace')){
-	  function mb_substr_replace($string, $replacement, $start, $length = null, $encoding = "UTF-8") {
-		if (extension_loaded('mbstring') === true){
-			$string_length = (is_null($encoding) === true) ? mb_strlen($string) : mb_strlen($string, $encoding);
-			if ($start < 0) { $start = max(0, $string_length + $start); }
-			else if ($start > $string_length) {$start = $string_length; }
-			if ($length < 0){ $length = max(0, $string_length - $start + $length);  }
-			else if ((is_null($length) === true) || ($length > $string_length)) { $length = $string_length; }
-			if (($start + $length) > $string_length){$length = $string_length - $start;} 
-			if (is_null($encoding) === true) {  return mb_substr($string, 0, $start) . $replacement . mb_substr($string, $start + $length, $string_length - $start - $length); }
-			return mb_substr($string, 0, $start, $encoding) . $replacement . mb_substr($string, $start + $length, $string_length - $start - $length, $encoding);
-		}
-		return (is_null($length) === true) ? substr_replace($string, $replacement, $start) : substr_replace($string, $replacement, $start, $length);
-	  }
-	}

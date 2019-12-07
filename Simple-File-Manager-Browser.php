@@ -4,7 +4,7 @@ $Allowed_IPs = array('127.0.0.1', '::1');    //insert your correct IP   (YOUR IP
 
 
 /*	// based on  pafm(https://github.com/mustafa0x/pafm), added ZIP functionality and minor changes..
-	// https://github.com/tazotodua/useful-php-scripts/blob/master/Simple-PHP-file-browser-manager.php
+	// https://github.com/ttodua/useful-php-scripts/blob/master/Simple-PHP-file-browser-manager.php
 	@name:                    PHP AJAX File Manager (PAFM)
 	@filename:                pafm.php
 	@version:                 1.8 RC1 (TT modification)

@@ -10,7 +10,7 @@
      * If you need, you can check "import.php" too
 */
 
-// by https://github.com/tazotodua/useful-php-scripts //
+// by https://github.com/ttodua/useful-php-scripts //
 function EXPORT_DATABASE($host,$user,$pass,$name,       $tables=false, $backup_name=false)
 { 
 	set_time_limit(3000); $mysqli = new mysqli($host,$user,$pass,$name); $mysqli->select_db($name); $mysqli->query("SET NAMES 'utf8'");

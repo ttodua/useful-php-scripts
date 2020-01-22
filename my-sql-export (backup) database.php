@@ -6,7 +6,7 @@
 ##### Notes #####
      * (optional) 5th parameter: to backup specific tables only,like: array("mytable1","mytable2",...)   
      * (optional) 6th parameter: backup filename (otherwise, it creates random name)
-     * IMPORTANT NOTE ! Many people replaces strings in SQL file, which is not recommended. READ THIS:  http://itask.software/tools/wordpress-migrator
+     * IMPORTANT NOTE ! Many people replaces strings in SQL file, which is not recommended. READ THIS:  http://puvox.software/tools/wordpress-migrator
      * If you need, you can check "import.php" too
 */
 

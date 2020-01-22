@@ -1,4 +1,4 @@
-// =========== https://github.com/tazotodua/useful-php-scripts ========== 
+// =========== https://github.com/ttodua/useful-php-scripts ========== 
 //                                 USAGE:
 //     new GoodZipArchive('path/to/input/folder',    'path/to/output_zip_file.zip') ;
 // ======================================================================

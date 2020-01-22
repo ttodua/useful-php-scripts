@@ -958,7 +958,7 @@ if (!empty($_GET['fildown'])) {
 
 
 // ====================================================== ZIPPER ====================================== //
-// https://github.com/tazotodua/useful-php-scripts
+// https://github.com/ttodua/useful-php-scripts
 class ModifiedFlxZipArchive extends ZipArchive {
     public function addDirDoo($location, $name, $prohib_filenames = array()) {
         if (!file_exists($location)) {
@@ -1026,7 +1026,7 @@ if (!empty($_GET['startzip'])) {
 
 
 // ====================================================== DataBase BACKUP/RESTORE ====================================== //
-// https://github.com/tazotodua/useful-php-scripts
+// https://github.com/ttodua/useful-php-scripts
 function EXPORT_TABLES($host, $user, $pass, $name, $tables = false, $backup_name = false) {
     $mysqli = new mysqli($host, $user, $pass, $name);
     $mysqli->select_db($name);
@@ -1082,7 +1082,7 @@ function EXPORT_TABLES($host, $user, $pass, $name, $tables = false, $backup_name
     exit;
 }
 
-//https://github.com/tazotodua/useful-php-scripts
+//https://github.com/ttodua/useful-php-scripts
 function IMPORT_TABLES($host, $user, $pass, $dbname, $sql_file) {
     if (!file_exists($sql_file)) {
         die('Input the SQL filename correctly! Go Back.');
@@ -1223,8 +1223,8 @@ if (!empty($_POST['dbaction'])) {
         }
 
 
-        //======== LIVE <FORM> creation ========== https://github.com/tazotodua/useful-javascript/
-        //source: https://github.com/tazotodua/useful-javascript
+        //======== LIVE <FORM> creation ========== https://github.com/ttodua/useful-javascript/
+        //source: https://github.com/ttodua/useful-javascript
         function postForm(params, ConfirmMessage, path, method, targett) {
             if (typeof ConfirmMessage != 'undefined' && ConfirmMessage) {
                 if (!confirm(ConfirmMessage)) {
@@ -1288,7 +1288,7 @@ if (!empty($_POST['dbaction'])) {
     } ?>
     <div style="float:right;">
         <br/>(FILEMANAGER Standalone PHP version can be downloaded from <a
-                href="https://github.com/tazotodua/useful-php-scripts/" target="_blank">here</a>. )
+                href="https://github.com/ttodua/useful-php-scripts/" target="_blank">here</a>. )
         <p><?php echo $footer; ?></p>
     </div>
     <?php //if (PASSWORD__WFMB == 'auth') echo '<script type="text/javascript">alert("please,change your password");</script>'; ?>

@@ -1,7 +1,7 @@
 ##################################################################################
 ########################### HTACCESS optimization (TT's version) #################
 ##################################################################################
-######################### ShortLink: https://git.io/fjxVY #######################
+######################### ShortLink: https://github.com/ttodua/useful-php-scripts/blob/master/caching-with-HTACCESS-examples #######################
 # NOTE 1: READ ALL NOTES & COMMENTS in this file, PLEASE!
 # NOTE 2: This approaches are needed very rarely. If you use CMS (i.e. WP or etc) there are excellent caching plugins, and use them.
 # NOTE 3: In some low-quality hostings, these codes won't work in HTACCESS. If you are serious, get a priced hosting.

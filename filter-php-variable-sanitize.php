@@ -78,6 +78,6 @@ echo '<tr><td><code>'.htmlentities(defined('ABSPATH') ? sanitize_html_class($tex
 echo '<tr><td><code>'.htmlentities(defined('ABSPATH') ? sanitize_file_name($text) : 'A-1-.@^').'</code></td><td><code>sanitize_file_name($text)</code></td></tr>';
 echo '<tr><td><code>'.htmlentities(defined('ABSPATH') ? sanitize_email($text) : '(empty)').'</code></td><td><code>sanitize_email($text)</code></td></tr>';
 echo $divideeeeeeeeer;
-echo '<tr><td cospan="2">source code at : <b>github.com/tazotodua/useful-php-scripts</b><td></tr>';
+echo '<tr><td cospan="2">source code at : <b>github.com/ttodua/useful-php-scripts</b><td></tr>';
 echo '</tbody></table>';
 ?>

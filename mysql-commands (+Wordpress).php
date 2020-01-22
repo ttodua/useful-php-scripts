@@ -116,7 +116,7 @@ p.s. for Wordpress, for secutiry, its better to use "PREPARE" function inside th
 		$MANUAL->query("INSERT INTO my_tablename (content1, content2, userid) VALUES ('$value1', '$value2','$useriid')");
 		
 			
-					//////Method 2 (only for  wordpress, sanitized)////// (check Updates:::: https://github.com/tazotodua/useful-php-scripts/blob/master/mysql-commands%20%28%2BWordpress%29.php )
+					//////Method 2 (only for  wordpress, sanitized)////// (check Updates:::: https://github.com/ttodua/useful-php-scripts/blob/master/mysql-commands%20%28%2BWordpress%29.php )
 					public function UPDATE_OR_INSERT($tablename, $NewArray, $WhereArray=array()){	  global $wpdb; 
 						$array_for_check =   !empty($WhereArray) ? $WhereArray :  $NewArray;
 						$arrayNames= array_keys($array_for_check);

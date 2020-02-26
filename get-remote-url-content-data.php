@@ -33,7 +33,7 @@ function get_remote_data($url, $post_paramtrs=false,            $extra=array('sc
 	curl_setopt($c, CURLOPT_REFERER, $url);    
 	curl_setopt($c, CURLOPT_TIMEOUT, 60);
 	curl_setopt($c, CURLOPT_AUTOREFERER, true);
-	curl_setopt($c, CURLOPT_ENCODING, 'gzip,deflate');
+	curl_setopt($c, CURLOPT_ENCODING, '');
 	curl_setopt($c, CURLOPT_HEADER, !empty($extra['return_array']));
 	//set extra options if passed
 	if(!empty($extra['curl_opts'])) foreach($extra['curl_opts'] as $key=>$value) curl_setopt($c, constant($key), $value);

@@ -1,18 +1,16 @@
 <?php
 /*
-#############################################################################################
-############### useful PHP cURL function for your library (TT's version) ####################
-############### ( source: https://github.com/ttodua/useful-php-scripts ) #################### 
-#############################################################################################
+###################################################################################################
+################ useful PHP cURL function [ auto-follows recursive redirections ] #################
+###############$### ( source: https://github.com/ttodua/useful-php-scripts ) ###################### 
+###################################################################################################
+###################################################################################################
 ### echo get_remote_data("http://example.com/");                                   // GET
-### echo get_remote_data("http://example.com/", "var2=something&var3=blabla" );    // POST	
-### 
-###    * Automatically handles FOLLOWLOCATION problem;
-###    * Using 'replace_src'=>true, it fixes domain-relative urls  (i.e.:   src="./file.jpg"  ----->  src="http://example.com/file.jpg" ) 
-#################################################################################################
+### echo get_remote_data("http://example.com/", "var2=something&var3=blabla" );    // POST	 
+###################################################################################################
 */ 
 
-function get_remote_data($url, $post_paramtrs=false,            $extra=['replace_src'=>true, 'return_array'=>false, "curl_opts"=>[]])	
+function get_remote_data($url, $post_paramtrs=false,  $curl_opts=>[])	
 { 
 	$c = curl_init(); 
 	curl_setopt($c, CURLOPT_URL, $url);
@@ -35,7 +33,7 @@ function get_remote_data($url, $post_paramtrs=false,            $extra=['replace
 	curl_setopt($c, CURLOPT_ENCODING, '');
 	curl_setopt($c, CURLOPT_HEADER, !empty($extra['return_array']));
 	//set extra options if passed
-	if(!empty($extra['curl_opts'])) foreach($extra['curl_opts'] as $key=>$value) curl_setopt($c, constant($key), $value);
+	if(!empty($curl_opts)) foreach($curl_opts as $key=>$value) curl_setopt($c, constant($key), $value);
 	$data = curl_exec($c);
 	if(!empty($extra['return_array'])) { 
 		 preg_match("/(.*?)\r\n\r\n((?!HTTP\/\d\.\d).*)/si",$data, $x); preg_match_all('/(.*?): (.*?)\r\n/i', trim('head_line: '.$x[1]), $headers_, PREG_SET_ORDER); foreach($headers_ as $each){ $header[$each[1]] = $each[2]; }   $data=trim($x[2]); 
@@ -59,81 +57,89 @@ function get_remote_data($url, $post_paramtrs=false,            $extra=['replace
 	// if not redirected,and nor "status 200" page, then error..
 	elseif ( $status['http_code'] != 200 ) { $data =  "ERRORCODE22 with $url<br/><br/>Last status codes:".json_encode($status)."<br/><br/>Last data got:$data";}
 	//URLS correction
-	if(function_exists('url_corrections_for_content_HELPER')){	    $data= url_corrections_for_content_HELPER($data, $status['url'], [ 'replace_src'=>!empty($extra['replace_src'])] );    	}
 	$answer = ( !empty($extra['return_array']) ? array('data'=>$data, 'header'=>$header, 'info'=>$status) : $data);
-	return $answer;      }     function url_corrections_for_content_HELPER( $content=false, $url, 	$extra_opts=['replace_src'=>false] ) {  
-	$GLOBALS['rdgr']['replace_src']=$extra_opts['replace_src'];
-	if($GLOBALS['rdgr']['replace_src'] ) {
-		if($url) {
-			$GLOBALS['rdgr']['parsed_url']			= parse_url($url);
-			$GLOBALS['rdgr']['urlparts']['domain_X']= $GLOBALS['rdgr']['parsed_url']['scheme'].'://'.$GLOBALS['rdgr']['parsed_url']['host'];
-			$GLOBALS['rdgr']['urlparts']['path_X']	= stripslashes(dirname($GLOBALS['rdgr']['parsed_url']['path']).'/'); 
-			$GLOBALS['rdgr']['all_protocols']= array('adc','afp','amqp','bacnet','bittorrent','bootp','camel','dict','dns','dsnp','dhcp','ed2k','empp','finger','ftp','gnutella','gopher','http','https','imap','irc','isup','javascript','ldap','mime','msnp','map','modbus','mosh','mqtt','nntp','ntp','ntcip','openadr','pop3','radius','rdp','rlogin','rsync','rtp','rtsp','ssh','sisnapi','sip','smtp','snmp','soap','smb','ssdp','stun','tup','telnet','tcap','tftp','upnp','webdav','xmpp');
-		}
-		$GLOBALS['rdgr']['ext_array'] 	= array(
-			'src'	=> array('audio','embed','iframe','img','input','script','source','track','video'),
-			'srcset'=> array('source'),
-			'data'	=> array('object'),
-			'href'	=> array('link','area','a'), 
-			'action'=> array('form')
-			//'param', 'applet' and 'base' tags are exclusion, because of a bit complex structure 
-		);
-		$content= preg_replace_callback( 
-			'/<(((?!<).)*?)>/si', 	//avoids unclosed & closing tags
-			function($matches_A){
-				$content_A = $matches_A[0];
-				$tagname = preg_match('/((.*?)(\s|$))/si', $matches_A[1], $n) ? $n[2] : "";
-				foreach($GLOBALS['rdgr']['ext_array'] as $key=>$value){
-					if(in_array($tagname,$value)){
-						preg_match('/ '.$key.'=(\'|\")/i', $content_A, $n);
-						if(!empty($n[1])){
-							$GLOBALS['rdgr']['aphostrope_type']= $n[1];
-							$content_A = preg_replace_callback( 
-								'/( '.$key.'='.$GLOBALS['rdgr']['aphostrope_type'].')(.*?)('.$GLOBALS['rdgr']['aphostrope_type'].')/i',
-								function($matches_B){
-									$full_link = $matches_B[2];
-									//correction to files/urls
-									if(!empty($GLOBALS['rdgr']['replace_src'])	){
-										//if not schemeless url
-										if(substr($full_link, 0,2) != '//'){
-											$replace_src_allow=true;
-											//check if the link is a type of any special protocol
-											foreach($GLOBALS['rdgr']['all_protocols'] as $each_protocol){
-												//if protocol found - dont continue
-												if(substr($full_link, 0, strlen($each_protocol)+1) == $each_protocol.':'){
-													$replace_src_allow=false; break;
-												}
-											}
-											if($replace_src_allow){
-												$full_link = $GLOBALS['rdgr']['urlparts']['domain_X']. (str_replace('//','/',  $GLOBALS['rdgr']['urlparts']['path_X'].$full_link) );
-											}
+	return $answer;      
+}     
+
+
+
+
+
+
+
+
+
+
+// this function can be used onto already OBTAINED-DATA, to convert the "relative" paths to the external domain automatically:
+//														i.e.:   src="./file.jpg"  ----->  src="http://example.com/file.jpg" 
+
+function fixed_domain_HELPER( $content, $domain_or_url ) {  
+	$GLOBALS['rdgr']['parsed_url']			= parse_url($domain_or_url);
+	$GLOBALS['rdgr']['urlparts']['domain_X']= $GLOBALS['rdgr']['parsed_url']['scheme'].'://'.$GLOBALS['rdgr']['parsed_url']['host'];
+	$GLOBALS['rdgr']['urlparts']['path_X']	= stripslashes(dirname($GLOBALS['rdgr']['parsed_url']['path']).'/'); 
+	$GLOBALS['rdgr']['all_protocols']= array('adc','afp','amqp','bacnet','bittorrent','bootp','camel','dict','dns','dsnp','dhcp','ed2k','empp','finger','ftp','gnutella','gopher','http','https','imap','irc','isup','javascript','ldap','mime','msnp','map','modbus','mosh','mqtt','nntp','ntp','ntcip','openadr','pop3','radius','rdp','rlogin','rsync','rtp','rtsp','ssh','sisnapi','sip','smtp','snmp','soap','smb','ssdp','stun','tup','telnet','tcap','tftp','upnp','webdav','xmpp');
+
+	$GLOBALS['rdgr']['ext_array'] 	= array(
+		'src'	=> array('audio','embed','iframe','img','input','script','source','track','video'),
+		'srcset'=> array('source'),
+		'data'	=> array('object'),
+		'href'	=> array('link','area','a'), 
+		'action'=> array('form')
+		//'param', 'applet' and 'base' tags are exclusion, because of a bit complex structure 
+	);
+	$content= preg_replace_callback( 
+		'/<(((?!<).)*?)>/si', 	//avoids unclosed & closing tags
+		function($matches_A){
+			$content_A = $matches_A[0];
+			$tagname = preg_match('/((.*?)(\s|$))/si', $matches_A[1], $n) ? $n[2] : "";
+			foreach($GLOBALS['rdgr']['ext_array'] as $key=>$value){
+				if(in_array($tagname,$value)){
+					preg_match('/ '.$key.'=(\'|\")/i', $content_A, $n);
+					if(!empty($n[1])){
+						$GLOBALS['rdgr']['aphostrope_type']= $n[1];
+						$content_A = preg_replace_callback( 
+							'/( '.$key.'='.$GLOBALS['rdgr']['aphostrope_type'].')(.*?)('.$GLOBALS['rdgr']['aphostrope_type'].')/i',
+							function($matches_B){
+								$full_link = $matches_B[2];
+								//correction to files/urls
+								//if not schemeless url
+								if(substr($full_link, 0,2) != '//'){
+									$replace_src_allow=true;
+									//check if the link is a type of any special protocol
+									foreach($GLOBALS['rdgr']['all_protocols'] as $each_protocol){
+										//if protocol found - dont continue
+										if(substr($full_link, 0, strlen($each_protocol)+1) == $each_protocol.':'){
+											$replace_src_allow=false; break;
 										}
-									} 
-									// replace with schemeless
-									// $full_link=str_replace(  array('https://','http://'), '//', $full_link); 
-									$matches_B[2]=$full_link;
-									unset($matches_B[0]);
-									$content_B=''; foreach ($matches_B as $each){$content_B .= $each; }
-									return $content_B;
-								},
-								$content_A
-							);
-						}
+									}
+									if($replace_src_allow){
+										$full_link = $GLOBALS['rdgr']['urlparts']['domain_X']. (str_replace('//','/',  $GLOBALS['rdgr']['urlparts']['path_X'].$full_link) );
+									}
+								}
+								// replace with schemeless
+								// $full_link=str_replace(  array('https://','http://'), '//', $full_link); 
+								$matches_B[2]=$full_link;
+								unset($matches_B[0]);
+								$content_B=''; foreach ($matches_B as $each){$content_B .= $each; }
+								return $content_B;
+							},
+							$content_A
+						);
 					}
 				}
-				return $content_A;
-			},
-			$content
-		); 
-		$content= preg_replace_callback( 
-			'/style="(.*?)background(\-image|)(.*?|)\:(.*?|)url\((\'|\"|)(.*?)(\'|\"|)\)/i',
-			function($matches_A){
-				$url = $matches_A[7];
-				$url = (substr($url,0,2)=='//' || substr($url,0,7)=='http://' || substr($url,0,8)=='https://' ? $url : '#');
-				return 'style="'.$matches_A[1].'background'.$matches_A[2].$matches_A[3].':'.$matches_A[4].'url('.$url.')'; //$matches_A[5] is url taged ,7 is url
-			},
-			$content
-		);
-	}
+			}
+			return $content_A;
+		},
+		$content
+	); 
+	$content= preg_replace_callback( 
+		'/style="(.*?)background(\-image|)(.*?|)\:(.*?|)url\((\'|\"|)(.*?)(\'|\"|)\)/i',
+		function($matches_A){
+			$url = $matches_A[7];
+			$url = (substr($url,0,2)=='//' || substr($url,0,7)=='http://' || substr($url,0,8)=='https://' ? $url : '#');
+			return 'style="'.$matches_A[1].'background'.$matches_A[2].$matches_A[3].':'.$matches_A[4].'url('.$url.')'; //$matches_A[5] is url taged ,7 is url
+		},
+		$content
+	);
 	return $content;
 }

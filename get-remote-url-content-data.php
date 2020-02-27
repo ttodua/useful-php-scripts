@@ -114,9 +114,6 @@ function get_remote_data($url, $post_paramtrs=false,            $extra=['replace
 									$matches_B[2]=$full_link;
 									unset($matches_B[0]);
 									$content_B=''; foreach ($matches_B as $each){$content_B .= $each; }
-									if(!empty($GLOBALS['rdgr']['schemeless'])){
-										$full_link=str_replace(  array('https://','http://'), '//', $full_link);
-									} 
 									return $content_B;
 								},
 								$content_A

@@ -1,15 +1,15 @@
 <?php
 /*
-##############################################################################################
-############### useful PHP cURL function for your library (TT's version) #####################
-##############################################################################################
-### echo get_remote_data("http://example.com/");                                   //GET request
-### echo get_remote_data("http://example.com/", "var2=something&var3=blabla" );    //POST request 	
+#############################################################################################
+############### useful PHP cURL function for your library (TT's version) ####################
+############### ( source: https://github.com/ttodua/useful-php-scripts ) #################### 
+#############################################################################################
+### echo get_remote_data("http://example.com/");                                   // GET
+### echo get_remote_data("http://example.com/", "var2=something&var3=blabla" );    // POST	
 ### 
 ###    * Automatically handles FOLLOWLOCATION problem;
 ###    * Using 'replace_src'=>true, it fixes domain-relative urls  (i.e.:   src="./file.jpg"  ----->  src="http://example.com/file.jpg" ) 
-###### // source: https://github.com/ttodua/useful-php-scripts          	 ########## 
-###########################################################################################
+#################################################################################################
 */ 
 
 function get_remote_data($url, $post_paramtrs=false,            $extra=['replace_src'=>true, 'return_array'=>false, "curl_opts"=>[]])	

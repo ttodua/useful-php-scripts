@@ -60,12 +60,11 @@ function get_remote_data($url, $post_paramtrs=false,            $extra=array('sc
 	// if not redirected,and nor "status 200" page, then error..
 	elseif ( $status['http_code'] != 200 ) { $data =  "ERRORCODE22 with $url<br/><br/>Last status codes:".json_encode($status)."<br/><br/>Last data got:$data";}
 	//URLS correction
-	if(function_exists('url_corrections_for_content_HELPER')){	    $data= url_corrections_for_content_HELPER($data, $status['url'],   array('schemeless'=>!empty($extra['schemeless']), 'replace_src'=>!empty($extra['replace_src']), 'rawgit_replace'=>!empty($extra['rawgit_replace']) )  );    	}
+	if(function_exists('url_corrections_for_content_HELPER')){	    $data= url_corrections_for_content_HELPER($data, $status['url'],   array('schemeless'=>!empty($extra['schemeless']), 'replace_src'=>!empty($extra['replace_src']) )  );    	}
 	$answer = ( !empty($extra['return_array']) ? array('data'=>$data, 'header'=>$header, 'info'=>$status) : $data);
-	return $answer;      }     function url_corrections_for_content_HELPER( $content=false, $url=false, 	$extra_opts=array('schemeless'=>false, 'replace_src'=>false, 'rawgit_replace'=>false) ) { 
+	return $answer;      }     function url_corrections_for_content_HELPER( $content=false, $url=false, 	$extra_opts=array('schemeless'=>false, 'replace_src'=>false) ) { 
 	$GLOBALS['rdgr']['schemeless'] =$extra_opts['schemeless'];
 	$GLOBALS['rdgr']['replace_src']=$extra_opts['replace_src'];
-	$GLOBALS['rdgr']['rawgit_replace']=$extra_opts['rawgit_replace'];
 	if($GLOBALS['rdgr']['schemeless'] || $GLOBALS['rdgr']['replace_src'] ) {
 		if($url) {
 			$GLOBALS['rdgr']['parsed_url']			= parse_url($url);
@@ -115,11 +114,7 @@ function get_remote_data($url, $post_paramtrs=false,            $extra=array('sc
 									//replace http(s) with sheme-less urls
 									if(!empty($GLOBALS['rdgr']['schemeless'])){
 										$full_link=str_replace(  array('https://','http://'), '//', $full_link);
-									}
-									//replace github mime
-									if(!empty($GLOBALS['rdgr']['rawgit_replace'])){
-										$full_link= str_replace('//raw.github'.'usercontent.com/','//rawgit.com/', $full_link);
-									}
+									} 
 									$matches_B[2]=$full_link;
 									unset($matches_B[0]);
 									$content_B=''; foreach ($matches_B as $each){$content_B .= $each; }

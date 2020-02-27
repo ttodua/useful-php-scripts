@@ -7,13 +7,12 @@
 ### echo get_remote_data("http://example.com/", "var2=something&var3=blabla" );    //POST request 	
 ### 
 ###    * Automatically handles FOLLOWLOCATION problem;
-###    * Using 'replace_src'=>true, it fixes domain-relative urls  (i.e.:   src="./file.jpg"  ----->  src="http://example.com/file.jpg" )
-###    * Using 'schemeless'=>true, it converts urls in schemeless  (i.e.:   src="http://exampl..  ----->  src="//exampl... )\
+###    * Using 'replace_src'=>true, it fixes domain-relative urls  (i.e.:   src="./file.jpg"  ----->  src="http://example.com/file.jpg" ) 
 ###### // source: https://github.com/ttodua/useful-php-scripts          	 ########## 
 ###########################################################################################
 */ 
 
-function get_remote_data($url, $post_paramtrs=false,            $extra=array('schemeless'=>true, 'replace_src'=>true, 'return_array'=>false, "curl_opts"=>[]))	
+function get_remote_data($url, $post_paramtrs=false,            $extra=['replace_src'=>true, 'return_array'=>false, "curl_opts"=>[]])	
 { 
 	$c = curl_init(); 
 	curl_setopt($c, CURLOPT_URL, $url);
@@ -60,12 +59,11 @@ function get_remote_data($url, $post_paramtrs=false,            $extra=array('sc
 	// if not redirected,and nor "status 200" page, then error..
 	elseif ( $status['http_code'] != 200 ) { $data =  "ERRORCODE22 with $url<br/><br/>Last status codes:".json_encode($status)."<br/><br/>Last data got:$data";}
 	//URLS correction
-	if(function_exists('url_corrections_for_content_HELPER')){	    $data= url_corrections_for_content_HELPER($data, $status['url'],   array('schemeless'=>!empty($extra['schemeless']), 'replace_src'=>!empty($extra['replace_src']) )  );    	}
+	if(function_exists('url_corrections_for_content_HELPER')){	    $data= url_corrections_for_content_HELPER($data, $status['url'], [ 'replace_src'=>!empty($extra['replace_src'])] );    	}
 	$answer = ( !empty($extra['return_array']) ? array('data'=>$data, 'header'=>$header, 'info'=>$status) : $data);
-	return $answer;      }     function url_corrections_for_content_HELPER( $content=false, $url=false, 	$extra_opts=array('schemeless'=>false, 'replace_src'=>false) ) { 
-	$GLOBALS['rdgr']['schemeless'] =$extra_opts['schemeless'];
+	return $answer;      }     function url_corrections_for_content_HELPER( $content=false, $url, 	$extra_opts=['replace_src'=>false] ) {  
 	$GLOBALS['rdgr']['replace_src']=$extra_opts['replace_src'];
-	if($GLOBALS['rdgr']['schemeless'] || $GLOBALS['rdgr']['replace_src'] ) {
+	if($GLOBALS['rdgr']['replace_src'] ) {
 		if($url) {
 			$GLOBALS['rdgr']['parsed_url']			= parse_url($url);
 			$GLOBALS['rdgr']['urlparts']['domain_X']= $GLOBALS['rdgr']['parsed_url']['scheme'].'://'.$GLOBALS['rdgr']['parsed_url']['host'];
@@ -110,14 +108,15 @@ function get_remote_data($url, $post_paramtrs=false,            $extra=array('sc
 												$full_link = $GLOBALS['rdgr']['urlparts']['domain_X']. (str_replace('//','/',  $GLOBALS['rdgr']['urlparts']['path_X'].$full_link) );
 											}
 										}
-									}
-									//replace http(s) with sheme-less urls
-									if(!empty($GLOBALS['rdgr']['schemeless'])){
-										$full_link=str_replace(  array('https://','http://'), '//', $full_link);
 									} 
+									// replace with schemeless
+									// $full_link=str_replace(  array('https://','http://'), '//', $full_link); 
 									$matches_B[2]=$full_link;
 									unset($matches_B[0]);
 									$content_B=''; foreach ($matches_B as $each){$content_B .= $each; }
+									if(!empty($GLOBALS['rdgr']['schemeless'])){
+										$full_link=str_replace(  array('https://','http://'), '//', $full_link);
+									} 
 									return $content_B;
 								},
 								$content_A

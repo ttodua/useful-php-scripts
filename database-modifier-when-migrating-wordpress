@@ -5,7 +5,7 @@ if (empty($_FILES['dbfilee'])) {
 									echo '<!DOCTYPE html><head><title>Replace strings in DB</title></head><body>';
 ?>
 <h1>Intelligently replace strings and domains with new values</h1>
-<b>DESCRIPTION:</b> this script will help you MUCH!! sometimes, when migrating site (or in SQL file, you want to replace strings), dont do it manually! because the strings may be present in SERIALIZED ARRAYS too, and that needs special replacement, not just the direct replacement...   so, this script will do that... ( But also, read some notes <a href="http://www.protectpages.com/blog/migrating-normal-wp-site-as-multisite" target="_blank">HERE</a>;  You can download <a href="https://github.com/ttodua/useful-php-scripts/">SOURCE CODE</a> of this script)
+<b>DESCRIPTION:</b> this script will help you MUCH!! sometimes, when migrating site (or in SQL file, you want to replace strings), dont do it manually! because the strings may be present in SERIALIZED ARRAYS too, and that needs special replacement, not just the direct replacement...   so, this script will do that... ( But also, read some notes <a href="https://puvox.software/blog/migrating-normal-wp-site-as-multisite" target="_blank">HERE</a>;  You can download <a href="https://github.com/ttodua/useful-php-scripts/">SOURCE CODE</a> of this script)
 <br/><br/>
 	<form style="background:rgb(184, 231, 133);padding:10px;" action="" method="POST" enctype="multipart/form-data">
 	drag database file here:<input type="file" name="dbfilee" /><br/>

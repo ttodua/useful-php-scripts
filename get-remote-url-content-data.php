@@ -10,7 +10,7 @@
 ###################################################################################################
 */ 
 
-function get_remote_data($url, $post_paramtrs=false,  $curl_opts=>[])	
+function get_remote_data($url, $post_paramtrs=false,  $curl_opts=[])	
 { 
 	$c = curl_init(); 
 	curl_setopt($c, CURLOPT_URL, $url);

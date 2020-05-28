@@ -1,8 +1,8 @@
-		( Read More: https://puvox.software/blog/two-way-encryption-decryption-between-php-and-c-sharp/ )
+             ###   Read More: https://puvox.software/blog/two-way-encryption-decryption-between-php-and-c-sharp/   ###
 
 
 // ###############################################################################################################
-// ##################################################       PHP       #############################################
+// #################################################       PHP       #############################################
 // ###############################################################################################################
 // Example:      echo EncryptDecrypt::EncryptString (  "Hello message to C#", "mySecretKey123" );
 // ###############################################################################################################
@@ -42,77 +42,76 @@
 // ###############################################################################################################
 
 
-		#region Encrypt/Decrypt
-		public static class EncryptDecrypt
+	#region Encrypt/Decrypt
+	public static class EncryptDecrypt
+	{
+		public static string EncryptString(string plainText, string secterKey)
 		{
-			// encryption 
-			public static string EncryptString(string plainText, string secterKey)
+			CryptoStream cryptoStream; MemoryStream memoryStream;
+			this.helper__encrypt_decrypt_stream(out cryptoStream, out memoryStream, secterKey);
+			string encryptedText = String.Empty;
+			try
 			{
-				CryptoStream cryptoStream; MemoryStream memoryStream;
-				this.helper__encrypt_decrypt_stream(out cryptoStream, out memoryStream, secterKey);
-				string encryptedText = String.Empty;
-				try
-				{
-					byte[] plainBytes = Encoding.ASCII.GetBytes(plainText); 	// Convert the plainText string into a byte array
-					cryptoStream.Write(plainBytes, 0, plainBytes.Length);  		// Encrypt the input plaintext string
-					cryptoStream.FlushFinalBlock();                         	// Complete the encryption process
-					byte[] cipherBytes = memoryStream.ToArray();            	// Convert the encrypted data from a MemoryStream to a byte array
+				byte[] plainBytes = Encoding.ASCII.GetBytes(plainText); 	// Convert the plainText string into a byte array
+				cryptoStream.Write(plainBytes, 0, plainBytes.Length);  		// Encrypt the input plaintext string
+				cryptoStream.FlushFinalBlock();                         	// Complete the encryption process
+				byte[] cipherBytes = memoryStream.ToArray();            	// Convert the encrypted data from a MemoryStream to a byte array
 
-					encryptedText = Convert.ToBase64String(cipherBytes, 0, cipherBytes.Length);  // Convert the encrypted byte array to a base64 encoded string
-				}
-				catch (Exception e)
-				{
-					return e.Message;
-				}
-				finally
-				{
-					memoryStream.Close();
-					cryptoStream.Close();
-				}
-				return encryptedText;
+				encryptedText = Convert.ToBase64String(cipherBytes, 0, cipherBytes.Length);  // Convert the encrypted byte array to a base64 encoded string
 			}
-
-			public static string DecryptString(string encryptedText, string secterKey)
+			catch (Exception e)
 			{
-				
-				CryptoStream cryptoStream; MemoryStream memoryStream;
-				this.helper__encrypt_decrypt_stream(out cryptoStream, out memoryStream, secterKey);
-				string plainText = String.Empty;
-				try
-				{
-					byte[] cipherBytes = Convert.FromBase64String(encryptedText);// Convert the encryptedText string into a byte array
-					cryptoStream.Write(cipherBytes, 0, cipherBytes.Length);		// Decrypt the input encryptedText string
-					cryptoStream.FlushFinalBlock();              				// Complete the decryption process
-					byte[] plainBytes = memoryStream.ToArray();					// Convert the decrypted data from a MemoryStream to a byte array
-					
-					plainText = Encoding.ASCII.GetString(plainBytes, 0, plainBytes.Length); // Convert the decrypted byte array to string
-				}
-				catch (Exception e)
-				{
-					return e.Message;
-				}
-				finally
-				{
-					memoryStream.Close();
-					cryptoStream.Close();
-				}
-				return plainText;
+				return e.Message;
 			}
-			 
-			public static void helper__encrypt_decrypt_stream(out MemoryStream memoryStream, out CryptoStream cryptoStream, string secterKey)
+			finally
 			{
-				SHA256 mySHA256 = SHA256Managed.Create();
-				byte[] key = mySHA256.ComputeHash(Encoding.ASCII.GetBytes(secterKey));
-				byte[] iv = new byte[16] { 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0 };
-				// string symmetric encryption
-				Aes encryptor = Aes.Create();
-				encryptor.Mode = CipherMode.CBC;
-				//encryptor.KeySize = 256;    encryptor.BlockSize = 128;   encryptor.Padding = PaddingMode.Zeros;
-				encryptor.Key = key;
-				encryptor.IV = iv;
-
-				memoryStream = new MemoryStream();
-				cryptoStream = new CryptoStream(memoryStream, encryptor.CreateEncryptor(), CryptoStreamMode.Write); // write to memory stream
+				memoryStream.Close();
+				cryptoStream.Close();
 			}
+			return encryptedText;
 		}
-		#endregion
+
+		public static string DecryptString(string encryptedText, string secterKey)
+		{
+			
+			CryptoStream cryptoStream; MemoryStream memoryStream;
+			this.helper__encrypt_decrypt_stream(out cryptoStream, out memoryStream, secterKey);
+			string plainText = String.Empty;
+			try
+			{
+				byte[] cipherBytes = Convert.FromBase64String(encryptedText);// Convert the encryptedText string into a byte array
+				cryptoStream.Write(cipherBytes, 0, cipherBytes.Length);		// Decrypt the input encryptedText string
+				cryptoStream.FlushFinalBlock();              				// Complete the decryption process
+				byte[] plainBytes = memoryStream.ToArray();					// Convert the decrypted data from a MemoryStream to a byte array
+				
+				plainText = Encoding.ASCII.GetString(plainBytes, 0, plainBytes.Length); // Convert the decrypted byte array to string
+			}
+			catch (Exception e)
+			{
+				return e.Message;
+			}
+			finally
+			{
+				memoryStream.Close();
+				cryptoStream.Close();
+			}
+			return plainText;
+		}
+		 
+		public static void helper__encrypt_decrypt_stream(out MemoryStream memoryStream, out CryptoStream cryptoStream, string secterKey)
+		{
+			SHA256 mySHA256 = SHA256Managed.Create();
+			byte[] key = mySHA256.ComputeHash(Encoding.ASCII.GetBytes(secterKey));
+			byte[] iv = new byte[16] { 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0 };
+			// string symmetric encryption
+			Aes encryptor = Aes.Create();
+			encryptor.Mode = CipherMode.CBC;
+			//encryptor.KeySize = 256;    encryptor.BlockSize = 128;   encryptor.Padding = PaddingMode.Zeros;
+			encryptor.Key = key;
+			encryptor.IV = iv;
+
+			memoryStream = new MemoryStream();
+			cryptoStream = new CryptoStream(memoryStream, encryptor.CreateEncryptor(), CryptoStreamMode.Write); // write to memory stream
+		}
+	}
+	#endregion

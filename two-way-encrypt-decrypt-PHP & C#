@@ -1,0 +1,116 @@
+
+// ###############################################################################################################
+// ##################################################       PHP       #############################################
+// ###############################################################################################################
+// Example:      echo EncryptDecrypt::EncryptString (  "Hello message to C#", "mySecretKey123" );
+// ###############################################################################################################
+// ###############################################################################################################
+
+	#region Encrypt/Decrypt
+	public static class EncryptDecrypt
+	{
+  
+		public static function encrypt_C($plaintext, $password, $method= 'aes-256-cbc'){
+			self::helper__encrypt_decrypt_stream($password);
+			return base64_encode(openssl_encrypt($plaintext, $method, self::password_shuffled, OPENSSL_RAW_DATA, self::iv));
+		}
+
+		public static function decrypt_C($encrypted, $password, $method= 'aes-256-cbc'){
+			self::helper__encrypt_decrypt_stream($password);
+			return openssl_decrypt(base64_decode($encrypted), $method, self::password_shuffled, OPENSSL_RAW_DATA, self::iv);
+		}
+		
+		public static function helper__encrypt_decrypt_stream($password, $method= 'aes-256-cbc'){
+			// Must be exact 32 chars (256 bit)
+			self::password_shuffled = substr(hash('sha256', $password, true), 0, 32);		
+			// IV must be exact 16 chars (128 bit)
+			self::iv = chr(0x0) . chr(0x0) . chr(0x0) . chr(0x0) . chr(0x0) . chr(0x0) . chr(0x0) . chr(0x0) . chr(0x0) . chr(0x0) . chr(0x0) . chr(0x0) . chr(0x0) . chr(0x0) . chr(0x0) . chr(0x0);
+		}
+    
+	}
+	#endregion
+  
+  
+
+// ###############################################################################################################
+// ##################################################       C#       #############################################
+// ###############################################################################################################
+// Example:       Console.WriteLine( EncryptDecrypt::DecryptString ( encryptedStringFromPhp, "mySecretKey123" )    );
+// ###############################################################################################################
+// ###############################################################################################################
+
+
+		#region Encrypt/Decrypt
+		public static class EncryptDecrypt
+		{
+			// encryption 
+			public static string EncryptString(string plainText, string secterKey)
+			{
+				CryptoStream cryptoStream; MemoryStream memoryStream;
+				this.helper__encrypt_decrypt_stream(out cryptoStream, out memoryStream, secterKey);
+				string encryptedText = String.Empty;
+				try
+				{
+					byte[] plainBytes = Encoding.ASCII.GetBytes(plainText); 	// Convert the plainText string into a byte array
+					cryptoStream.Write(plainBytes, 0, plainBytes.Length);  		// Encrypt the input plaintext string
+					cryptoStream.FlushFinalBlock();                         	// Complete the encryption process
+					byte[] cipherBytes = memoryStream.ToArray();            	// Convert the encrypted data from a MemoryStream to a byte array
+
+					encryptedText = Convert.ToBase64String(cipherBytes, 0, cipherBytes.Length);  // Convert the encrypted byte array to a base64 encoded string
+				}
+				catch (Exception e)
+				{
+					return e.Message;
+				}
+				finally
+				{
+					memoryStream.Close();
+					cryptoStream.Close();
+				}
+				return encryptedText;
+			}
+
+			public static string DecryptString(string encryptedText, string secterKey)
+			{
+				
+				CryptoStream cryptoStream; MemoryStream memoryStream;
+				this.helper__encrypt_decrypt_stream(out cryptoStream, out memoryStream, secterKey);
+				string plainText = String.Empty;
+				try
+				{
+					byte[] cipherBytes = Convert.FromBase64String(encryptedText);// Convert the encryptedText string into a byte array
+					cryptoStream.Write(cipherBytes, 0, cipherBytes.Length);		// Decrypt the input encryptedText string
+					cryptoStream.FlushFinalBlock();              				// Complete the decryption process
+					byte[] plainBytes = memoryStream.ToArray();					// Convert the decrypted data from a MemoryStream to a byte array
+					
+					plainText = Encoding.ASCII.GetString(plainBytes, 0, plainBytes.Length); // Convert the decrypted byte array to string
+				}
+				catch (Exception e)
+				{
+					return e.Message;
+				}
+				finally
+				{
+					memoryStream.Close();
+					cryptoStream.Close();
+				}
+				return plainText;
+			}
+			 
+			public static void helper__encrypt_decrypt_stream(out MemoryStream memoryStream, out CryptoStream cryptoStream, string secterKey)
+			{
+				SHA256 mySHA256 = SHA256Managed.Create();
+				byte[] key = mySHA256.ComputeHash(Encoding.ASCII.GetBytes(secterKey));
+				byte[] iv = new byte[16] { 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0 };
+				// string symmetric encryption
+				Aes encryptor = Aes.Create();
+				encryptor.Mode = CipherMode.CBC;
+				//encryptor.KeySize = 256;    encryptor.BlockSize = 128;   encryptor.Padding = PaddingMode.Zeros;
+				encryptor.Key = key;
+				encryptor.IV = iv;
+
+				memoryStream = new MemoryStream();
+				cryptoStream = new CryptoStream(memoryStream, encryptor.CreateEncryptor(), CryptoStreamMode.Write); // write to memory stream
+			}
+		}
+		#endregion

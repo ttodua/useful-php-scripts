@@ -10,12 +10,12 @@
 	public static class EncryptDecrypt
 	{
   
-		public static function encrypt_C($plaintext, $password, $method= 'aes-256-cbc'){
+		public static function encrypt($plaintext, $password, $method= 'aes-256-cbc'){
 			self::helper__encrypt_decrypt_stream($password);
 			return base64_encode(openssl_encrypt($plaintext, $method, self::password_shuffled, OPENSSL_RAW_DATA, self::iv));
 		}
 
-		public static function decrypt_C($encrypted, $password, $method= 'aes-256-cbc'){
+		public static function decrypt($encrypted, $password, $method= 'aes-256-cbc'){
 			self::helper__encrypt_decrypt_stream($password);
 			return openssl_decrypt(base64_decode($encrypted), $method, self::password_shuffled, OPENSSL_RAW_DATA, self::iv);
 		}

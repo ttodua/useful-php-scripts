@@ -1,6 +1,6 @@
 // =========== https://github.com/ttodua/useful-php-scripts ================ 
 // =========================================================================
-//     zip_folder('path/to/input/folder',   'path/to/output_zip_file.zip') ;
+//     zip_folder(__DIR__.'/path/to/input/folder',   __DIR__.'/path/to/output_zip_file.zip') ;
 // =========================================================================
 
 function zip_folder ($input_folder, $output_zip_file) {
